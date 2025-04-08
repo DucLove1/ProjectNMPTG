@@ -150,6 +150,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pipe.h">
+    <ClInclude Include="CEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

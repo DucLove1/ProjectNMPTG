@@ -75,6 +75,9 @@
     <ClCompile Include="Portal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Pipe.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -146,6 +149,7 @@
     <ClInclude Include="Portal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Pipe.h">
     <ClInclude Include="CEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -108,11 +108,12 @@ class CMario : public CGameObject
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
-	int level; 
-	int untouchable; 
+	int level;
+	int untouchable;
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
-	int coin; 
+	BOOLEAN isPickUp;
+	int coin;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -127,12 +128,13 @@ public:
 		isSitting = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
-		ay = MARIO_GRAVITY; 
+		ay = MARIO_GRAVITY;
 
 		level = MARIO_LEVEL_BIG;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
+		isPickUp = false;
 		coin = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -140,11 +142,11 @@ public:
 	void SetState(int state);
 
 	int IsCollidable()
-	{ 
-		return (state != MARIO_STATE_DIE); 
+	{
+		return (state != MARIO_STATE_DIE);
 	}
 
-	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
+	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable == 0); }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
@@ -154,3 +156,29 @@ public:
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
+
+
+//	else 
+//		if (vx == 0)
+//		{
+//			if (nx > 0) aniId = ID_ANI_MARIO_IDLE_RIGHT;
+//			else aniId = ID_ANI_MARIO_IDLE_LEFT;
+//		}
+//		else if (vx > 0)
+//		{
+//			if (ax < 0)
+//				aniId = ID_ANI_MARIO_BRACE_RIGHT;
+//			else if (ax == MARIO_ACCEL_RUN_X)
+//				aniId = ID_ANI_MARIO_RUNNING_RIGHT;
+//			else if (ax == MARIO_ACCEL_WALK_X)
+//				aniId = ID_ANI_MARIO_WALKING_RIGHT;
+//		}
+//		else // vx < 0
+//		{
+//			if (ax > 0)
+//				aniId = ID_ANI_MARIO_BRACE_LEFT;
+//			else if (ax == -MARIO_ACCEL_RUN_X)
+//				aniId = ID_ANI_MARIO_RUNNING_LEFT;
+//			else if (ax == -MARIO_ACCEL_WALK_X)
+//				aniId = ID_ANI_MARIO_WALKING_LEFT;
+//		}

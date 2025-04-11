@@ -7,6 +7,8 @@
 #include "Goomba.h"
 #include "Coin.h"
 #include "Portal.h"
+#include "CQuestionBrick.h"
+#include "Breakable.h"
 
 #include "Collision.h"
 
@@ -53,6 +55,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
+	else if (dynamic_cast<CQuestionBrick*>(e->obj))
+		OnCollisionWithQuestionBrick(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -93,6 +97,41 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	coin++;
+}
+
+void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
+{
+	CQuestionBrick* brick = dynamic_cast<CQuestionBrick*>(e->obj);
+	if (e->ny > 0) // collision with top of brick
+	{
+		//if (brick->GetTypeOfHolder() == COIN_ITEM)
+		//{
+		//	coin++;
+		//	brick->GotHit();
+		//}
+		//else if (brick->GetTypeOfHolder() == MUSHROOM_ITEM)
+		//{
+		//	if (level == MARIO_LEVEL_SMALL)
+		//	{
+		//		SetLevel(MARIO_LEVEL_BIG); 
+		//		brick->GotHit();
+		//	}
+		//}
+		//else if (brick->GetTypeOfHolder() == LEAF_ITEM)
+		//{
+		//	if (level == MARIO_LEVEL_SMALL)
+		//	{
+		//		SetLevel(MARIO_LEVEL_BIG);
+		//		brick->GotHit();
+		//	}
+		//	else if (level == MARIO_LEVEL_BIG)
+		//	{
+		//		SetLevel(MARIO_LEVEL_TAIL);
+		//		e->obj->Delete();
+		//	}
+		//}
+		brick->GotHit();
+	}
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

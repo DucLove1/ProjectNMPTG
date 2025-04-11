@@ -12,7 +12,7 @@
 #include "Pipe.h"
 #include "GreenKoopa.h"
 #include "SampleKeyEventHandler.h"
-
+#include "Block.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
@@ -124,6 +124,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int state = atoi(tokens[3].c_str());
 		obj = new GreenKoopa(x, y, state);
+		break;
+	}
+	case OBJECT_TYPE_BLOCK:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		vector<vector<int>> gridId(3, vector<int>(3));
+		int curToken = 5;
+		for(int row = 0; row < 3; row++)
+		{
+			for(int col = 0; col < 3; col++)
+			{
+				gridId[row][col] = atoi(tokens[curToken].c_str());
+				curToken++;
+			}
+		}
+		obj = new Block(x, y, width, height, gridId);
 		break;
 	}
 	case OBJECT_TYPE_PIPE:

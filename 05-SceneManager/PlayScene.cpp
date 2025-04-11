@@ -130,17 +130,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int width = atoi(tokens[3].c_str());
 		int height = atoi(tokens[4].c_str());
-		vector<vector<int>> gridId(3, vector<int>(3));
-		int curToken = 5;
-		for(int row = 0; row < 3; row++)
-		{
-			for(int col = 0; col < 3; col++)
-			{
-				gridId[row][col] = atoi(tokens[curToken].c_str());
-				curToken++;
-			}
-		}
-		obj = new Block(x, y, width, height, gridId);
+		int color = atoi(tokens[5].c_str());
+		obj = new Block(x, y, width, height, color);
 		break;
 	}
 	case OBJECT_TYPE_PIPE:

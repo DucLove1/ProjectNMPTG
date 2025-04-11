@@ -13,6 +13,7 @@ blocks.txt
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 6 = greenKoopas, 7 = block
 # See OBJECT_TYPE constants in AssetIDs.h
 
+
 # BRICKS
 1	0	148
 1	0	164
@@ -45,7 +46,12 @@ blocks.txt
 1	352	164
 
 #greenBlock
-7	100	80	5	6	112001	112002	112003	112004	112005	112006	112007	112008	112009
+7	100	80	5	6	0
+
+#greenBlock
+7	80	60	5	6	2
+#greenBlock
+7	120	100	5	6	1
 
 # MARIO
 0	20	10

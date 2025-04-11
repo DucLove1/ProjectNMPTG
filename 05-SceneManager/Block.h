@@ -12,20 +12,56 @@ private:
 	int unitHeight;			// Unit: cell
 	int unitWidth;
 	vector<vector<int>> gridBlockId;
+	void GetGrid(int color)
+	{
+		//gridBlockId.resize(3, vector<int>(3, 0));
+		switch (color)
+		{
+		case Color::BEIGE:
+			gridBlockId = { { 110001, 110002, 110003 },
+				{ 110004, 110005, 110006 },
+				{ 110007, 110008, 110009 }
+			};
+			break;
+		case Color::BLUE:
+			gridBlockId = {
+	{ 111001, 111002, 111003 },
+	{ 111004, 111005, 111006 },
+	{ 111007, 111008, 111009 }
+			};
+			break;
+		case Color::GREEN:
+			gridBlockId = {
+	{ 112001, 112002, 112003 },
+	{ 112004, 112005, 112006 },
+	{ 112007, 112008, 112009 }
+			};
+			break;
+		case Color::WHITE:
+			gridBlockId = {
+	{ 113001, 113002, 113003 },
+	{ 113004, 113005, 113006 },
+	{ 113007, 113008, 113009 }
+			};
+			break;
+		default:
+			break;
+		}
+	}
 public:
-	Block(float x, float y, int unitWidth, int unitHeight, vector<vector<int>>& gridId)
+	enum Color
+	{
+		BEIGE,
+		BLUE,
+		GREEN,
+		WHITE
+	};
+	Block(float x, float y, int unitWidth, int unitHeight, int color)
 		: CGameObject(x, y)
 	{
 		this->unitWidth = unitWidth;
 		this->unitHeight = unitHeight;
-		gridBlockId.resize(3);
-		for (int row = 0; row < gridId.size(); row++)
-		{
-			for (int col = 0; col < gridId[0].size(); col++)
-			{
-				(this->gridBlockId[row]).push_back(gridId[row][col]);
-			}
-		}
+		GetGrid(color);
 	}
 	void Render() override;
 	void Update(DWORD dt) {};

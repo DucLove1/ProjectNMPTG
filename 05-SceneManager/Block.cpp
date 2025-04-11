@@ -7,36 +7,36 @@ void Block::Render()
 	float xx = x;
 	float yy = y;
 	// 4 goc
-	s->Get(gridBlockId[0][0])->Draw(xx, yy);
-	s->Get(gridBlockId[0][2])->Draw(xx + (unitWidth - 1) * DISTANCE_BETWEEN_BLOCKS, yy);
-	s->Get(gridBlockId[2][0])->Draw(xx, yy + (unitHeight - 1) * DISTANCE_BETWEEN_BLOCKS);
-	s->Get(gridBlockId[2][2])->Draw(xx + (unitWidth - 1) * DISTANCE_BETWEEN_BLOCKS, yy + (unitHeight - 1) * DISTANCE_BETWEEN_BLOCKS);
+	s->Get((gridBlockId)[0][0])->Draw(xx, yy);
+	s->Get((gridBlockId)[0][2])->Draw(xx + (unitWidth - 1) * DISTANCE_BETWEEN_BLOCKS, yy);
+	s->Get((gridBlockId)[2][0])->Draw(xx, yy + (unitHeight - 1) * DISTANCE_BETWEEN_BLOCKS);
+	s->Get((gridBlockId)[2][2])->Draw(xx + (unitWidth - 1) * DISTANCE_BETWEEN_BLOCKS, yy + (unitHeight - 1) * DISTANCE_BETWEEN_BLOCKS);
 	// canh tren row = 0
 	for (int col = 1; col < unitWidth - 1; col++)
 	{
-		s->Get(gridBlockId[0][1])->Draw(xx + col * DISTANCE_BETWEEN_BLOCKS, yy);
+		s->Get((gridBlockId)[0][1])->Draw(xx + col * DISTANCE_BETWEEN_BLOCKS, yy);
 	}
 	// canh ben trai col = 0
 	for (int row = 1; row < unitHeight - 1; row++)
 	{
-		s->Get(gridBlockId[1][0])->Draw(xx, yy + row * DISTANCE_BETWEEN_BLOCKS);
+		s->Get((gridBlockId)[1][0])->Draw(xx, yy + row * DISTANCE_BETWEEN_BLOCKS);
 	}
 	// canh ben phai col = unitWidth - 1
 	for (int row = 1; row < unitHeight - 1; row++)
 	{
-		s->Get(gridBlockId[1][2])->Draw(xx + (unitWidth - 1) * DISTANCE_BETWEEN_BLOCKS, yy + row * DISTANCE_BETWEEN_BLOCKS);
+		s->Get((gridBlockId)[1][2])->Draw(xx + (unitWidth - 1) * DISTANCE_BETWEEN_BLOCKS, yy + row * DISTANCE_BETWEEN_BLOCKS);
 	}
 	// canh duoi row = unitHeight - 1
 	for (int col = 1; col < unitWidth - 1; col++)
 	{
-		s->Get(gridBlockId[2][1])->Draw(xx + col * DISTANCE_BETWEEN_BLOCKS, yy + (unitHeight - 1) * DISTANCE_BETWEEN_BLOCKS);
+		s->Get((gridBlockId)[2][1])->Draw(xx + col * DISTANCE_BETWEEN_BLOCKS, yy + (unitHeight - 1) * DISTANCE_BETWEEN_BLOCKS);
 	}
 	// ben trong
 	for (int row = 1; row < unitHeight - 1; row++)
 	{
 		for (int col = 1; col < unitWidth - 1; col++)
 		{
-			s->Get(gridBlockId[1][1])->Draw(xx + col * DISTANCE_BETWEEN_BLOCKS, yy + row * DISTANCE_BETWEEN_BLOCKS);
+			s->Get((gridBlockId)[1][1])->Draw(xx + col * DISTANCE_BETWEEN_BLOCKS, yy + row * DISTANCE_BETWEEN_BLOCKS);
 		}
 	}
 	// shadow

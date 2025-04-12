@@ -21,6 +21,8 @@
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="Breakable.cpp" />
+    <ClCompile Include="CQuestionBrick.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="GreenKoopa.cpp" />
     <ClCompile Include="Block.cpp" />
@@ -51,6 +53,8 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="Breakable.h" />
+    <ClInclude Include="CQuestionBrick.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="GreenKoopa.h" />
     <ClInclude Include="Block.h" />

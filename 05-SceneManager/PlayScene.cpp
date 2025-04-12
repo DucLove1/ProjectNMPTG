@@ -10,7 +10,10 @@
 #include "Coin.h"
 #include "Platform.h"
 #include "Pipe.h"
+#include "CQuestionBrick.h"
+
 #include "GreenKoopa.h"
+
 #include "SampleKeyEventHandler.h"
 #include "Block.h"
 using namespace std;
@@ -150,6 +153,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 
 	}
+	case OBJECT_TYPE_QUESTION_BRICK:
+	{
+		int item = atoi(tokens[3].c_str());
+		int timeCanHit = atoi(tokens[4].c_str());
+		obj = new CQuestionBrick(x, y, item, timeCanHit);
+		break;
+	}
 
 	case OBJECT_TYPE_PLATFORM:
 	{
@@ -189,6 +199,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	obj->SetPosition(x, y);
 
 
+	objects.push_back(obj);
+}
+
+void CPlayScene::AddObject(LPGAMEOBJECT obj) {
 	objects.push_back(obj);
 }
 

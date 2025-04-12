@@ -12,8 +12,10 @@
 #include "Pipe.h"
 #include "CQuestionBrick.h"
 
-#include "SampleKeyEventHandler.h"
+#include "GreenKoopa.h"
 
+#include "SampleKeyEventHandler.h"
+#include "Block.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
@@ -121,7 +123,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
-
+	case OBJECT_TYPE_GREEN_KOOPAS:
+	{
+		int state = atoi(tokens[3].c_str());
+		obj = new GreenKoopa(x, y, state);
+		break;
+	}
+	case OBJECT_TYPE_BLOCK:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		int color = atoi(tokens[5].c_str());
+		obj = new Block(x, y, width, height, color);
+		break;
+	}
 	case OBJECT_TYPE_PIPE:
 	{
 		float cell_width = (float)atof(tokens[3].c_str());

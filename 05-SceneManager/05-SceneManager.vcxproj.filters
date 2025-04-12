@@ -23,6 +23,9 @@
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Breakable.cpp" />
     <ClCompile Include="CQuestionBrick.cpp" />
+    <ClCompile Include="Koopa.cpp" />
+    <ClCompile Include="GreenKoopa.cpp" />
+    <ClCompile Include="Block.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -52,6 +55,9 @@
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Breakable.h" />
     <ClInclude Include="CQuestionBrick.h" />
+    <ClInclude Include="Koopa.h" />
+    <ClInclude Include="GreenKoopa.h" />
+    <ClInclude Include="Block.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

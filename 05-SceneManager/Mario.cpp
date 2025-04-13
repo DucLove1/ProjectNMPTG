@@ -9,7 +9,7 @@
 #include "Portal.h"
 #include "CQuestionBrick.h"
 #include "Breakable.h"
-
+#include "Leaf.h"
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -57,6 +57,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CQuestionBrick*>(e->obj))
 		OnCollisionWithQuestionBrick(e);
+	else if (dynamic_cast<CLeaf*>(e->obj))
+		OnCollisionWithLeaf(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -132,6 +134,21 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 		//}
 		brick->GotHit();
 	}
+}
+void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
+{
+	CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
+	if (level == MARIO_LEVEL_SMALL)
+	{
+		SetLevel(MARIO_LEVEL_BIG);
+		e->obj->Delete();
+	}
+	/*else if (level == MARIO_LEVEL_BIG)
+	{
+		SetLevel(MARIO_LEVEL_TAIL);
+		e->obj->Delete();
+	}*/
+	DebugOut(L"Leaf, got it by mario\n");
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

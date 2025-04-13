@@ -11,6 +11,7 @@
 #include "Platform.h"
 #include "Pipe.h"
 #include "CQuestionBrick.h"
+#include "Leaf.h"
 
 #include "GreenKoopa.h"
 
@@ -158,6 +159,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int item = atoi(tokens[3].c_str());
 		int timeCanHit = atoi(tokens[4].c_str());
 		obj = new CQuestionBrick(x, y, item, timeCanHit);
+		break;
+	}
+	case OBJECT_TYPE_LEAF:
+	{
+		obj = new CLeaf(x, y);
 		break;
 	}
 

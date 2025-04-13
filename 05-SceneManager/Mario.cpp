@@ -9,7 +9,7 @@
 #include "Portal.h"
 #include "CQuestionBrick.h"
 #include "Breakable.h"
-
+#include "Koopa.h"
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -56,7 +56,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CQuestionBrick*>(e->obj))
-		OnCollisionWithQuestionBrick(e);
+		OnCollisionWithQuestionBrick(e);	
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)

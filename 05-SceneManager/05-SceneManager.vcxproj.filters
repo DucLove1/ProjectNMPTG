@@ -26,6 +26,8 @@
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="GreenKoopa.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="RedKoopa.cpp" />
+    <ClCompile Include="Sensor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -58,6 +60,8 @@
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="GreenKoopa.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="RedKoopa.h" />
+    <ClInclude Include="Sensor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

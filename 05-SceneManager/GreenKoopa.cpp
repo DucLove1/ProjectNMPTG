@@ -21,6 +21,9 @@ void GreenKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	case IN_SHELL_DOWN:
 		UpdateStateInShell();
 		break;
+	case KNOCK_OUT:
+		UpdateStateKnockOut();
+		break;
 	}
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }

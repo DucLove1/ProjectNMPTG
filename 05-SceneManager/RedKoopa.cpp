@@ -16,14 +16,9 @@ void RedKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	case IN_SHELL_DOWN:
 		UpdateStateInShell();
 		break;
-	}
-	if (state == HAS_NO_WING)
-	{
-		//sensor->TurnOn();
-	}
-	else
-	{
-		//sensor->TurnOff();
+	case KNOCK_OUT:
+		UpdateStateKnockOut();
+		break;
 	}
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }

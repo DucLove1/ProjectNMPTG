@@ -17,13 +17,13 @@ public:
 	{
 		this->enemy = enemy;
 		enemy->GetPosition(this->x, this->y);
-		this->x -= (ENEMY_BBOX_WIDTH + 5);
+		//this->x -= (ENEMY_BBOX_WIDTH + 5);
 		ay = 0.001f;
 		vy = 0;
 		isOn = false;
 	}
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	void Render() {}
+	void Render() { RenderBoundingBox(); }
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	void FollowEnemy();
 	int IsCollidable() { return 1; }

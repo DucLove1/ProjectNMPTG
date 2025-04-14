@@ -12,6 +12,11 @@ void Sensor::GetBoundingBox(float& left, float& top, float& right, float& bottom
 void Sensor::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	RedKoopa* koopa = dynamic_cast<RedKoopa*>(enemy);
+	if (koopa->GetState() == Koopa::KNOCK_OUT)
+	{
+		this->Delete();
+		return;
+	}
 	if (koopa->IsOnGround() && koopa->GetState() == RedKoopa::HAS_NO_WING)
 		this->TurnOn();
 	else
@@ -31,11 +36,13 @@ void Sensor::FollowEnemy()
 	koopa->GetPosition(this->x, tempt);
 	if (direction == 1)
 	{
-		this->x += ENEMY_BBOX_WIDTH / 2 + SENSOR_BBOX_WIDTH / 2 + 1;
+		//this->x += ENEMY_BBOX_WIDTH / 2 + SENSOR_BBOX_WIDTH / 2 + 1;
+		this->x +=  1;
 	}
 	else
 	{
-		this->x -= ENEMY_BBOX_WIDTH / 2 + SENSOR_BBOX_WIDTH / 2 + 1;
+		//this->x -= ENEMY_BBOX_WIDTH / 2 + SENSOR_BBOX_WIDTH / 2 + 1;
+		this->x -= 1;
 	}
 }
 void Sensor::OnNoCollision(DWORD dt)
@@ -62,7 +69,6 @@ void Sensor::OnCollisionWith(LPCOLLISIONEVENT e)
 	// va cham voi nhung vat co kha nang block
 	if (e->ny != 0)
 	{
-		//DebugOut(L"Cham dat");
 		vy = 0;
 	}
 	else if (e->nx != 0)

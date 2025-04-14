@@ -18,6 +18,10 @@ void Koopa::SetState(int state)
 	case IN_SHELL_DOWN:
 		SetStateInShellDown();
 		break;
+	case KNOCK_OUT:
+		SetStateKnockOut();
+		break;
+	
 	}
 	CGameObject::SetState(state);
 }
@@ -33,6 +37,7 @@ void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		bottom = top + KOOPA_SPRITE_HAS_WING_HEIGHT;
 		break;
 	case HAS_NO_WING:
+	case KNOCK_OUT:
 		left = x - KOOPA_SPRITE_HAS_NO_WING_WIDTH / 2;
 		top = y - KOOPA_SPRITE_HAS_NO_WING_HEIGHT / 2;
 		right = left + KOOPA_SPRITE_HAS_NO_WING_WIDTH;
@@ -59,16 +64,17 @@ void Koopa::OnNoCollision(DWORD dt)
 void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	// va cham vs goomba thi knock out no
-	if (dynamic_cast<CGoomba*>(e->obj) &&
-		(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
-		vx != 0)
-	{
-		CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-		if (goomba->IsAlive())
-		{
-			goomba->KnockedOut(this);
-		}
-	}
+	//if (dynamic_cast<CGoomba*>(e->obj) &&
+	//	(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
+	//	vx != 0)
+	//{
+	//	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	//	if (goomba->IsAlive())
+	//	{
+	//		goomba->KnockedOut(this);
+	//	}
+	//}
+	OnCollisionWithEnemy(e);
 	// khong bi block boi e->obj thi return
 	if (!e->obj->IsBlocking())
 		return;
@@ -85,6 +91,30 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		nx = -nx;
 	}
 }
+void Koopa::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
+{
+	if (dynamic_cast<CEnemy*>(e->obj) &&
+		(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
+		vx != 0)
+	{
+		CEnemy* enemy = dynamic_cast<CEnemy*>(e->obj);
+		if (enemy->IsAlive())
+		{
+			Koopa* koopa = dynamic_cast<Koopa*>(e->obj);
+			if (koopa != NULL)
+			{
+				if (koopa->GetState() == Koopa::IN_SHELL_DOWN || koopa->GetState() == Koopa::IN_SHELL_UP)
+				{
+					float vx, vy;
+					koopa->GetSpeed(vx, vy);
+					if(vx != 0)
+						this->KnockedOut(koopa);
+				}
+			}
+			enemy->KnockedOut(this);
+		}
+	}
+}
 void Koopa::UpdateStateInShell()
 {
 	ULONGLONG cur = GetTickCount64();
@@ -92,6 +122,21 @@ void Koopa::UpdateStateInShell()
 	{
 		SetState(HAS_NO_WING);
 		timerInShell = 0;
+	}
+}
+void Koopa::UpdateStateKnockOut()
+{
+	ULONGLONG time = GetTickCount64() - timerKnockOut;
+	if (time >= TIME_OUT_KNOCK_OUT)
+	{
+		isDeleted = true;
+		return;
+	}
+	if (time >= TIME_KNOCK_OUT)
+	{
+		ay = GOOMBA_GRAVITY * 1.5;
+		ax = 0;
+		return;
 	}
 }
 void Koopa::Render()
@@ -123,6 +168,9 @@ void Koopa::Render()
 		else
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN_MOVE : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN_MOVE;
 		break;
+	case KNOCK_OUT:
+		    aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_KNOCK_OUT : ID_ANI_GREEN_KOOPA_KNOCK_OUT;
+		break;
 	}
 	if (lastAnimationId != aniId)
 	{
@@ -130,7 +178,7 @@ void Koopa::Render()
 		lastAnimationId = aniId;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 void Koopa::KickedFromTop(CGameObject* obj)
 {
@@ -164,6 +212,13 @@ void Koopa::MoveInShell(int direction)
 {
 	this->nx = direction;
 	vx = direction * KOOPA_IN_SHELL_SPEED;
+}
+void Koopa::KnockedOut(CGameObject* obj)
+{
+	float objX, objY;
+	obj->GetPosition(objX, objY);
+	nx = (this->x > objX) ? 1 : -1;
+	SetState(KNOCK_OUT);
 }
 void Koopa::SetStateHasWing()
 {
@@ -207,4 +262,18 @@ void Koopa::SetStateInShellDown()
 	{
 		y += (KOOPA_SPRITE_HAS_WING_HEIGHT - KOOPA_SPRITE_IN_SHELL_HEIGHT) / 2;
 	}
+}
+
+void Koopa::SetStateKnockOut()
+{
+	if (state == HAS_WING)
+	{
+		y += (KOOPA_SPRITE_HAS_WING_HEIGHT - KOOPA_SPRITE_HAS_NO_WING_HEIGHT) / 2;
+	}
+	ay = -GOOMBA_GRAVITY;
+	vy = -0.01f;
+	ax = -nx * 0.0005f;
+	//vx = abs(vx) * nx;
+	vx = 0.25f * nx;
+	timerKnockOut = GetTickCount64();
 }

@@ -3,6 +3,7 @@
 
 #include "Animation.h"
 #include "Animations.h"
+#include "AssetIDs.h"
 
 #include "debug.h"
 
@@ -136,7 +137,7 @@ public:
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
-		isPickUp = false;
+		isPickUp = true;
 		coin = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

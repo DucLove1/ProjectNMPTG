@@ -166,7 +166,24 @@ int CMario::GetAniIdSmall()
 
 	if (!isOnPlatform)
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
+		if (isPickUp) // jump and holding item
+		{
+			if (abs(ax) == MARIO_ACCEL_RUN_X)
+			{
+				if (nx >= 0)
+					aniId = ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_LEFT;
+			}
+			else
+			{
+				if (nx >= 0)
+					aniId = ID_ANI_MARIO_SMALL_PICKING_JUMP_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_SMALL_PICKING_JUMP_LEFT;
+			}
+		}
+		else if (abs(ax) == MARIO_ACCEL_RUN_X)
 		{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT;
@@ -188,11 +205,29 @@ int CMario::GetAniIdSmall()
 		else
 			aniId = ID_ANI_MARIO_SIT_LEFT;
 	}
-	else if (isPickUp) {
-		if (nx >= 0)
-			aniId = ID_ANI_MARIO_PICKING_RIGHT;
+	else if (isPickUp) // this case is Pick the Koopa
+	{
+		if (abs(vx) > MARIO_WALKING_SPEED)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_SMALL_PICKING_RUN_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_SMALL_PICKING_RUN_LEFT;
+		}
+		else if (abs(vx) > 0)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_SMALL_PICKING_WALK_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_SMALL_PICKING_WALK_LEFT;
+		}
 		else
-			aniId = ID_ANI_MARIO_PICKING_LEFT;
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_SMALL_PICKING_IDLE_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_SMALL_PICKING_IDLE_LEFT;
+		}
 	}
 	else {
 
@@ -241,7 +276,24 @@ int CMario::GetAniIdBig()
 
 	if (!isOnPlatform) // this case is Jump/fall out
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
+		if (isPickUp) // jump and holding item
+		{
+			if (abs(ax) == MARIO_ACCEL_RUN_X)
+			{
+				if (nx >= 0)
+					aniId = ID_ANI_MARIO_PICKING_RUN_JUMP_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_PICKING_RUN_JUMP_LEFT;
+			}
+			else
+			{
+				if (nx >= 0)
+					aniId = ID_ANI_MARIO_PICKING_JUMP_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_PICKING_JUMP_LEFT;
+			}
+		}
+		else if (abs(ax) == MARIO_ACCEL_RUN_X)
 		{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_JUMP_RUN_RIGHT;
@@ -265,12 +317,29 @@ int CMario::GetAniIdBig()
 	}
 	else if (isPickUp) // this case is Pick the Koopa
 	{
-		if (nx >= 0)
-			aniId = ID_ANI_MARIO_PICKING_RIGHT;
+		if (abs(vx) > MARIO_WALKING_SPEED)
+		{
+			if(nx >= 0)
+				aniId = ID_ANI_MARIO_PICKING_RUN_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_PICKING_RUN_LEFT;
+		}
+		else if(abs(vx) > 0)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_PICKING_WALK_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_PICKING_WALK_LEFT;
+		}
 		else
-			aniId = ID_ANI_MARIO_PICKING_LEFT;
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_PICKING_IDLE_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_PICKING_IDLE_LEFT;
+		}
 	}
-	else
+	else //  another movement
 	{
 		if (vx > 0)
 		{
@@ -325,7 +394,7 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 
 	DebugOutTitle(L"Coins: %d", coin);
 }

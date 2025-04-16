@@ -16,6 +16,8 @@
 
 #include "SampleKeyEventHandler.h"
 #include "Block.h"
+#include "RedKoopa.h"
+#include "Sensor.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
@@ -127,6 +129,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int state = atoi(tokens[3].c_str());
 		obj = new GreenKoopa(x, y, state);
+		break;
+	}
+	case OBJECT_TYPE_RED_KOOPAS:
+	{
+		int state = atoi(tokens[3].c_str());
+		obj = new RedKoopa(x, y, state);
+		Sensor* sensor = new Sensor(dynamic_cast<CEnemy*>(obj));
+		objects.push_back(sensor);
 		break;
 	}
 	case OBJECT_TYPE_BLOCK:

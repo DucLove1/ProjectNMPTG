@@ -9,7 +9,7 @@
 #include "Portal.h"
 #include "CQuestionBrick.h"
 #include "Breakable.h"
-
+#include "Koopa.h"
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

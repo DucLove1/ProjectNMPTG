@@ -1,14 +1,9 @@
-#include "GreenKoopa.h"
+#include "RedKoopa.h"
 
-void GreenKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void RedKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vx += ax * dt;
-	if (!onGround)
-	{
-		vy += ay * dt;
-	}
-	else
-		vy = 0;
+	vy += ay * dt;
 	switch (state)
 	{
 	case HAS_WING:
@@ -28,15 +23,11 @@ void GreenKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
-void GreenKoopa::UpdateStateHasWing()
+void RedKoopa::UpdateStateHasWing()
 {
-	if (this->onGround)
-	{
-		vy = -KOOPA_JUMP_FORCE;
-	}
 }
 
-void GreenKoopa::UpdateStateHasNoWing()
+void RedKoopa::UpdateStateHasNoWing()
 {
 
 }

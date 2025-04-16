@@ -486,7 +486,9 @@ void CMario::SetState(int state)
 			vx = 0.0f;
 			ax = 0.0f;
 		}
+
 		break;
+
 
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_DEFLECT_SPEED;

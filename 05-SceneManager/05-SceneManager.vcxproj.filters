@@ -28,6 +28,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="RedKoopa.cpp" />
     <ClCompile Include="Sensor.cpp" />
+    <ClCompile Include="Venus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="RedKoopa.h" />
     <ClInclude Include="Sensor.h" />
+    <ClInclude Include="Venus.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

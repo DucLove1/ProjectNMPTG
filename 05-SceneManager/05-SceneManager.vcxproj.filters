@@ -26,6 +26,7 @@
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="GreenKoopa.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="RedKoopa.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="Venus.cpp" />
@@ -61,6 +62,7 @@
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="GreenKoopa.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Leaf.h" />
     <ClInclude Include="RedKoopa.h" />
     <ClInclude Include="Sensor.h" />
     <ClInclude Include="Venus.h" />

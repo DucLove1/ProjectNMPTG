@@ -21,3 +21,4 @@ height	240
 30	textures\stuffs.png
 40	textures\misc2.png
 50	textures\enemies_2.png
+60	textures\marioWorldMap.png

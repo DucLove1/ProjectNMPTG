@@ -52,9 +52,11 @@ void CQuestionBrick::GotHit()
 	{
 		timeCanHit--;
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-		CGoomba* goomba = new CGoomba(x, y - 16);
-		scene->AddObject(goomba);
-		cdHit = 1000;
+		//CGoomba* goomba = new CGoomba(x, y - 16);
+		//scene->AddObject(goomba);
+		CLeaf* leaf = new CLeaf(x, y-BRICK_BBOX_HEIGHT);
+		scene->AddObject(leaf);
+		cdHit = CD_GOT_HIT;
 	}
 }
 
@@ -85,7 +87,7 @@ void CQuestionBrick::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CQuestionBrick::GetBoundingBox( float &l, float &t, float &r, float &b) {

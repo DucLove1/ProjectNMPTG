@@ -8,6 +8,7 @@
 #define MUSHROOM_ITEM 3
 #define LEAF_ITEM 4
 
+#define CD_GOT_HIT 50
 
 class CQuestionBrick : public CBreakable
 {

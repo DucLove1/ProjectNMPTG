@@ -160,6 +160,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="GreenKoopa.cpp" />
     <ClCompile Include="Koopa.cpp" />
+    <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Pipe.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="GreenKoopa.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
+    <ClInclude Include="Leaf.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Platform.h" />

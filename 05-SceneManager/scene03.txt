@@ -7,6 +7,7 @@ goomba.txt
 cloud.txt
 pipe.txt
 questionbrick.txt
+leaf.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -68,6 +69,9 @@ questionbrick.txt
 
 #QuestionBlock
 20	180	120	1	5
+
+#Goomba test
+2	180	100
 
 #Portal
 50	300	110	316	140	2

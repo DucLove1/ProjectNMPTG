@@ -34,59 +34,6 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
-//#define MARIO_STATE_PICKING_IDLE		700
-//#define MARIO_STATE_PICKING_RIGHT			701
-//#define MARIO_STATE_PICKING_LEFT			702
-//
-//#define MARIO_STATE_PICKING_JUMPING_RIGHT		703
-//#define MARIO_STATE_PICKING_JUMPING_LEFT		704
-//
-//#define MARIO_STATE_PICKING_RUNNING_RIGHT		705
-//#define MARIO_STATE_PICKING_RUNNING_LEFT		706
-
-//#pragma region ANIMATION_ID
-//
-//#define ID_ANI_MARIO_IDLE_RIGHT 400
-//#define ID_ANI_MARIO_IDLE_LEFT 401
-//
-//#define ID_ANI_MARIO_WALKING_RIGHT 500
-//#define ID_ANI_MARIO_WALKING_LEFT 501
-//
-//#define ID_ANI_MARIO_RUNNING_RIGHT 600
-//#define ID_ANI_MARIO_RUNNING_LEFT 601
-//
-//#define ID_ANI_MARIO_JUMP_WALK_RIGHT 700
-//#define ID_ANI_MARIO_JUMP_WALK_LEFT 701
-//
-//#define ID_ANI_MARIO_JUMP_RUN_RIGHT 800
-//#define ID_ANI_MARIO_JUMP_RUN_LEFT 801
-//
-//#define ID_ANI_MARIO_SIT_RIGHT 900
-//#define ID_ANI_MARIO_SIT_LEFT 901
-//
-//#define ID_ANI_MARIO_BRACE_RIGHT 1000
-//#define ID_ANI_MARIO_BRACE_LEFT 1001
-//
-//#define ID_ANI_MARIO_DIE 999
-//
-//// SMALL MARIO
-//#define ID_ANI_MARIO_SMALL_IDLE_RIGHT 1100
-//#define ID_ANI_MARIO_SMALL_IDLE_LEFT 1102
-//
-//#define ID_ANI_MARIO_SMALL_WALKING_RIGHT 1200
-//#define ID_ANI_MARIO_SMALL_WALKING_LEFT 1201
-//
-//#define ID_ANI_MARIO_SMALL_RUNNING_RIGHT 1300
-//#define ID_ANI_MARIO_SMALL_RUNNING_LEFT 1301
-//
-//#define ID_ANI_MARIO_SMALL_BRACE_RIGHT 1400
-//#define ID_ANI_MARIO_SMALL_BRACE_LEFT 1401
-//
-//#define ID_ANI_MARIO_SMALL_JUMP_WALK_RIGHT 1500
-//#define ID_ANI_MARIO_SMALL_JUMP_WALK_LEFT 1501
-//
-//#define ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT 1600
-//#define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
 
 #pragma endregion
 
@@ -126,7 +73,10 @@ class CMario : public CGameObject
 	BOOLEAN isPickUp;
 	int coin;
 
+	LPGAMEOBJECT item;
+
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
@@ -149,6 +99,8 @@ public:
 		isOnPlatform = false;
 		isPickUp = false;
 		coin = 0;
+
+		this->item = nullptr;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -162,7 +114,11 @@ public:
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable == 0); }
 
 	BOOLEAN IsPicking() { return isPickUp; }
+	int GetNx() { return nx; }
+
 	void SetPickUp(BOOLEAN pick) { isPickUp = pick; }
+	void PickingItem();
+	void ReleaseItem(CGameObject* item);
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);

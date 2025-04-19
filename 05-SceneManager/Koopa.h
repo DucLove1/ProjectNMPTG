@@ -65,5 +65,7 @@ public:
 	int IsCollidable() override { return state != KNOCK_OUT; }
 	void KnockedOut(CGameObject*);
 	bool IsAlive() { return state != KNOCK_OUT; }
-};
 
+	void ReleaseByPlayer(CMario* e);
+
+};

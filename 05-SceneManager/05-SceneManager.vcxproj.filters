@@ -1,73 +1,286 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Animations.cpp" />
-    <ClCompile Include="Brick.cpp" />
-    <ClCompile Include="Coin.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="debug.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Goomba.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mario.cpp" />
-    <ClCompile Include="Pipe.cpp" />
-    <ClCompile Include="Platform.cpp" />
-    <ClCompile Include="PlayScene.cpp" />
-    <ClCompile Include="Portal.cpp" />
-    <ClCompile Include="SampleKeyEventHandler.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="Sprites.cpp" />
-    <ClCompile Include="Textures.cpp" />
-    <ClCompile Include="Utils.cpp" />
-    <ClCompile Include="Breakable.cpp" />
-    <ClCompile Include="CQuestionBrick.cpp" />
-    <ClCompile Include="Koopa.cpp" />
-    <ClCompile Include="GreenKoopa.cpp" />
-    <ClCompile Include="Block.cpp" />
-    <ClCompile Include="Leaf.cpp" />
-    <ClCompile Include="RedKoopa.cpp" />
-    <ClCompile Include="Sensor.cpp" />
-    <ClCompile Include="Venus.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Animation.h" />
-    <ClInclude Include="AnimationFrame.h" />
-    <ClInclude Include="Animations.h" />
-    <ClInclude Include="AssetIDs.h" />
-    <ClInclude Include="Brick.h" />
-    <ClInclude Include="CEnemy.h" />
-    <ClInclude Include="Coin.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="debug.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Goomba.h" />
-    <ClInclude Include="KeyEventHandler.h" />
-    <ClInclude Include="Mario.h" />
-    <ClInclude Include="Pipe.h" />
-    <ClInclude Include="Platform.h" />
-    <ClInclude Include="PlayScene.h" />
-    <ClInclude Include="Portal.h" />
-    <ClInclude Include="SampleKeyEventHandler.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="Sprites.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Textures.h" />
-    <ClInclude Include="Utils.h" />
-    <ClInclude Include="Breakable.h" />
-    <ClInclude Include="CQuestionBrick.h" />
-    <ClInclude Include="Koopa.h" />
-    <ClInclude Include="GreenKoopa.h" />
-    <ClInclude Include="Block.h" />
-    <ClInclude Include="Leaf.h" />
-    <ClInclude Include="RedKoopa.h" />
-    <ClInclude Include="Sensor.h" />
-    <ClInclude Include="Venus.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
+	
+<!--<ItemGroup>
+	<ClCompile Include="Animation.cpp" />
+	<ClCompile Include="Animations.cpp" />
+	<ClCompile Include="Brick.cpp" />
+	<ClCompile Include="Coin.cpp" />
+	<ClCompile Include="Collision.cpp" />
+	<ClCompile Include="debug.cpp" />
+	<ClCompile Include="Game.cpp" />
+	<ClCompile Include="GameObject.cpp" />
+	<ClCompile Include="Goomba.cpp" />
+	<ClCompile Include="main.cpp" />
+	<ClCompile Include="Mario.cpp" />
+	<ClCompile Include="Pipe.cpp" />
+	<ClCompile Include="Platform.cpp" />
+	<ClCompile Include="PlayScene.cpp" />
+	<ClCompile Include="Portal.cpp" />
+	<ClCompile Include="SampleKeyEventHandler.cpp" />
+	<ClCompile Include="Sprite.cpp" />
+	<ClCompile Include="Sprites.cpp" />
+	<ClCompile Include="Textures.cpp" />
+	<ClCompile Include="Utils.cpp" />
+	<ClCompile Include="Breakable.cpp" />
+	<ClCompile Include="CQuestionBrick.cpp" />
+	<ClCompile Include="Koopa.cpp" />
+	<ClCompile Include="GreenKoopa.cpp" />
+	<ClCompile Include="Block.cpp" />
+	<ClCompile Include="Leaf.cpp" />
+	<ClCompile Include="RedKoopa.cpp" />
+	<ClCompile Include="Sensor.cpp" />
+	<ClCompile Include="Venus.cpp" />
+	<ClCompile Include="Mushroom.cpp" />
+</ItemGroup>
+<ItemGroup>
+	<ClInclude Include="Animation.h" />
+	<ClInclude Include="AnimationFrame.h" />
+	<ClInclude Include="Animations.h" />
+	<ClInclude Include="AssetIDs.h" />
+	<ClInclude Include="Brick.h" />
+	<ClInclude Include="CEnemy.h" />
+	<ClInclude Include="Coin.h" />
+	<ClInclude Include="Collision.h" />
+	<ClInclude Include="debug.h" />
+	<ClInclude Include="Game.h" />
+	<ClInclude Include="GameObject.h" />
+	<ClInclude Include="Goomba.h" />
+	<ClInclude Include="KeyEventHandler.h" />
+	<ClInclude Include="Mario.h" />
+	<ClInclude Include="Pipe.h" />
+	<ClInclude Include="Platform.h" />
+	<ClInclude Include="PlayScene.h" />
+	<ClInclude Include="Portal.h" />
+	<ClInclude Include="SampleKeyEventHandler.h" />
+	<ClInclude Include="Scene.h" />
+	<ClInclude Include="Sprite.h" />
+	<ClInclude Include="Sprites.h" />
+	<ClInclude Include="Texture.h" />
+	<ClInclude Include="Textures.h" />
+	<ClInclude Include="Utils.h" />
+	<ClInclude Include="Breakable.h" />
+	<ClInclude Include="CQuestionBrick.h" />
+	<ClInclude Include="Koopa.h" />
+	<ClInclude Include="GreenKoopa.h" />
+	<ClInclude Include="Block.h" />
+	<ClInclude Include="Leaf.h" />
+	<ClInclude Include="RedKoopa.h" />
+	<ClInclude Include="Sensor.h" />
+	<ClInclude Include="Venus.h" />
+	<ClInclude Include="Mushroom.h" />
+</ItemGroup>
+<ItemGroup>
+	<None Include="packages.config" />
+</ItemGroup>-->
+
+		<ItemGroup>
+			<ClCompile Include="Animation.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Animations.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Brick.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Coin.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Collision.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="debug.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Game.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="GameObject.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Goomba.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="main.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Mario.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Pipe.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Platform.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="PlayScene.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Portal.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="SampleKeyEventHandler.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Sprite.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Sprites.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Textures.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Utils.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Breakable.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="CQuestionBrick.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Koopa.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="GreenKoopa.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Block.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Leaf.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="RedKoopa.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Sensor.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Venus.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+			<ClCompile Include="Mushroom.cpp">
+				<Filter>Source Files</Filter>
+			</ClCompile>
+		</ItemGroup>
+
+		<ItemGroup>
+			<ClInclude Include="Animation.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="AnimationFrame.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Animations.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="AssetIDs.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Brick.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="CEnemy.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Coin.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Collision.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="debug.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Game.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="GameObject.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Goomba.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="KeyEventHandler.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Mario.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Pipe.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Platform.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="PlayScene.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Portal.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="SampleKeyEventHandler.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Scene.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Sprite.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Sprites.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Texture.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Textures.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Utils.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Breakable.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="CQuestionBrick.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Koopa.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="GreenKoopa.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Block.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Leaf.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="RedKoopa.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Sensor.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Venus.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+			<ClInclude Include="Mushroom.h">
+				<Filter>Header Files</Filter>
+			</ClInclude>
+		</ItemGroup>
+
+		<ItemGroup>
+			<None Include="packages.config">
+				<Filter>Resource Files</Filter>
+			</None>
+		</ItemGroup>
+
+
+
 </Project>

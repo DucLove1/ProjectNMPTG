@@ -1,4 +1,4 @@
-#include "Leaf.h"
+﻿#include "Leaf.h"
 #include "debug.h"
 
 void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

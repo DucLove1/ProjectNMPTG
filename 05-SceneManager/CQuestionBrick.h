@@ -33,7 +33,7 @@ public:
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
-	void GotHit();
+	void GotHit(LPCOLLISIONEVENT e);
 	int IsBlocking() { return 1; }
 
 	int GetTypeOfHolder() { return this->typeOfHolder; }

@@ -18,7 +18,7 @@ mushroom.txt
 # MARIO
 0	32	-10
 # BRICKS
-
+1	16	164
 1	16	180
 1	32	180
 1	48	180

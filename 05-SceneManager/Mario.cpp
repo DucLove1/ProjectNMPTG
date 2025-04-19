@@ -116,7 +116,8 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 {
 	Koopa* koopa = dynamic_cast<Koopa*>(e->obj);
 
-	if (isPickUp) return;
+	if (isPickUp)
+		if (item == koopa) return;
 
 	// jump on top >> kill Koopa and deflect a bit 
 	if (e->ny < 0)
@@ -126,20 +127,59 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 			koopa->KickedFromTop(this);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
+		DebugOut(L"Koopa, Mario hit by Koopa\n");
 	}
-	else 
-	{
-		if (this->GetState() == MARIO_STATE_RUNNING_LEFT
-			|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+	else if (e->ny >= 0) {
+
+		if (koopa->GetState() == Koopa::IN_SHELL_DOWN
+			|| koopa->GetState() == Koopa::IN_SHELL_UP)
 		{
-			untouchable = 1;
-			isPickUp = true;
-			this->item = koopa;
-			//koopa->WasPickedUp(this);
+
+			if (this->GetState() == MARIO_STATE_RUNNING_LEFT
+				|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+			{
+				untouchable = 1;
+				isPickUp = true;
+				this->item = koopa;
+				//koopa->WasPickedUp(this);
+			}
+			else {
+				float Mx, My, Kx, Ky;
+				this->GetPosition(Mx, My);
+				koopa->GetPosition(Kx, Ky);
+				if (Mx - Kx >= 0)
+					koopa->MoveInShell(-1);
+				else
+					koopa->MoveInShell(1);
+			}
+		}
+
+	}
+	else
+	{
+		if (koopa->GetState() == Koopa::IN_SHELL_DOWN
+			|| koopa->GetState() == Koopa::IN_SHELL_UP)
+		{
+
+			if (this->GetState() == MARIO_STATE_RUNNING_LEFT
+				|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+			{
+				untouchable = 1;
+				isPickUp = true;
+				this->item = koopa;
+				//koopa->WasPickedUp(this);
+			}
+			else
+			{
+				if (nx >= 0)
+					koopa->MoveInShell(-1);
+				else
+					koopa->MoveInShell(1);
+			}
 		}
 		else if (untouchable == 0 && !isPickUp)
 		{
-			if (koopa->GetState() != Koopa::KNOCK_OUT)
+			//if (koopa->GetState() != Koopa::KNOCK_OUT)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{
@@ -485,6 +525,7 @@ void CMario::SetState(int state)
 		{
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
+			isPickUp = false;
 			vx = 0; vy = 0.0f;
 			y += MARIO_SIT_HEIGHT_ADJUST;
 		}
@@ -582,6 +623,13 @@ void CMario::PickingItem() {
 		item->SetPosition(this->x + 16, this->y);
 	else
 		item->SetPosition(this->x - 16, this->y);
+
+	if (dynamic_cast<Koopa*>(item))
+	{
+		Koopa* koopa = dynamic_cast<Koopa*>(item);
+		if (koopa->IsTimeOut())
+			isPickUp = false;
+	}
 
 }
 void CMario::ReleaseItem(CGameObject* item) {

@@ -67,5 +67,6 @@ public:
 	bool IsAlive() { return state != KNOCK_OUT; }
 
 	void ReleaseByPlayer(CMario* e);
+	bool IsTimeOut() { return (GetTickCount64() - timerInShell >= TIME_OUT_OF_SHELL); }
 
 };

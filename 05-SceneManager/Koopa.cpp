@@ -277,3 +277,17 @@ void Koopa::SetStateKnockOut()
 	vx = 0.25f * nx;
 	timerKnockOut = GetTickCount64();
 }
+
+
+void Koopa::ReleaseByPlayer(CMario* player)
+{
+	//CMario* player = dynamic_cast<CMario*>(e->obj);
+	if (player == NULL) return;
+	int nx = player->GetNx();
+	if (this->state == IN_SHELL_DOWN) {
+		if(nx >= 0)
+			MoveInShell(1);
+		else
+			MoveInShell(-1);
+	}
+}

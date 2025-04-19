@@ -45,17 +45,29 @@ void CQuestionBrick::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	//}
 }
-void CQuestionBrick::GotHit()
+void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 {
+
 	if (timeCanHit <= 0) return;
 	if(cdHit <= 0) // can do 
 	{
 		timeCanHit--;
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-		//CGoomba* goomba = new CGoomba(x, y - 16);
-		//scene->AddObject(goomba);
-		CLeaf* leaf = new CLeaf(x, y-BRICK_BBOX_HEIGHT);
-		scene->AddObject(leaf);
+
+
+		float Mx, My, Ox, Oy;
+		this->GetPosition(Mx, My);
+		//if (dynamic_cast<CMario*>(e->obj) == NULL) return;
+		CMario* mario = (CMario*)e;
+		mario->GetPosition(Ox, Oy);
+		
+		float dir = Ox - Mx;
+
+		if (dir >= 0) nx = -1;
+		else nx = 1;
+		//CMushroom* mr = new CMushroom(x, y, nx);
+		CLeaf* mr = new CLeaf(x, y);
+		scene->AddObject(mr);
 		cdHit = CD_GOT_HIT;
 	}
 }

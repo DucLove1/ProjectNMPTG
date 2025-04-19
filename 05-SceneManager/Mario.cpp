@@ -4,6 +4,7 @@
 #include "Mario.h"
 #include "Game.h"
 
+#include "Koopa.h"
 #include "Goomba.h"
 #include "Coin.h"
 #include "Portal.h"
@@ -18,7 +19,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	if (isPickUp) {
+		DebugOut(L"PreCall");
+		PickingItem();
+	}
+	else {
+		if (item != nullptr) {
+			ReleaseItem(item);
+			item = nullptr;
+		}
+	}
+
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
+
 
 	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
@@ -52,6 +65,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
+	else if (dynamic_cast<Koopa*>(e->obj))
+		OnCollisionWithKoopa(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
@@ -60,6 +75,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBrick(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
 		OnCollisionWithLeaf(e);
+
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -96,6 +112,50 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
+{
+	Koopa* koopa = dynamic_cast<Koopa*>(e->obj);
+
+	if (isPickUp) return;
+
+	// jump on top >> kill Koopa and deflect a bit 
+	if (e->ny < 0)
+	{
+		if (koopa->GetState() != Koopa::KNOCK_OUT)
+		{
+			koopa->KickedFromTop(this);
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+	}
+	else 
+	{
+		if (this->GetState() == MARIO_STATE_RUNNING_LEFT
+			|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+		{
+			untouchable = 1;
+			isPickUp = true;
+			this->item = koopa;
+			//koopa->WasPickedUp(this);
+		}
+		else if (untouchable == 0 && !isPickUp)
+		{
+			if (koopa->GetState() != Koopa::KNOCK_OUT)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+	}
+}
+
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
@@ -107,33 +167,7 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 	CQuestionBrick* brick = dynamic_cast<CQuestionBrick*>(e->obj);
 	if (e->ny > 0) // collision with top of brick
 	{
-		//if (brick->GetTypeOfHolder() == COIN_ITEM)
-		//{
-		//	coin++;
-		//	brick->GotHit();
-		//}
-		//else if (brick->GetTypeOfHolder() == MUSHROOM_ITEM)
-		//{
-		//	if (level == MARIO_LEVEL_SMALL)
-		//	{
-		//		SetLevel(MARIO_LEVEL_BIG); 
-		//		brick->GotHit();
-		//	}
-		//}
-		//else if (brick->GetTypeOfHolder() == LEAF_ITEM)
-		//{
-		//	if (level == MARIO_LEVEL_SMALL)
-		//	{
-		//		SetLevel(MARIO_LEVEL_BIG);
-		//		brick->GotHit();
-		//	}
-		//	else if (level == MARIO_LEVEL_BIG)
-		//	{
-		//		SetLevel(MARIO_LEVEL_TAIL);
-		//		e->obj->Delete();
-		//	}
-		//}
-		brick->GotHit();
+		brick->GotHit((LPCOLLISIONEVENT)this);
 	}
 }
 void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
@@ -320,12 +354,12 @@ int CMario::GetAniIdBig()
 	{
 		if (abs(vx) > MARIO_WALKING_SPEED)
 		{
-			if(nx >= 0)
+			if (nx >= 0)
 				aniId = ID_ANI_MARIO_PICKING_RUN_RIGHT;
 			else
 				aniId = ID_ANI_MARIO_PICKING_RUN_LEFT;
 		}
-		else if(abs(vx) > 0)
+		else if (abs(vx) > 0)
 		{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_PICKING_WALK_RIGHT;
@@ -539,3 +573,21 @@ void CMario::SetLevel(int l)
 	level = l;
 }
 
+void CMario::PickingItem() {
+	if (this->item == nullptr) return;
+
+	item->SetSpeed(0, 0);
+
+	if (nx >= 0)
+		item->SetPosition(this->x + 16, this->y);
+	else
+		item->SetPosition(this->x - 16, this->y);
+
+}
+void CMario::ReleaseItem(CGameObject* item) {
+	Koopa* koopa = dynamic_cast<Koopa*> (item);
+	if (koopa == nullptr) return;
+
+	koopa->ReleaseByPlayer(this);
+
+}

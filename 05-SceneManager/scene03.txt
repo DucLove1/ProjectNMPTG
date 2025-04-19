@@ -8,10 +8,11 @@ cloud.txt
 pipe.txt
 questionbrick.txt
 leaf.txt
+mushroom.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 9 = Pipe, 20 = QuestionBrick
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 9 = Pipe, 20 = QuestionBrick, 22 = Mushroom
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO

@@ -20,6 +20,7 @@
 #include "Block.h"
 #include "RedKoopa.h"
 #include "Sensor.h"
+#include "Venus.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -140,6 +141,27 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		Sensor* sensor = new Sensor(dynamic_cast<CEnemy*>(obj));
 		objects.push_back(sensor);
 		break;
+	}
+	case OBJECT_TYPE_RED_VENUS:
+	{
+		int type = atoi(tokens[3].c_str());
+		obj = new Venus(x, y, type);
+		// pipe
+		float cell_width = (float)atof(tokens[4].c_str());
+		float cell_height = (float)atof(tokens[5].c_str());
+		int length = atoi(tokens[6].c_str());
+		int sprite_begin = atoi(tokens[7].c_str());
+		int sprite_middle = atoi(tokens[8].c_str());
+		int sprite_end = atoi(tokens[9].c_str());
+		CPipe* pipe = new CPipe(
+			x, y - 8,
+			cell_width, cell_height, length,
+			sprite_begin, sprite_middle, sprite_end);
+		objects.push_back(obj);
+		objects.push_back(pipe);
+		return;
+		break;
+	
 	}
 	case OBJECT_TYPE_BLOCK:
 	{

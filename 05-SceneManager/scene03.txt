@@ -9,6 +9,8 @@ pipe.txt
 questionbrick.txt
 leaf.txt
 mushroom.txt
+red_venus.txt
+bullet.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -69,10 +71,13 @@ mushroom.txt
 9	224	100	5	5	5	81000	82000	83000
 
 #QuestionBlock
-20	180	120	1	5
+20	180	140	1	5
+20	160	100	1	5
 
 #Goomba test
 2	180	100
 
 #Portal
 50	300	110	316	140	2
+#Red venus
+13	50	140	0	32	16	5	81000	82000	83000

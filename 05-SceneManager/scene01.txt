@@ -8,6 +8,8 @@ goomba.txt
 cloud.txt
 green_koopa.txt
 blocks.txt
+red_venus.txt
+pipe.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type

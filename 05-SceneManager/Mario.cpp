@@ -129,57 +129,42 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		}
 		DebugOut(L"Koopa, Mario hit by Koopa\n");
 	}
-	else if (e->ny >= 0) {
+	else if (e->ny > 0) {
 
-		if (koopa->GetState() == Koopa::IN_SHELL_DOWN
-			|| koopa->GetState() == Koopa::IN_SHELL_UP)
+		float Kvx, Kvy;
+		koopa->GetSpeed(Kvx, Kvy);
+		if (abs(Kvx) <= 0)
 		{
-
-			if (this->GetState() == MARIO_STATE_RUNNING_LEFT
-				|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+			// koopa is in shell
+			if (koopa->GetState() == Koopa::IN_SHELL_DOWN
+				|| koopa->GetState() == Koopa::IN_SHELL_UP)
 			{
-				untouchable = 1;
-				isPickUp = true;
-				this->item = koopa;
-				//koopa->WasPickedUp(this);
-			}
-			else {
-				float Mx, My, Kx, Ky;
-				this->GetPosition(Mx, My);
-				koopa->GetPosition(Kx, Ky);
-				if (Mx - Kx >= 0)
-					koopa->MoveInShell(-1);
+				//These's make game knows M will Kick or hold
+				if (this->GetState() == MARIO_STATE_RUNNING_LEFT
+					|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+				{
+					untouchable = 1;
+					isPickUp = true;
+					this->item = koopa;
+					//koopa->WasPickedUp(this);
+				}
+				// Koopa git kicked by Mario
 				else
-					koopa->MoveInShell(1);
+				{
+					float Mx, My, Kx, Ky;
+					this->GetPosition(Mx, My);
+					koopa->GetPosition(Kx, Ky);
+					if (Mx - Kx >= 0)
+						koopa->MoveInShell(1);
+					else
+						koopa->MoveInShell(-1);
+				}
 			}
 		}
-
-	}
-	else
-	{
-		if (koopa->GetState() == Koopa::IN_SHELL_DOWN
-			|| koopa->GetState() == Koopa::IN_SHELL_UP)
+		// moving so 100% deal damege
+		else
 		{
-
-			if (this->GetState() == MARIO_STATE_RUNNING_LEFT
-				|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
-			{
-				untouchable = 1;
-				isPickUp = true;
-				this->item = koopa;
-				//koopa->WasPickedUp(this);
-			}
-			else
-			{
-				if (nx >= 0)
-					koopa->MoveInShell(-1);
-				else
-					koopa->MoveInShell(1);
-			}
-		}
-		else if (untouchable == 0 && !isPickUp)
-		{
-			//if (koopa->GetState() != Koopa::KNOCK_OUT)
+			if (koopa->GetState() != Koopa::KNOCK_OUT)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{
@@ -190,6 +175,57 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				{
 					DebugOut(L">>> Mario DIE >>> \n");
 					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+
+	}
+	else // colli with return value is x > 0 or x < 0
+	{
+		float Kvx, Kvy;
+		koopa->GetSpeed(Kvx, Kvy);
+		if (abs(Kvx) <= 0)
+		{
+
+			if (koopa->GetState() == Koopa::IN_SHELL_DOWN
+				|| koopa->GetState() == Koopa::IN_SHELL_UP)
+			{
+
+				if (this->GetState() == MARIO_STATE_RUNNING_LEFT
+					|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+				{
+					untouchable = 1;
+					isPickUp = true;
+					this->item = koopa;
+					//koopa->WasPickedUp(this);
+				}
+
+				else {
+					if (nx >= 0)
+						koopa->MoveInShell(1);
+					else
+						koopa->MoveInShell(-1);
+				}
+
+			}
+
+		}
+		else
+		{
+			if (untouchable == 0 && !isPickUp)
+			{
+				if (koopa->GetState() != Koopa::KNOCK_OUT)
+				{
+					if (level > MARIO_LEVEL_SMALL)
+					{
+						level = MARIO_LEVEL_SMALL;
+						StartUntouchable();
+					}
+					else
+					{
+						DebugOut(L">>> Mario DIE >>> \n");
+						SetState(MARIO_STATE_DIE);
+					}
 				}
 			}
 		}

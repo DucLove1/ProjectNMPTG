@@ -136,7 +136,6 @@ void Venus::UpdateStateHide(DWORD dt)
 		// mario is close to Venus, Venus doesn't appear
 		float marioX, marioY;
 		mario->GetPosition(marioX, marioY);
-		DebugOut(L"distance = %f\n", abs(marioX - this->x));
 		if (abs(marioX - this->x) <= DISTANCE_TO_APPEAR)
 			return;
 		this->y = maxY;

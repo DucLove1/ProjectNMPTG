@@ -21,6 +21,7 @@
 #include "RedKoopa.h"
 #include "Sensor.h"
 #include "Venus.h"
+#include "Ground.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -125,7 +126,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
+	case OBJECT_TYPE_GOOMBA:
+	{
+		int type = atoi(tokens[3].c_str());
+		int state = atoi(tokens[4].c_str());
+		obj = new CGoomba(x, y, type, state); break;
+	}
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_GREEN_KOOPAS:
@@ -186,6 +192,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			sprite_begin, sprite_middle, sprite_end);
 		break;
 
+	}
+	case OBJECT_TYPE_GROUND:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		obj = new Ground(x, y, width, height);
+		break;
 	}
 	case OBJECT_TYPE_QUESTION_BRICK:
 	{

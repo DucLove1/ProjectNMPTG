@@ -14,6 +14,56 @@
 #include "Koopa.h"
 #include "Collision.h"
 
+
+
+//define for Id map
+int mapAniId[][24] = {
+		{
+			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT,
+			ID_ANI_MARIO_SMALL_WALKING_RIGHT, ID_ANI_MARIO_SMALL_WALKING_LEFT,
+			ID_ANI_MARIO_SMALL_RUNNING_RIGHT, ID_ANI_MARIO_SMALL_RUNNING_LEFT,
+			ID_ANI_MARIO_SMALL_JUMP_WALK_RIGHT, ID_ANI_MARIO_SMALL_JUMP_WALK_LEFT,
+			ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT, ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT,
+			ID_ANI_MARIO_SMALL_BRACE_RIGHT, ID_ANI_MARIO_SMALL_BRACE_LEFT,
+			ID_ANI_MARIO_SMALL_PICKING_IDLE_RIGHT, ID_ANI_MARIO_SMALL_PICKING_IDLE_LEFT,
+			ID_ANI_MARIO_SMALL_PICKING_WALK_RIGHT, ID_ANI_MARIO_SMALL_PICKING_WALK_LEFT,
+			ID_ANI_MARIO_SMALL_PICKING_RUN_RIGHT, ID_ANI_MARIO_SMALL_PICKING_RUN_LEFT,
+			ID_ANI_MARIO_SMALL_PICKING_JUMP_RIGHT, ID_ANI_MARIO_SMALL_PICKING_JUMP_LEFT,
+			ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_RIGHT, ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_LEFT,
+			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT,
+		},
+		{
+			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,
+			ID_ANI_MARIO_WALKING_RIGHT, ID_ANI_MARIO_WALKING_LEFT,
+			ID_ANI_MARIO_RUNNING_RIGHT, ID_ANI_MARIO_RUNNING_LEFT,
+			ID_ANI_MARIO_JUMP_WALK_RIGHT, ID_ANI_MARIO_JUMP_WALK_LEFT,
+			ID_ANI_MARIO_JUMP_RUN_RIGHT, ID_ANI_MARIO_JUMP_RUN_LEFT,
+			ID_ANI_MARIO_BRACE_RIGHT, ID_ANI_MARIO_BRACE_LEFT,
+			ID_ANI_MARIO_PICKING_IDLE_RIGHT, ID_ANI_MARIO_PICKING_IDLE_LEFT,
+			ID_ANI_MARIO_PICKING_WALK_RIGHT, ID_ANI_MARIO_PICKING_WALK_LEFT,
+			ID_ANI_MARIO_PICKING_RUN_RIGHT, ID_ANI_MARIO_PICKING_RUN_LEFT,
+			ID_ANI_MARIO_PICKING_JUMP_RIGHT, ID_ANI_MARIO_PICKING_JUMP_LEFT,
+			ID_ANI_MARIO_PICKING_RUN_JUMP_RIGHT, ID_ANI_MARIO_PICKING_RUN_JUMP_LEFT,
+			ID_ANI_MARIO_SIT_RIGHT, ID_ANI_MARIO_SIT_LEFT
+		},
+		{
+			ID_ANI_MARIO_TAIL_IDLE_RIGHT, ID_ANI_MARIO_TAIL_IDLE_LEFT,
+			ID_ANI_MARIO_TAIL_WALKING_RIGHT, ID_ANI_MARIO_TAIL_WALKING_LEFT,
+			ID_ANI_MARIO_TAIL_RUNNING_RIGHT, ID_ANI_MARIO_TAIL_RUNNING_LEFT,
+			ID_ANI_MARIO_TAIL_JUMP_WALK_RIGHT, ID_ANI_MARIO_TAIL_JUMP_WALK_LEFT,
+			ID_ANI_MARIO_TAIL_JUMP_RUN_RIGHT, ID_ANI_MARIO_TAIL_JUMP_RUN_LEFT,
+			ID_ANI_MARIO_TAIL_BRACE_RIGHT, ID_ANI_MARIO_TAIL_BRACE_LEFT,
+			ID_ANI_MARIO_TAIL_PICKING_IDLE_RIGHT, ID_ANI_MARIO_TAIL_PICKING_IDLE_LEFT,
+			ID_ANI_MARIO_TAIL_PICKING_WALK_RIGHT, ID_ANI_MARIO_TAIL_PICKING_WALK_LEFT,
+			ID_ANI_MARIO_TAIL_PICKING_RUN_RIGHT, ID_ANI_MARIO_TAIL_PICKING_RUN_LEFT,
+			ID_ANI_MARIO_TAIL_PICKING_JUMP_RIGHT, ID_ANI_MARIO_TAIL_PICKING_JUMP_LEFT,
+			ID_ANI_MARIO_TAIL_PICKING_RUN_JUMP_RIGHT, ID_ANI_MARIO_TAIL_PICKING_RUN_JUMP_LEFT,
+			ID_ANI_MARIO_TAIL_SIT_RIGHT, ID_ANI_MARIO_TAIL_SIT_LEFT
+
+		}
+};
+
+
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
@@ -41,6 +91,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+	int x = mapAniId[0][0];
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -254,11 +305,11 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 		SetLevel(MARIO_LEVEL_BIG);
 		e->obj->Delete();
 	}
-	/*else if (level == MARIO_LEVEL_BIG)
+	else if (level == MARIO_LEVEL_BIG)
 	{
 		SetLevel(MARIO_LEVEL_TAIL);
 		e->obj->Delete();
-	}*/
+	}
 	DebugOut(L"Leaf, got it by mario\n");
 }
 
@@ -268,120 +319,15 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
 }
 
-//
-// Get animation ID for small Mario
-//
-int CMario::GetAniIdSmall()
+int CMario::ConvertAniTypeToAniId(int animation_type)
 {
-	int aniId = -1;
-
-	if (!isOnPlatform)
-	{
-		if (isPickUp) // jump and holding item
-		{
-			if (abs(ax) == MARIO_ACCEL_RUN_X)
-			{
-				if (nx >= 0)
-					aniId = ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_RIGHT;
-				else
-					aniId = ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_LEFT;
-			}
-			else
-			{
-				if (nx >= 0)
-					aniId = ID_ANI_MARIO_SMALL_PICKING_JUMP_RIGHT;
-				else
-					aniId = ID_ANI_MARIO_SMALL_PICKING_JUMP_LEFT;
-			}
-		}
-		else if (abs(ax) == MARIO_ACCEL_RUN_X)
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT;
-		}
-		else
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_JUMP_WALK_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SMALL_JUMP_WALK_LEFT;
-		}
-	}
-	else if (isSitting)
-	{
-		if (nx > 0)
-			aniId = ID_ANI_MARIO_SIT_RIGHT;
-		else
-			aniId = ID_ANI_MARIO_SIT_LEFT;
-	}
-	else if (isPickUp) // this case is Pick the Koopa
-	{
-		if (abs(vx) > MARIO_WALKING_SPEED)
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_PICKING_RUN_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SMALL_PICKING_RUN_LEFT;
-		}
-		else if (abs(vx) > 0)
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_PICKING_WALK_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SMALL_PICKING_WALK_LEFT;
-		}
-		else
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_PICKING_IDLE_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SMALL_PICKING_IDLE_LEFT;
-		}
-	}
-	else {
-
-		if (vx > 0)
-		{
-			if (ax < 0 && state != MARIO_STATE_IDLE)
-				aniId = ID_ANI_MARIO_SMALL_BRACE_RIGHT;
-			else if (ax < 0 && state == MARIO_STATE_IDLE)
-				aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
-			else if (ax == MARIO_ACCEL_RUN_X)
-				aniId = ID_ANI_MARIO_SMALL_RUNNING_RIGHT;
-			else if (ax == MARIO_ACCEL_WALK_X)
-				aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
-		}
-		else if (vx < 0)
-		{
-			if (ax > 0 && state != MARIO_STATE_IDLE)
-				aniId = ID_ANI_MARIO_SMALL_BRACE_LEFT;
-			else if (ax > 0 && state == MARIO_STATE_IDLE)
-				aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
-			else if (ax == -MARIO_ACCEL_RUN_X)
-				aniId = ID_ANI_MARIO_SMALL_RUNNING_LEFT;
-			else if (ax == -MARIO_ACCEL_WALK_X)
-				aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
-		}
-		else
-		{
-			if (nx > 0) aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
-			else aniId = ID_ANI_MARIO_SMALL_IDLE_LEFT;
-		}
-	}
-
-
-	if (aniId == -1) aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
-
-	return aniId;
+	return mapAniId[this->level - 1][animation_type];
 }
-
 
 //
 // Get animdation ID for big Mario
 //
-int CMario::GetAniIdBig()
+int CMario::GetAniId()
 {
 	int aniId = -1;
 
@@ -392,62 +338,62 @@ int CMario::GetAniIdBig()
 			if (abs(ax) == MARIO_ACCEL_RUN_X)
 			{
 				if (nx >= 0)
-					aniId = ID_ANI_MARIO_PICKING_RUN_JUMP_RIGHT;
+					aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_RUN_JUMP_RIGHT);
 				else
-					aniId = ID_ANI_MARIO_PICKING_RUN_JUMP_LEFT;
+					aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_RUN_JUMP_LEFT);
 			}
 			else
 			{
 				if (nx >= 0)
-					aniId = ID_ANI_MARIO_PICKING_JUMP_RIGHT;
+					aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_JUMP_RIGHT);
 				else
-					aniId = ID_ANI_MARIO_PICKING_JUMP_LEFT;
+					aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_JUMP_LEFT);
 			}
 		}
 		else if (abs(ax) == MARIO_ACCEL_RUN_X)
 		{
 			if (nx >= 0)
-				aniId = ID_ANI_MARIO_JUMP_RUN_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_JUMP_RUN_RIGHT);
 			else
-				aniId = ID_ANI_MARIO_JUMP_RUN_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_JUMP_RUN_LEFT);
 		}
 		else
 		{
 			if (nx >= 0)
-				aniId = ID_ANI_MARIO_JUMP_WALK_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_JUMP_WALK_RIGHT);
 			else
-				aniId = ID_ANI_MARIO_JUMP_WALK_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_JUMP_WALK_LEFT);
 		}
 	}
 	else if (isSitting) // this case is sitting
 	{
 		if (nx >= 0)
-			aniId = ID_ANI_MARIO_SIT_RIGHT;
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_RIGHT);
 		else
-			aniId = ID_ANI_MARIO_SIT_LEFT;
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_LEFT);
 	}
 	else if (isPickUp) // this case is Pick the Koopa
 	{
 		if (abs(vx) > MARIO_WALKING_SPEED)
 		{
 			if (nx >= 0)
-				aniId = ID_ANI_MARIO_PICKING_RUN_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_RUN_RIGHT);
 			else
-				aniId = ID_ANI_MARIO_PICKING_RUN_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_RUN_LEFT);
 		}
 		else if (abs(vx) > 0)
 		{
 			if (nx >= 0)
-				aniId = ID_ANI_MARIO_PICKING_WALK_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_WALK_RIGHT);
 			else
-				aniId = ID_ANI_MARIO_PICKING_WALK_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_WALK_LEFT);
 		}
 		else
 		{
 			if (nx >= 0)
-				aniId = ID_ANI_MARIO_PICKING_IDLE_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_IDLE_RIGHT);
 			else
-				aniId = ID_ANI_MARIO_PICKING_IDLE_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_IDLE_LEFT);
 		}
 	}
 	else //  another movement
@@ -455,41 +401,42 @@ int CMario::GetAniIdBig()
 		if (vx > 0)
 		{
 			if (ax < 0 && state != MARIO_STATE_IDLE)
-				aniId = ID_ANI_MARIO_BRACE_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_BRACE_RIGHT);
 			else if (ax < 0 && state == MARIO_STATE_IDLE)
-				aniId = ID_ANI_MARIO_WALKING_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_WALKING_RIGHT);
 			else if (ax == MARIO_ACCEL_RUN_X)
-				aniId = ID_ANI_MARIO_RUNNING_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_RUNNING_RIGHT);
 			else if (ax == MARIO_ACCEL_WALK_X)
-				aniId = ID_ANI_MARIO_WALKING_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_WALKING_RIGHT);
 		}
 		else if (vx < 0)
 		{
 			if (ax > 0 && state != MARIO_STATE_IDLE)
-				aniId = ID_ANI_MARIO_BRACE_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_BRACE_LEFT);
 			else if (ax > 0 && state == MARIO_STATE_IDLE)
-				aniId = ID_ANI_MARIO_WALKING_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_WALKING_LEFT);
 			else if (ax == -MARIO_ACCEL_RUN_X)
-				aniId = ID_ANI_MARIO_RUNNING_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_RUNNING_LEFT);
 			else if (ax == -MARIO_ACCEL_WALK_X)
-				aniId = ID_ANI_MARIO_WALKING_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_WALKING_LEFT);
 		}
 		else
 		{
 			if (nx >= 0)
-				aniId = ID_ANI_MARIO_IDLE_RIGHT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_IDLE_RIGHT);
 			else
-				aniId = ID_ANI_MARIO_IDLE_LEFT;
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_IDLE_LEFT);
 		}
 
 
 	}
 
 
-	if (aniId == -1) aniId = ID_ANI_MARIO_IDLE_RIGHT;
+	if (aniId == -1) aniId = ConvertAniTypeToAniId(ANI_MARIO_IDLE_RIGHT);
 
 	return aniId;
 }
+
 
 void CMario::Render()
 {
@@ -498,11 +445,8 @@ void CMario::Render()
 
 	if (state == MARIO_STATE_DIE)
 		aniId = ID_ANI_MARIO_DIE;
-	else if (level == MARIO_LEVEL_BIG)
-		aniId = GetAniIdBig();
-	else if (level == MARIO_LEVEL_SMALL)
-		aniId = GetAniIdSmall();
-
+	else
+		aniId = GetAniId();
 	animations->Get(aniId)->Render(x, y);
 
 	RenderBoundingBox();
@@ -614,7 +558,7 @@ void CMario::SetState(int state)
 
 void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (level == MARIO_LEVEL_BIG)
+	if (level == MARIO_LEVEL_BIG || level == MARIO_LEVEL_TAIL)
 	{
 		if (isSitting)
 		{
@@ -648,6 +592,17 @@ void CMario::SetLevel(int l)
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 	}
 	level = l;
+}
+void CMario::DecreaseLevel()
+{
+	if(level == MARIO_LEVEL_SMALL) {
+		SetState(MARIO_STATE_DIE);
+	}
+	else
+	{
+		level -= 1;
+		StartUntouchable();
+	}
 }
 
 void CMario::PickingItem() {

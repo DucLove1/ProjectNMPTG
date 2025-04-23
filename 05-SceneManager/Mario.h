@@ -58,6 +58,36 @@
 
 
 #define MARIO_UNTOUCHABLE_TIME 2500
+#define MARIO_RECOVERY_TIME 2500
+
+#pragma region MARIO_ANI_TYPE
+
+#define  ANI_MARIO_IDLE_RIGHT 0
+#define  ANI_MARIO_IDLE_LEFT 1
+#define  ANI_MARIO_WALKING_RIGHT 2
+#define  ANI_MARIO_WALKING_LEFT 3
+#define  ANI_MARIO_RUNNING_RIGHT 4
+#define  ANI_MARIO_RUNNING_LEFT 5
+#define  ANI_MARIO_JUMP_WALK_RIGHT 6
+#define  ANI_MARIO_JUMP_WALK_LEFT 7
+#define  ANI_MARIO_JUMP_RUN_RIGHT 8 
+#define  ANI_MARIO_JUMP_RUN_LEFT 9
+#define  ANI_MARIO_BRACE_RIGHT 10
+#define  ANI_MARIO_BRACE_LEFT 11
+#define  ANI_MARIO_PICKING_IDLE_RIGHT 12
+#define  ANI_MARIO_PICKING_IDLE_LEFT 13
+#define  ANI_MARIO_PICKING_WALK_RIGHT 14
+#define  ANI_MARIO_PICKING_WALK_LEFT 15
+#define  ANI_MARIO_PICKING_RUN_RIGHT 16
+#define  ANI_MARIO_PICKING_RUN_LEFT 17
+#define  ANI_MARIO_PICKING_JUMP_RIGHT 18
+#define  ANI_MARIO_PICKING_JUMP_LEFT 19
+#define  ANI_MARIO_PICKING_RUN_JUMP_RIGHT 20
+#define  ANI_MARIO_PICKING_RUN_JUMP_LEFT 21
+#define  ANI_MARIO_SIT_RIGHT 22
+#define  ANI_MARIO_SIT_LEFT 23
+
+#pragma endregion
 
 class CMario : public CGameObject
 {
@@ -68,9 +98,12 @@ class CMario : public CGameObject
 
 	int level;
 	int untouchable;
+
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	BOOLEAN isPickUp;
+	int isRecovering;
+
 	int coin;
 
 	LPGAMEOBJECT item;
@@ -84,6 +117,10 @@ class CMario : public CGameObject
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
+	int GetAniIdTail();
+
+	int ConvertAniTypeToAniId(int animation_type);
+	int GetAniId();
 
 public:
 	CMario(float x, float y) : CGameObject(x, y)
@@ -93,7 +130,7 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
-		level = MARIO_LEVEL_BIG;
+		level = MARIO_LEVEL_TAIL;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
@@ -124,6 +161,8 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
 	void SetLevel(int l);
+	void DecreaseLevel();
+
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);

@@ -105,6 +105,7 @@
     <ClCompile Include="Venus.cpp" />
     <ClCompile Include="VenusBullet.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="SpawnEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Venus.h" />
     <ClInclude Include="VenusBullet.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="SpawnEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -22,6 +22,7 @@
 #include "Sensor.h"
 #include "Venus.h"
 #include "Ground.h"
+#include "SpawnEnemy.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -126,11 +127,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA:
+	case OBJECT_TYPE_BROWN_GOOMBA:
 	{
-		int type = atoi(tokens[3].c_str());
-		int state = atoi(tokens[4].c_str());
-		obj = new CGoomba(x, y, type, state); break;
+		int state = atoi(tokens[3].c_str());
+		obj = new CGoomba(x, y, GOOMBA, state); break;
+	}
+	case OBJECT_TYPE_RED_GOOMBA:
+	{
+		int state = atoi(tokens[3].c_str());
+		obj = new CGoomba(x, y, RED_GOOMBA, state); break;
 	}
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
@@ -168,6 +173,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 		break;
 	
+	}
+	case OBJECT_TYPE_SPAWNER:
+	{
+		float posSpawnX = (float)atof(tokens[3].c_str());
+		float posSpawnY = (float)atof(tokens[4].c_str());
+		int sizeTokens = tokens.size();
+		vector<pair<int, int>> enemies;
+		for (int i = 5; i < sizeTokens; i += 2)
+		{
+			pair<int, int> enemy;
+			enemy.first = atoi(tokens[i].c_str());
+			enemy.second = atoi(tokens[i + 1].c_str());
+			enemies.emplace_back(enemy);
+		}
+		obj = new SpawnEnemy(x, y, posSpawnX, posSpawnY, enemies);
+		break;
 	}
 	case OBJECT_TYPE_BLOCK:
 	{

@@ -90,7 +90,6 @@ void Venus::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	case HIDE:
 		UpdateStateHide(dt);
 		break;
-
 	}
 }
 void Venus::UpdateStateAppear(DWORD dt)

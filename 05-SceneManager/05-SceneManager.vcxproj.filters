@@ -103,6 +103,9 @@
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Venus.cpp" />
+    <ClCompile Include="VenusBullet.cpp" />
+    <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="SpawnEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -140,6 +143,9 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Venus.h" />
+    <ClInclude Include="VenusBullet.h" />
+    <ClInclude Include="Ground.h" />
+    <ClInclude Include="SpawnEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

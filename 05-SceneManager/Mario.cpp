@@ -13,7 +13,7 @@
 #include "Leaf.h"
 #include "Koopa.h"
 #include "Collision.h"
-
+#include "SpawnEnemy.h"
 
 
 //define for Id map
@@ -65,7 +65,6 @@ int mapAniId[][26] = {
 
 		}
 };
-
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -142,7 +141,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBrick(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
 		OnCollisionWithLeaf(e);
-
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)

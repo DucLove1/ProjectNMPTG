@@ -37,3 +37,10 @@ void CAnimation::Render(float x, float y)
 	frames[currentFrame]->GetSprite()->Draw(x, y);
 }
 
+void CAnimation::SetAllFrameTime(DWORD time)
+{
+	for (int i = 0; i < frames.size(); i++)
+	{
+		frames[i]->SetTime(time);
+	}
+}

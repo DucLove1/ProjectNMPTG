@@ -3,14 +3,15 @@
 
 #include "Animation.h"
 #include "Animations.h"
+#include "AssetIDs.h"
 
 #include "debug.h"
 
-#define MARIO_WALKING_SPEED		0.1f
+#define MARIO_WALKING_SPEED		0.15f
 #define MARIO_RUNNING_SPEED		0.2f
 
-#define MARIO_ACCEL_WALK_X	0.0005f
-#define MARIO_ACCEL_RUN_X	0.0007f
+#define MARIO_ACCEL_WALK_X	0.0002f
+#define MARIO_ACCEL_RUN_X	0.0003f
 
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
@@ -33,50 +34,8 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
+#define MARIO_STATE_POWERUP		700
 
-#pragma region ANIMATION_ID
-
-#define ID_ANI_MARIO_IDLE_RIGHT 400
-#define ID_ANI_MARIO_IDLE_LEFT 401
-
-#define ID_ANI_MARIO_WALKING_RIGHT 500
-#define ID_ANI_MARIO_WALKING_LEFT 501
-
-#define ID_ANI_MARIO_RUNNING_RIGHT 600
-#define ID_ANI_MARIO_RUNNING_LEFT 601
-
-#define ID_ANI_MARIO_JUMP_WALK_RIGHT 700
-#define ID_ANI_MARIO_JUMP_WALK_LEFT 701
-
-#define ID_ANI_MARIO_JUMP_RUN_RIGHT 800
-#define ID_ANI_MARIO_JUMP_RUN_LEFT 801
-
-#define ID_ANI_MARIO_SIT_RIGHT 900
-#define ID_ANI_MARIO_SIT_LEFT 901
-
-#define ID_ANI_MARIO_BRACE_RIGHT 1000
-#define ID_ANI_MARIO_BRACE_LEFT 1001
-
-#define ID_ANI_MARIO_DIE 999
-
-// SMALL MARIO
-#define ID_ANI_MARIO_SMALL_IDLE_RIGHT 1100
-#define ID_ANI_MARIO_SMALL_IDLE_LEFT 1102
-
-#define ID_ANI_MARIO_SMALL_WALKING_RIGHT 1200
-#define ID_ANI_MARIO_SMALL_WALKING_LEFT 1201
-
-#define ID_ANI_MARIO_SMALL_RUNNING_RIGHT 1300
-#define ID_ANI_MARIO_SMALL_RUNNING_LEFT 1301
-
-#define ID_ANI_MARIO_SMALL_BRACE_RIGHT 1400
-#define ID_ANI_MARIO_SMALL_BRACE_LEFT 1401
-
-#define ID_ANI_MARIO_SMALL_JUMP_WALK_RIGHT 1500
-#define ID_ANI_MARIO_SMALL_JUMP_WALK_LEFT 1501
-
-#define ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT 1600
-#define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
 
 #pragma endregion
 
@@ -87,6 +46,7 @@
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
+#define MARIO_LEVEL_TAIL	3
 
 #define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 24
@@ -100,6 +60,39 @@
 
 
 #define MARIO_UNTOUCHABLE_TIME 2500
+#define MARIO_RECOVERY_TIME 2500
+#define MARIO_HIDDEN_GAP_WHILE_RECOVERY 200
+#define MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR 1000
+
+#pragma region MARIO_ANI_TYPE
+
+#define  ANI_MARIO_IDLE_RIGHT 0
+#define  ANI_MARIO_IDLE_LEFT 1
+#define  ANI_MARIO_WALKING_RIGHT 2
+#define  ANI_MARIO_WALKING_LEFT 3
+#define  ANI_MARIO_RUNNING_RIGHT 4
+#define  ANI_MARIO_RUNNING_LEFT 5
+#define  ANI_MARIO_JUMP_WALK_RIGHT 6
+#define  ANI_MARIO_JUMP_WALK_LEFT 7
+#define  ANI_MARIO_JUMP_RUN_RIGHT 8 
+#define  ANI_MARIO_JUMP_RUN_LEFT 9
+#define  ANI_MARIO_BRACE_RIGHT 10
+#define  ANI_MARIO_BRACE_LEFT 11
+#define  ANI_MARIO_PICKING_IDLE_RIGHT 12
+#define  ANI_MARIO_PICKING_IDLE_LEFT 13
+#define  ANI_MARIO_PICKING_WALK_RIGHT 14
+#define  ANI_MARIO_PICKING_WALK_LEFT 15
+#define  ANI_MARIO_PICKING_RUN_RIGHT 16
+#define  ANI_MARIO_PICKING_RUN_LEFT 17
+#define  ANI_MARIO_PICKING_JUMP_RIGHT 18
+#define  ANI_MARIO_PICKING_JUMP_LEFT 19
+#define  ANI_MARIO_PICKING_RUN_JUMP_RIGHT 20
+#define  ANI_MARIO_PICKING_RUN_JUMP_LEFT 21
+#define  ANI_MARIO_SIT_RIGHT 22
+#define  ANI_MARIO_SIT_LEFT 23
+#define ANI_MARIO_POWER_UP_RIGHT 24
+#define ANI_MARIO_POWER_UP_LEFT 25
+#pragma endregion
 
 class CMario : public CGameObject
 {
@@ -108,18 +101,35 @@ class CMario : public CGameObject
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
-	int level; 
-	int untouchable; 
+	int level;
+
+	int untouchable;
 	ULONGLONG untouchable_start;
+
 	BOOLEAN isOnPlatform;
-	int coin; 
+	BOOLEAN isPickUp;
+
+	int isRecovering;
+	ULONGLONG recovery_start;
+
+	bool isPowerUp;
+	//bool isSelfPausing;
+	ULONGLONG anchor_start;
+
+
+	int coin;
+
+	LPGAMEOBJECT item;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
+	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
 
-	int GetAniIdBig();
-	int GetAniIdSmall();
+	int ConvertAniTypeToAniId(int animation_type);
+	int GetAniId();
 
 public:
 	CMario(float x, float y) : CGameObject(x, y)
@@ -127,30 +137,56 @@ public:
 		isSitting = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
-		ay = MARIO_GRAVITY; 
+		ay = MARIO_GRAVITY;
 
-		level = MARIO_LEVEL_BIG;
+		level = MARIO_LEVEL_TAIL;
+
 		untouchable = 0;
 		untouchable_start = -1;
+
+		isRecovering = 0;
+		recovery_start = -1;
+
+		isPowerUp = false;
+		//isSelfPausing = false;
+
 		isOnPlatform = false;
+		isPickUp = false;
 		coin = 0;
+
+		this->item = nullptr;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
 
 	int IsCollidable()
-	{ 
-		return (state != MARIO_STATE_DIE); 
+	{
+		return (state != MARIO_STATE_DIE);
 	}
 
-	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
+	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable == 0); }
+
+	BOOLEAN IsPicking() { return isPickUp; }
+	int GetNx() { return nx; }
+
+	void SetPickUp(BOOLEAN pick) { isPickUp = pick; }
+	void PickingItem();
+	void ReleaseItem(CGameObject* item);
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
 	void SetLevel(int l);
+	int GetLevel() { return this->level; }
+
+	void DecreaseLevel();
+	void SetPowerUP(bool power) { isPowerUp = power; anchor_start = GetTickCount64(); }
+	//void SetSelfPausing(bool pause) { isSelfPausing = pause; }
+
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
+

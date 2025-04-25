@@ -1,5 +1,5 @@
 [SETTINGS]
-start	5
+start	6
 width	320
 height	240
 
@@ -9,11 +9,16 @@ height	240
 0	intro.txt
 1	scene01.txt
 2	scene02.txt
+3	scene03.txt
 5	scene0005.txt
-
+6	map1.txt
 # id	file 
 [TEXTURES]
 -100	textures\bbox.png
 0	textures\mario.png
 10	textures\enemies.png
 20	textures\misc.png
+30	textures\stuffs.png
+40	textures\misc2.png
+50	textures\enemies_2.png
+60	textures\marioWorldMap.png

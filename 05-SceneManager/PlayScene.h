@@ -6,6 +6,8 @@
 #include "Brick.h"
 #include "Mario.h"
 #include "Goomba.h"
+#include "Leaf.h"
+#include "Mushroom.h"
 //#include "Koopas.h"
 
 
@@ -37,7 +39,7 @@ public:
 
 	void Clear();
 	void PurgeDeletedObjects();
-
+	void AddObject(LPGAMEOBJECT obj);
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
 };
 

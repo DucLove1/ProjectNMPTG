@@ -1,14 +1,19 @@
 # list of object assets to load in this scene
 [ASSETS]
+red_koopa.txt
 mario.txt
 brick.txt
 coin.txt
 goomba.txt
 cloud.txt
+green_koopa.txt
+blocks.txt
+red_venus.txt
+pipe.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 6 = greenKoopas, 7 = block, 12 = red_koopa
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
@@ -45,6 +50,15 @@ cloud.txt
 1	352	148
 1	352	164
 
+#greenBlock
+7	100	80	5	6	0
+
+#greenBlock
+7	80	60	5	6	2
+#greenBlock
+7	120	100	5	6	1
+
+
 #COIN
 4	100	120
 4	120	120
@@ -52,12 +66,14 @@ cloud.txt
 4	160	120
 4	180	120
 
-#Goomba
-2	300	10
-
 #Platform
 5	90	136	16	15	16	51000	52000	53000
 5	120	90	16	16	8	20001	20001	20001
 
 #Portal 
-50	300	110	316	140	2
+50	300	110	316	140	3
+
+#greenKoopas
+6	100	120	1
+# redKoopas
+12	100	50	1

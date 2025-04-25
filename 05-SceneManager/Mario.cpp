@@ -13,7 +13,7 @@
 #include "Leaf.h"
 #include "Koopa.h"
 #include "Collision.h"
-
+#include "SpawnEnemy.h"
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
@@ -75,7 +75,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBrick(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
 		OnCollisionWithLeaf(e);
-
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)

@@ -65,8 +65,8 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 
 		if (dir >= 0) nx = -1;
 		else nx = 1;
-		//CMushroom* mr = new CMushroom(x, y, nx);
-		CLeaf* mr = new CLeaf(x, y);
+		CMushroom* mr = new CMushroom(x, y, nx);
+		//CLeaf* mr = new CLeaf(x, y);
 		scene->AddObject(mr);
 		cdHit = CD_GOT_HIT;
 	}

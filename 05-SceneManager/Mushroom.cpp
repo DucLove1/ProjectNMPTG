@@ -1,5 +1,5 @@
 #include "Mushroom.h"
-
+#include "debug.h"
 
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -8,20 +8,18 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (!wasGrowUp)
 	{
-		vy = -MUSHROOM_SPEED;
+		vy = -MUSHROOM_SPEED_Y;
 		vx = 0;
 	}
 	else
 	{
-		vy = 0.0f; // temp
+		ay = MUSHROOM_GRAVITY;
 		if (nx >= 0)
-			vx = MUSHROOM_SPEED;
+			vx = MUSHROOM_SPEED_X;
 		else
-			vx = -MUSHROOM_SPEED;
+			vx = -MUSHROOM_SPEED_X;
 	}
-	y += vy * dt;
-	x += vx * dt;
-
+	vy += ay * dt;
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -30,7 +28,7 @@ void CMushroom::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
 	animations->Get(ID_ANI_MUSHROOM)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMushroom::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -57,4 +55,15 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = 0;
 	}*/
+	if (!e->obj->IsBlocking())
+		return;
+	if (e->ny != 0)
+	{
+		vy = 0;
+	}
+	if(e->nx != 0)
+	{
+		vx = -vx;
+		nx = -nx;
+	}
 }

@@ -20,6 +20,9 @@
 #include "Block.h"
 #include "RedKoopa.h"
 #include "Sensor.h"
+#include "Venus.h"
+#include "Ground.h"
+#include "SpawnEnemy.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -124,7 +127,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
+	case OBJECT_TYPE_BROWN_GOOMBA:
+	{
+		int state = atoi(tokens[3].c_str());
+		obj = new CGoomba(x, y, GOOMBA, state); break;
+	}
+	case OBJECT_TYPE_RED_GOOMBA:
+	{
+		int state = atoi(tokens[3].c_str());
+		obj = new CGoomba(x, y, RED_GOOMBA, state); break;
+	}
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_GREEN_KOOPAS:
@@ -139,6 +151,43 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new RedKoopa(x, y, state);
 		Sensor* sensor = new Sensor(dynamic_cast<CEnemy*>(obj));
 		objects.push_back(sensor);
+		break;
+	}
+	case OBJECT_TYPE_RED_VENUS:
+	{
+		int type = atoi(tokens[3].c_str());
+		obj = new Venus(x, y, type);
+		// pipe
+		float cell_width = (float)atof(tokens[4].c_str());
+		float cell_height = (float)atof(tokens[5].c_str());
+		int length = atoi(tokens[6].c_str());
+		int sprite_begin = atoi(tokens[7].c_str());
+		int sprite_middle = atoi(tokens[8].c_str());
+		int sprite_end = atoi(tokens[9].c_str());
+		CPipe* pipe = new CPipe(
+			x, y - 8,
+			cell_width, cell_height, length,
+			sprite_begin, sprite_middle, sprite_end);
+		objects.push_back(obj);
+		objects.push_back(pipe);
+		return;
+		break;
+	
+	}
+	case OBJECT_TYPE_SPAWNER:
+	{
+		float posSpawnX = (float)atof(tokens[3].c_str());
+		float posSpawnY = (float)atof(tokens[4].c_str());
+		int sizeTokens = tokens.size();
+		vector<pair<int, int>> enemies;
+		for (int i = 5; i < sizeTokens; i += 2)
+		{
+			pair<int, int> enemy;
+			enemy.first = atoi(tokens[i].c_str());
+			enemy.second = atoi(tokens[i + 1].c_str());
+			enemies.emplace_back(enemy);
+		}
+		obj = new SpawnEnemy(x, y, posSpawnX, posSpawnY, enemies);
 		break;
 	}
 	case OBJECT_TYPE_BLOCK:
@@ -164,6 +213,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			sprite_begin, sprite_middle, sprite_end);
 		break;
 
+	}
+	case OBJECT_TYPE_GROUND:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		obj = new Ground(x, y, width, height);
+		break;
 	}
 	case OBJECT_TYPE_QUESTION_BRICK:
 	{

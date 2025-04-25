@@ -10,13 +10,14 @@ red_venus.txt
 pipe.txt
 bullet.txt
 goomba.txt
+red_koopa.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2
+# type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12
 # See OBJECT_TYPE constants in AssetIDs.h
 #mario
-0	0	10
+0	500	10
 #ground
 15	0	157	42	1
 15	672	141	42	2
@@ -42,3 +43,6 @@ goomba.txt
 13	419	117	0	32	16	3	81000	82000	83000
 #brown goomba
 2	290	140	0	1
+2	600	130	0	1
+#red koopa
+12	550	100	1

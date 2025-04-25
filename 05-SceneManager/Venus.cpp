@@ -104,7 +104,7 @@ void Venus::UpdateStateAppear(DWORD dt)
 		this->y = minY;
 		if (timer == -1)
 			timer = GetTickCount64();
-		else if (GetTickCount64() - timer > TIME_WAIT)
+		else if (GetTickCount64() - timer > TIME_WAIT_TO_FIRE)
 		{
 			SetState(ATTACK);
 			timer = -1;
@@ -119,7 +119,7 @@ void Venus::UpdateStateAttack(DWORD dt)
 		float angle = ChooseAngle();
 		bullet->Fire(x,y - 4.5f,angle);
 	}
-	else if (GetTickCount64() - timer > TIME_WAIT)
+	else if (GetTickCount64() - timer > TIME_WAIT_TO_HIDE)
 	{
 		SetState(HIDE);
 		timer = -1;
@@ -141,7 +141,7 @@ void Venus::UpdateStateHide(DWORD dt)
 		this->y = maxY;
 		if (timer == -1)
 			timer = GetTickCount64();
-		else if (GetTickCount64() - timer > TIME_WAIT)
+		else if (GetTickCount64() - timer > TIME_WAIT_TO_APPEAR)
 		{
 			SetState(APPEAR);
 			timer = -1;

@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#define BULLET_SPEED 0.1f
+#define BULLET_SPEED 0.07f
 #define BBOX_WIDTH 8
 #define BBOX_HEIGHT 8
 class VenusBullet : public CGameObject
@@ -14,6 +14,7 @@ public:
 	{
 		this->speed = BULLET_SPEED;
 		this->angle = -1;
+		this->animId = -1;
 	}
 	int IsBlocking() { return 0; }
 	int IsCollidable() { return 1; }

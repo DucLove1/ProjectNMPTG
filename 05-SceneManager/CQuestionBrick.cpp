@@ -49,25 +49,31 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 {
 
 	if (timeCanHit <= 0) return;
-	if(cdHit <= 0) // can do 
+	if (cdHit <= 0) // can do 
 	{
 		timeCanHit--;
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-
-
 		float Mx, My, Ox, Oy;
 		this->GetPosition(Mx, My);
 		//if (dynamic_cast<CMario*>(e->obj) == NULL) return;
 		CMario* mario = (CMario*)e;
 		mario->GetPosition(Ox, Oy);
-		
+
 		float dir = Ox - Mx;
 
 		if (dir >= 0) nx = -1;
 		else nx = 1;
 		//CMushroom* mr = new CMushroom(x, y, nx);
-		CLeaf* mr = new CLeaf(x, y);
-		scene->AddObject(mr);
+		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+		{
+			CMushroom* mr = new CMushroom(x, y, nx);
+			scene->AddObject(mr);
+		}
+		else// if (mario->GetLevel() == MARIO_LEVEL_BIG)
+		{
+			CLeaf* mr = new CLeaf(x, y);
+			scene->AddObject(mr);
+		}
 		cdHit = CD_GOT_HIT;
 	}
 }

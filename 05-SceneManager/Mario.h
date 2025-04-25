@@ -34,6 +34,8 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
+#define MARIO_STATE_POWERUP		700
+
 
 #pragma endregion
 
@@ -59,6 +61,8 @@
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_RECOVERY_TIME 2500
+#define MARIO_HIDDEN_GAP_WHILE_RECOVERY 200
+#define MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR 1000
 
 #pragma region MARIO_ANI_TYPE
 
@@ -86,7 +90,8 @@
 #define  ANI_MARIO_PICKING_RUN_JUMP_LEFT 21
 #define  ANI_MARIO_SIT_RIGHT 22
 #define  ANI_MARIO_SIT_LEFT 23
-
+#define ANI_MARIO_POWER_UP_RIGHT 24
+#define ANI_MARIO_POWER_UP_LEFT 25
 #pragma endregion
 
 class CMario : public CGameObject
@@ -97,12 +102,20 @@ class CMario : public CGameObject
 	float ay;				// acceleration on y 
 
 	int level;
-	int untouchable;
 
+	int untouchable;
 	ULONGLONG untouchable_start;
+
 	BOOLEAN isOnPlatform;
 	BOOLEAN isPickUp;
+
 	int isRecovering;
+	ULONGLONG recovery_start;
+
+	bool isPowerUp;
+	//bool isSelfPausing;
+	ULONGLONG anchor_start;
+
 
 	int coin;
 
@@ -114,10 +127,6 @@ class CMario : public CGameObject
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
-
-	int GetAniIdBig();
-	int GetAniIdSmall();
-	int GetAniIdTail();
 
 	int ConvertAniTypeToAniId(int animation_type);
 	int GetAniId();
@@ -131,8 +140,16 @@ public:
 		ay = MARIO_GRAVITY;
 
 		level = MARIO_LEVEL_TAIL;
+
 		untouchable = 0;
 		untouchable_start = -1;
+
+		isRecovering = 0;
+		recovery_start = -1;
+
+		isPowerUp = false;
+		//isSelfPausing = false;
+
 		isOnPlatform = false;
 		isPickUp = false;
 		coin = 0;
@@ -161,11 +178,15 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
 	void SetLevel(int l);
+	int GetLevel() { return this->level; }
+
 	void DecreaseLevel();
+	void SetPowerUP(bool power) { isPowerUp = power; anchor_start = GetTickCount64(); }
+	//void SetSelfPausing(bool pause) { isSelfPausing = pause; }
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
-
 

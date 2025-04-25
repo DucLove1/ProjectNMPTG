@@ -28,9 +28,6 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx = -LEAF_SPEED;
 	}
 
-	x += vx * dt;
-	y += vy * dt;
-
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }

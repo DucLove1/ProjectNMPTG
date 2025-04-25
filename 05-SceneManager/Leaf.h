@@ -27,7 +27,9 @@ public:
 	}
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void OnCollisionWith(LPCOLLISIONEVENT e) {};
+	void OnNoCollision(DWORD dt) { x += vx * dt; y += vy * dt; }
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	int IsBlocking() { return 0; }
+	int IsBlocking() { return 1; }
 };
 

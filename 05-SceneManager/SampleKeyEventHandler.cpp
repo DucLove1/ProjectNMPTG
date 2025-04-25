@@ -24,9 +24,11 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_2:
 		mario->SetLevel(MARIO_LEVEL_BIG);
+		mario->SetPowerUP(true);
 		break;
 	case DIK_3:
 		mario->SetLevel(MARIO_LEVEL_TAIL);
+		mario->SetPowerUP(true);
 		break;
 	case DIK_0:
 		mario->SetState(MARIO_STATE_DIE);

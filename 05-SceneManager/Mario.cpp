@@ -17,7 +17,7 @@
 
 
 //define for Id map
-int mapAniId[][24] = {
+int mapAniId[][26] = {
 		{
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT,
 			ID_ANI_MARIO_SMALL_WALKING_RIGHT, ID_ANI_MARIO_SMALL_WALKING_LEFT,
@@ -30,7 +30,8 @@ int mapAniId[][24] = {
 			ID_ANI_MARIO_SMALL_PICKING_RUN_RIGHT, ID_ANI_MARIO_SMALL_PICKING_RUN_LEFT,
 			ID_ANI_MARIO_SMALL_PICKING_JUMP_RIGHT, ID_ANI_MARIO_SMALL_PICKING_JUMP_LEFT,
 			ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_RIGHT, ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_LEFT,
-			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT,
+			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is sitting)
+			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT // fill array with idle (this is powerUp)
 		},
 		{
 			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,
@@ -44,7 +45,8 @@ int mapAniId[][24] = {
 			ID_ANI_MARIO_PICKING_RUN_RIGHT, ID_ANI_MARIO_PICKING_RUN_LEFT,
 			ID_ANI_MARIO_PICKING_JUMP_RIGHT, ID_ANI_MARIO_PICKING_JUMP_LEFT,
 			ID_ANI_MARIO_PICKING_RUN_JUMP_RIGHT, ID_ANI_MARIO_PICKING_RUN_JUMP_LEFT,
-			ID_ANI_MARIO_SIT_RIGHT, ID_ANI_MARIO_SIT_LEFT
+			ID_ANI_MARIO_SIT_RIGHT, ID_ANI_MARIO_SIT_LEFT,
+			ID_ANI_MARIO_POWERUP_TO_BIG_RIGHT, ID_ANI_MARIO_POWERUP_TO_BIG_LEFT
 		},
 		{
 			ID_ANI_MARIO_TAIL_IDLE_RIGHT, ID_ANI_MARIO_TAIL_IDLE_LEFT,
@@ -58,7 +60,8 @@ int mapAniId[][24] = {
 			ID_ANI_MARIO_TAIL_PICKING_RUN_RIGHT, ID_ANI_MARIO_TAIL_PICKING_RUN_LEFT,
 			ID_ANI_MARIO_TAIL_PICKING_JUMP_RIGHT, ID_ANI_MARIO_TAIL_PICKING_JUMP_LEFT,
 			ID_ANI_MARIO_TAIL_PICKING_RUN_JUMP_RIGHT, ID_ANI_MARIO_TAIL_PICKING_RUN_JUMP_LEFT,
-			ID_ANI_MARIO_TAIL_SIT_RIGHT, ID_ANI_MARIO_TAIL_SIT_LEFT
+			ID_ANI_MARIO_TAIL_SIT_RIGHT, ID_ANI_MARIO_TAIL_SIT_LEFT,
+			ID_ANI_MARIO_POWERUP_TO_TAIL_RIGHT, ID_ANI_MARIO_POWERUP_TO_TAIL_LEFT
 
 		}
 };
@@ -89,6 +92,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
+	// Stop recovering if time is up
+	if (GetTickCount64() - recovery_start > MARIO_RECOVERY_TIME)
+	{
+		recovery_start = 0;
+		isRecovering = 0;
+	}
+
+	if (isPowerUp
+		|| GetTickCount64() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR) {
+		vy = 0.f;
+		return;
+	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	int x = mapAniId[0][0];
@@ -96,6 +111,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::OnNoCollision(DWORD dt)
 {
+	
 	x += vx * dt;
 	y += vy * dt;
 	isOnPlatform = false;
@@ -148,16 +164,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		{
 			if (goomba->GetState() != CGoomba::DIE)
 			{
-				if (level > MARIO_LEVEL_SMALL)
-				{
-					level = MARIO_LEVEL_SMALL;
-					StartUntouchable();
-				}
-				else
-				{
-					DebugOut(L">>> Mario DIE >>> \n");
-					SetState(MARIO_STATE_DIE);
-				}
+				DecreaseLevel();
 			}
 		}
 	}
@@ -217,16 +224,7 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		{
 			if (koopa->GetState() != Koopa::KNOCK_OUT)
 			{
-				if (level > MARIO_LEVEL_SMALL)
-				{
-					level = MARIO_LEVEL_SMALL;
-					StartUntouchable();
-				}
-				else
-				{
-					DebugOut(L">>> Mario DIE >>> \n");
-					SetState(MARIO_STATE_DIE);
-				}
+				DecreaseLevel();
 			}
 		}
 
@@ -267,16 +265,7 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 			{
 				if (koopa->GetState() != Koopa::KNOCK_OUT)
 				{
-					if (level > MARIO_LEVEL_SMALL)
-					{
-						level = MARIO_LEVEL_SMALL;
-						StartUntouchable();
-					}
-					else
-					{
-						DebugOut(L">>> Mario DIE >>> \n");
-						SetState(MARIO_STATE_DIE);
-					}
+					DecreaseLevel();
 				}
 			}
 		}
@@ -303,11 +292,15 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 	if (level == MARIO_LEVEL_SMALL)
 	{
 		SetLevel(MARIO_LEVEL_BIG);
+		SetPowerUP(true);
+		//SetSelfPausing(true);
 		e->obj->Delete();
 	}
 	else if (level == MARIO_LEVEL_BIG)
 	{
 		SetLevel(MARIO_LEVEL_TAIL);
+		SetPowerUP(true);
+		//SetSelfPausing(true);
 		e->obj->Delete();
 	}
 	DebugOut(L"Leaf, got it by mario\n");
@@ -330,6 +323,15 @@ int CMario::ConvertAniTypeToAniId(int animation_type)
 int CMario::GetAniId()
 {
 	int aniId = -1;
+
+	if (isPowerUp) 
+	{
+		if(nx>=0)
+		aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_RIGHT);
+		else 
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_LEFT);
+		return aniId;
+	}//early return at here to focus on animation
 
 	if (!isOnPlatform) // this case is Jump/fall out
 	{
@@ -447,6 +449,20 @@ void CMario::Render()
 		aniId = ID_ANI_MARIO_DIE;
 	else
 		aniId = GetAniId();
+
+	//there is some case will overlap prev animation in game loop. 
+	//render while after got hit (I/We call it is recovery state-but not actually state bruh)
+	if (isRecovering)
+	{
+		if (((GetTickCount64() - recovery_start) % MARIO_HIDDEN_GAP_WHILE_RECOVERY) >= MARIO_HIDDEN_GAP_WHILE_RECOVERY/2) return;
+	}
+	//render while isPowerUp got a new anim 
+	if (isPowerUp) {
+		if (animations->Get(aniId)->Done()) {
+			isPowerUp = false;
+			animations->Get(aniId)->Reset();
+		}
+	}
 	animations->Get(aniId)->Render(x, y);
 
 	RenderBoundingBox();
@@ -602,6 +618,7 @@ void CMario::DecreaseLevel()
 	{
 		level -= 1;
 		StartUntouchable();
+		StartRecovery();
 	}
 }
 

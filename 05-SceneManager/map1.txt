@@ -11,16 +11,45 @@ pipe.txt
 bullet.txt
 goomba.txt
 red_koopa.txt
+big_tree.txt
+bush.txt
+tui dem coi khoảng cách tụi nó là bao nhiêu cái bụi cây
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17
+# type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17, big_tree = 18, bushes = 19
 # See OBJECT_TYPE constants in AssetIDs.h
 #mario
-0	500	10
+0	850	10
 #ground
 15	0	157	42	1
-15	672	141	42	2
+15	672	141	29	2
+15	1200	157	40	1
+#big tree
+18	91	93	4	1
+18	75	109	3	0
+18	91	125	2	1
+18	123	109	3	1
+18	155	109	3	0
+18	139	141	1	0
+18	171	125	2	2
+
+18	928	77	3	1
+18	880	93	3	0
+18	912	93	2	0
+18	960	93	3	2
+18	864	125	1	0
+18	896	109	2	1
+18	928	109	2	1
+
+18	1008	93	3	0
+18	992	125	1	0
+18	1024	109	2	2
+
+#bushes
+19	219	141	3
+19	720	125	6
+19	1088	125	2
 #blue block
 7	327	73	6	10	1
 #white block

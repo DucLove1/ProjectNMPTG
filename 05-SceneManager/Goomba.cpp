@@ -92,13 +92,26 @@ void CGoomba::UpdateState()
 
 	if (state == HAS_WING)
 	{
-		if (countJump >= 3 && onGround && GetTickCount64() - timerFly >= TIME_FLYING)
+		ULONGLONG cur = GetTickCount64();
+		if (mario && cur - timerFollow <= TIME_FOLLOW)
+		{
+			float marioX, marioY;
+			mario->GetPosition(marioX, marioY);
+			if (abs(marioX - this->x) >= DISTANCE_FOLLOW)
+			{
+				if (marioX > this->x)
+					vx = abs(vx);
+				else
+					vx = -abs(vx);
+			}
+		}
+		if (countJump >= 3 && onGround && cur - timerFly >= TIME_FLYING)
 		{
 			vy = -GOOMBA_FLY_FORCE;
 			countJump = 0;
 			timerFly = GetTickCount64();
 		}
-		else if (GetTickCount64() - timerFly >= TIME_JUMPING)
+		else if (cur - timerFly >= TIME_JUMPING)
 		{
 			if (onGround)
 			{

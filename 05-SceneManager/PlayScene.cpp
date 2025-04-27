@@ -23,6 +23,7 @@
 #include "Venus.h"
 #include "Ground.h"
 #include "SpawnEnemy.h"
+#include "Goomba.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :

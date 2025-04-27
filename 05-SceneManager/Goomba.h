@@ -1,6 +1,7 @@
 #pragma once
-#include "GameObject.h"
 #include "CEnemy.h"
+#include "Game.h"
+#include "PlayScene.h"
 #define GOOMBA_GRAVITY 0.0015f
 #define GOOMBA_WALKING_SPEED 0.05f
 #define GOOMBA_JUMPING_FORCE 0.08f
@@ -23,20 +24,20 @@
 #define TIME_FLYING 2000
 #define TIME_KNOCK_OUT 200
 #define TIME_OUT_KNOCK_OUT 5000
+#define TIME_FOLLOW 20000
+#define DISTANCE_FOLLOW 100
 #define GOOMBA 0
 #define RED_GOOMBA 1
-#include "AssetIDs.h"
-#include "GameObject.h"
-#include "Mario.h"
-
 class CGoomba : public CEnemy
 {
 private:
+	CGameObject* mario;
 	ULONGLONG timerFly;
 	int type;
 	ULONGLONG die_start;
 	int countJump;
 	ULONGLONG timerKnockOut;
+	ULONGLONG timerFollow;
 	void SetStateDie();
 	void SetStateHasNoWing();
 	void SetStateHasWing();
@@ -60,6 +61,8 @@ public:
 		this->onGround = false;
 		timerFly = 0;
 		countJump = 0;
+		this->mario = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		this->timerFollow = GetTickCount64();
 	}
 	void SetState(int state) override;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom) override;

@@ -141,6 +141,11 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBrick(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
 		OnCollisionWithLeaf(e);
+	else if (dynamic_cast<SpawnEnemy*>(e->obj))
+	{
+		SpawnEnemy* spawn = dynamic_cast<SpawnEnemy*>(e->obj);
+		spawn->TouchedByMario();
+	}
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)

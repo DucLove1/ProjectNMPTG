@@ -114,7 +114,7 @@ class CMario : public CGameObject
 
 	bool isPowerUp;
 	//bool isSelfPausing;
-	ULONGLONG anchor_start;
+	ULONGLONG anchor_start; // time to anchor on air 
 
 
 	int coin;
@@ -127,6 +127,10 @@ class CMario : public CGameObject
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
+	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
+	void OnCollisionWithFireBall(LPCOLLISIONEVENT e);
+	void OnCollisionWithVenus(LPCOLLISIONEVENT e);
+	void OnCollisionWithSpawnGate(LPCOLLISIONEVENT e);
 
 	int ConvertAniTypeToAniId(int animation_type);
 	int GetAniId();
@@ -149,6 +153,7 @@ public:
 
 		isPowerUp = false;
 		//isSelfPausing = false;
+		anchor_start = -1;
 
 		isOnPlatform = false;
 		isPickUp = false;

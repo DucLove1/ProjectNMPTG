@@ -16,8 +16,7 @@ red_koopa.txt
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17
 # See OBJECT_TYPE constants in AssetIDs.h
-#mario
-0	500	10
+
 #ground
 15	0	157	42	1
 15	672	141	42	2
@@ -48,3 +47,6 @@ red_koopa.txt
 12	550	100	1
 # spawner
 17	650	60	750	100	2	1	2	1	16	0
+
+#mario
+0	500	10

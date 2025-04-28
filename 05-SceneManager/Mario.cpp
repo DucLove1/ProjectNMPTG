@@ -12,6 +12,8 @@
 #include "Breakable.h"
 #include "Leaf.h"
 #include "Koopa.h"
+#include "Venus.h"
+#include "VenusBullet.h"
 #include "Collision.h"
 #include "SpawnEnemy.h"
 
@@ -110,7 +112,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::OnNoCollision(DWORD dt)
 {
-	
+
 	x += vx * dt;
 	y += vy * dt;
 	isOnPlatform = false;
@@ -133,6 +135,10 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<Koopa*>(e->obj))
 		OnCollisionWithKoopa(e);
+	else if (dynamic_cast<Venus*>(e->obj))
+		OnCollisionWithVenus(e);
+	else if (dynamic_cast<VenusBullet*>(e->obj))
+		OnCollisionWithFireBall(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
@@ -141,6 +147,10 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBrick(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
 		OnCollisionWithLeaf(e);
+	else if (dynamic_cast<CMushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<SpawnEnemy*> (e->obj))
+		OnCollisionWithSpawnGate(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -270,6 +280,13 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithVenus(LPCOLLISIONEVENT e)
+{
+	if (untouchable == 0) {
+		DecreaseLevel();
+	}
+}
+
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
@@ -304,6 +321,30 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 	DebugOut(L"Leaf, got it by mario\n");
 }
 
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	if (level == MARIO_LEVEL_SMALL)
+	{
+		SetLevel(MARIO_LEVEL_BIG);
+		SetPowerUP(true);
+		e->obj->Delete();
+	}
+	//else score ++;
+}
+void CMario::OnCollisionWithFireBall(LPCOLLISIONEVENT e)
+{
+	if (untouchable == 0) {
+		DecreaseLevel();
+		//e->obj->Delete();
+	}
+}
+
+void CMario::OnCollisionWithSpawnGate(LPCOLLISIONEVENT e)
+{
+	SpawnEnemy* spawnGate = dynamic_cast<SpawnEnemy*>(e->obj);
+	spawnGate->TouchedByMario();
+}
+
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
@@ -322,11 +363,11 @@ int CMario::GetAniId()
 {
 	int aniId = -1;
 
-	if (isPowerUp) 
+	if (isPowerUp)
 	{
-		if(nx>=0)
-		aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_RIGHT);
-		else 
+		if (nx >= 0)
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_RIGHT);
+		else
 			aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_LEFT);
 		return aniId;
 	}//early return at here to focus on animation
@@ -452,7 +493,7 @@ void CMario::Render()
 	//render while after got hit (I/We call it is recovery state-but not actually state bruh)
 	if (isRecovering)
 	{
-		if (((GetTickCount64() - recovery_start) % MARIO_HIDDEN_GAP_WHILE_RECOVERY) >= MARIO_HIDDEN_GAP_WHILE_RECOVERY/2) return;
+		if (((GetTickCount64() - recovery_start) % MARIO_HIDDEN_GAP_WHILE_RECOVERY) >= MARIO_HIDDEN_GAP_WHILE_RECOVERY / 2) return;
 	}
 	//render while isPowerUp got a new anim 
 	if (isPowerUp) {
@@ -609,7 +650,7 @@ void CMario::SetLevel(int l)
 }
 void CMario::DecreaseLevel()
 {
-	if(level == MARIO_LEVEL_SMALL) {
+	if (level == MARIO_LEVEL_SMALL) {
 		SetState(MARIO_STATE_DIE);
 	}
 	else

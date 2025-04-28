@@ -109,6 +109,8 @@
     <ClCompile Include="BackgroundObject.cpp" />
     <ClCompile Include="BigTree.cpp" />
     <ClCompile Include="Bushes.cpp" />
+    <ClCompile Include="Cloud.cpp" />
+    <ClCompile Include="LionBricks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -152,6 +154,8 @@
     <ClInclude Include="BackgroundObject.h" />
     <ClInclude Include="BigTree.h" />
     <ClInclude Include="Bushes.h" />
+    <ClInclude Include="Cloud.h" />
+    <ClInclude Include="LionBricks.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

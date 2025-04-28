@@ -26,6 +26,8 @@
 #include "Goomba.h"
 #include "BigTree.h"
 #include "Bushes.h"
+#include "Cloud.h"
+#include "LionBricks.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -253,6 +255,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int width = atoi(tokens[3].c_str());
 		obj = new Bushes(x, y, width);
+		break;
+	}
+	case OBJECT_TYPE_CLOUD:
+	{
+		int width = atoi(tokens[3].c_str());
+		obj = new Cloud(x, y, width);
+		break;
+	}
+	case OBJECT_TYPE_LION_BRICKS:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		obj = new LionBricks(x, y, width, height);
 		break;
 	}
 	case OBJECT_TYPE_PLATFORM:

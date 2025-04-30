@@ -22,7 +22,7 @@ lion_brick.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 #mario
-0	1500	10
+0	200	10
 
 #ground
 15	0	157	42	1

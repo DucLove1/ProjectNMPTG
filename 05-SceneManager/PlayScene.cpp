@@ -177,7 +177,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects.push_back(pipe);
 		return;
 		break;
-	
+
 	}
 	case OBJECT_TYPE_SPAWNER:
 	{

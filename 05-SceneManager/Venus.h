@@ -13,7 +13,7 @@
 #define TIME_WAIT_TO_HIDE 2000
 #define TIME_WAIT_TO_APPEAR 2000
 #define TIME_WAIT_TO_ATTACK 3000
-#define SPEED_Y 0.05f
+#define SPEED_Y 0.1f
 #define DISTANCE_TO_APPEAR 28.0f
 class Venus: public CEnemy
 {
@@ -39,7 +39,7 @@ class Venus: public CEnemy
 		this->ax = 0;
 		this->ay = 0;
 		this->minY = y - 32;
-		this->maxY = y + 3;
+		this->maxY = y + 16;
 		this->state = HIDE;
 		this->cur_quarant = 0;
 		this->bullet = new VenusBullet(x, y);

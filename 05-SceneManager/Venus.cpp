@@ -58,6 +58,7 @@ void Venus::Render()
 	break;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	//RenderBoundingBox();
 }
 int Venus::FindQuardrant()
 {
@@ -132,12 +133,12 @@ void Venus::UpdateStateHide(DWORD dt)
 	}
 	else
 	{
-		// mario is close to Venus, Venus doesn't appear
+		this->y = maxY;
 		float marioX, marioY;
 		mario->GetPosition(marioX, marioY);
+		// mario is close to Venus, Venus doesn't appear
 		if (abs(marioX - this->x) <= DISTANCE_TO_APPEAR)
 			return;
-		this->y = maxY;
 		if (timer == -1)
 			timer = GetTickCount64();
 		else if (GetTickCount64() - timer > TIME_WAIT_TO_APPEAR)

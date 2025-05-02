@@ -72,7 +72,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-
+	
 	if (isPickUp) {
 		DebugOut(L"PreCall");
 		PickingItem();

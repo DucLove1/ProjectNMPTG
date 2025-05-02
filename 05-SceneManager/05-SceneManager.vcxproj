@@ -163,6 +163,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="GreenKoopa.cpp" />
+    <ClCompile Include="GreenVenus.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="Leaf.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Pipe.cpp" />
+    <ClCompile Include="PiranhaPlant.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
@@ -206,6 +208,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="GreenKoopa.h" />
+    <ClInclude Include="GreenVenus.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
@@ -214,6 +217,7 @@
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Pipe.h" />
+    <ClInclude Include="PiranhaPlant.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Portal.h" />

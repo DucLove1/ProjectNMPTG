@@ -17,9 +17,9 @@ public:
 	}
 	virtual int IsCollidable() {return 1;}
 	virtual int IsBlocking() { return 0; }
-	virtual void KickedFromTop(CGameObject*) = 0;
-	virtual void KnockedOut(CGameObject*) = 0;
-	virtual void TouchTwoSide(CGameObject*) = 0;
-	virtual bool IsAlive() = 0;
+	virtual void KickedFromTop(CGameObject*) {};
+	virtual void KnockedOut(CGameObject*) {};
+	virtual void TouchTwoSide(CGameObject*) {};
+	virtual bool IsAlive() { return true; };
 };
 

@@ -28,6 +28,7 @@
 #include "Bushes.h"
 #include "Cloud.h"
 #include "LionBricks.h"
+#include "PiranhaPlant.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -160,15 +161,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_RED_VENUS:
 	{
-		int type = atoi(tokens[3].c_str());
-		obj = new Venus(x, y, type);
+		obj = new Venus(x, y, RED);
 		// pipe
-		float cell_width = (float)atof(tokens[4].c_str());
-		float cell_height = (float)atof(tokens[5].c_str());
-		int length = atoi(tokens[6].c_str());
-		int sprite_begin = atoi(tokens[7].c_str());
-		int sprite_middle = atoi(tokens[8].c_str());
-		int sprite_end = atoi(tokens[9].c_str());
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int sprite_begin = atoi(tokens[6].c_str());
+		int sprite_middle = atoi(tokens[7].c_str());
+		int sprite_end = atoi(tokens[8].c_str());
 		CPipe* pipe = new CPipe(
 			x, y - 8,
 			cell_width, cell_height, length,
@@ -178,6 +178,42 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 		break;
 
+	}
+	case OBJECT_TYPE_GREEN_VENUS:
+	{
+		obj = new Venus(x, y, GREEN);
+		// pipe
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int sprite_begin = atoi(tokens[6].c_str());
+		int sprite_middle = atoi(tokens[7].c_str());
+		int sprite_end = atoi(tokens[8].c_str());
+		CPipe* pipe = new CPipe(
+			x, y - 8,
+			cell_width, cell_height, length,
+			sprite_begin, sprite_middle, sprite_end);
+		objects.push_back(obj);
+		objects.push_back(pipe);
+		return;
+	}
+	case OBJECT_TYPE_PIRANHA_PLANT:
+	{
+		obj = new PiranhaPlant(x, y);
+		// pipe
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int sprite_begin = atoi(tokens[6].c_str());
+		int sprite_middle = atoi(tokens[7].c_str());
+		int sprite_end = atoi(tokens[8].c_str());
+		CPipe* pipe = new CPipe(
+			x, y - 8,
+			cell_width, cell_height, length,
+			sprite_begin, sprite_middle, sprite_end);
+		objects.push_back(obj);
+		objects.push_back(pipe);
+		return;
 	}
 	case OBJECT_TYPE_SPAWNER:
 	{

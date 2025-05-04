@@ -19,6 +19,7 @@ green_venus.txt
 green_koopa.txt
 piranha.txt
 gold_brick.txt
+coin.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -27,8 +28,6 @@ gold_brick.txt
 
 #mario
 0	1000	10
-#gold brick
-34	1000	80
 #ground
 15	0	157	42	1
 15	672	141	29	2
@@ -70,6 +69,7 @@ gold_brick.txt
 30	385	15	1
 30	695	20	1
 30	773	50	3
+30	1232	25	1
 30	1712	30	3
 #blue block
 7	327	73	6	10	1
@@ -116,3 +116,9 @@ gold_brick.txt
 17	704	-150	1088	100	2	1	2	1	16	0
 17	1200	-100	1472	39	6	0	6	0	6	0
 17	1343	-100	1500	135	6	1
+#coin
+4	1120	60
+4	1151	31
+4	1182	2
+4	1213	-27
+4	1244	-56

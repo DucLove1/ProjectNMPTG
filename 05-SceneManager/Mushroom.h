@@ -15,6 +15,7 @@ class CMushroom : public CGameObject
 	float offSetEnd;
 	float ay;
 	BOOLEAN wasGrowUp;
+	bool canRender;
 
 public:
 	CMushroom(float x, float y, int nx) : CGameObject(x, y) 
@@ -25,6 +26,7 @@ public:
 		this->nx = nx;
 		wasGrowUp = false;
 		this->ay = 0;
+		canRender = true;
 	}
 
 	void Render();

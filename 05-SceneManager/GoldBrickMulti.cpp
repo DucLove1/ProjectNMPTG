@@ -30,9 +30,10 @@ void GoldBrickMulti::GotHit(LPCOLLISIONEVENT e)
 	{
 		SetState(STATE_GO_UP);
 		// neu la mario nho thi khong tru so lan hit
-		bool isMarioSmall = (dynamic_cast<CMario*>(e->src_obj)->GetLevel() == MARIO_LEVEL_SMALL);
+		/*bool isMarioSmall = (dynamic_cast<CMario*>(e->src_obj)->GetLevel() == MARIO_LEVEL_SMALL);
 		if(!isMarioSmall)
-			this->times--;
+			this->times--;*/
+		this->times--;
 	}
 	// tat active	
 	if (this->times == 0)

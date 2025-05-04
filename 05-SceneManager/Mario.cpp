@@ -153,6 +153,14 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithMushroom(e);
 	else if (dynamic_cast<SpawnEnemy*> (e->obj))
 		OnCollisionWithSpawnGate(e);
+	else if (dynamic_cast<GoldBrick*>(e->obj))
+	{
+		GoldBrick* brick = dynamic_cast<GoldBrick*>(e->obj);
+		if (e->ny > 0) // collision with top of brick
+		{
+			brick->GotHit(e);
+		}
+	}
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)

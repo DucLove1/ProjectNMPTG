@@ -15,7 +15,7 @@ public:
 		this->width = width;
 		this->height = height;
 	}
-	int IsColliable() { return 1; }
+	int IsColliable() { return 0; }
 	int IsBlocking() { return 1; }
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom) override;
 	void Render() override;

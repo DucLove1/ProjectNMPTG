@@ -245,7 +245,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_GOLD_BRICK:
 	{
-		obj = new ItemGoldBrick(x, y);
+		obj = new BreakableGoldBrick(x, y);
 		break;
 	}
 	case OBJECT_TYPE_PIPE:
@@ -460,7 +460,7 @@ void CPlayScene::Update(DWORD dt)
 	if (cx < 0) cx = 0;
 
 	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-
+	//CGame::GetInstance()->SetCamPos(cx, cy);
 	PurgeDeletedObjects();
 }
 

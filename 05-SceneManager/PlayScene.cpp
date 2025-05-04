@@ -29,6 +29,10 @@
 #include "Cloud.h"
 #include "LionBricks.h"
 #include "PiranhaPlant.h"
+#include "GoldBrick.h"
+#include "BreakableGoldBrick.h"
+#include "GoldBrickMulti.h"
+#include "ItemGoldBrick.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -237,6 +241,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int height = atoi(tokens[4].c_str());
 		int color = atoi(tokens[5].c_str());
 		obj = new Block(x, y, width, height, color);
+		break;
+	}
+	case OBJECT_TYPE_GOLD_BRICK:
+	{
+		obj = new ItemGoldBrick(x, y);
 		break;
 	}
 	case OBJECT_TYPE_PIPE:

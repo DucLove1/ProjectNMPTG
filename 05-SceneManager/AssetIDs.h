@@ -34,6 +34,7 @@
 #define OBJECT_TYPE_LION_BRICKS 31
 #define OBJECT_TYPE_GREEN_VENUS 32
 #define OBJECT_TYPE_PIRANHA_PLANT 33
+#define OBJECT_TYPE_GOLD_BRICK 34
 #define OBJECT_TYPE_PORTAL	50
 
 
@@ -300,6 +301,9 @@
 #pragma region PIRANHA_PLANT
 #define ID_SPRITE_PIRANHA_PLANT 330000
 #pragma endregion
+#pragma region GOLD_BRICK
+#define ID_SPRITE_GOLD_BRICK 340000
+#pragma endregion
 //Animations
 #pragma region ANIMATION
 #pragma region MARIO
@@ -564,4 +568,9 @@
 #pragma endregion
 #pragma region PIRANHA_PLANT
 #define ID_ANI_PIRANHA_PLANT 33000
+#pragma endregion
+
+#pragma region GOLD_BRICK
+#define ID_ANI_GOLD_BRICK_ACTIVE 34000
+#define ID_ANI_GOLD_BRICK_INACTIVE 34001
 #pragma endregion

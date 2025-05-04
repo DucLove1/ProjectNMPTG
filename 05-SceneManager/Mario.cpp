@@ -16,7 +16,9 @@
 #include "VenusBullet.h"
 #include "Collision.h"
 #include "SpawnEnemy.h"
-
+#include "BreakableGoldBrick.h"
+#include "GoldBrickMulti.h"
+#include "ItemGoldBrick.h"
 
 //define for Id map
 int mapAniId[][26] = {

@@ -152,6 +152,7 @@
     <ClCompile Include="BigTree.cpp" />
     <ClCompile Include="Breakable.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="BreakableGoldBrick.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Bushes.cpp" />
     <ClCompile Include="Cloud.cpp" />
@@ -161,9 +162,12 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GoldBrick.cpp" />
+    <ClCompile Include="GoldBrickMulti.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="GreenKoopa.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="ItemGoldBrick.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="LionBricks.cpp" />
@@ -195,6 +199,7 @@
     <ClInclude Include="BigTree.h" />
     <ClInclude Include="Breakable.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="BreakableGoldBrick.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bushes.h" />
     <ClInclude Include="CEnemy.h" />
@@ -205,9 +210,12 @@
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GoldBrick.h" />
+    <ClInclude Include="GoldBrickMulti.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="GreenKoopa.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="ItemGoldBrick.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="Leaf.h" />

@@ -116,6 +116,9 @@
     <ClCompile Include="BreakableGoldBrick.cpp" />
     <ClCompile Include="ItemGoldBrick.cpp" />
     <ClCompile Include="GoldBrickMulti.cpp" />
+    <ClCompile Include="GoldBrickWithButton.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="BuiderGoldBrick.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -166,6 +169,9 @@
     <ClInclude Include="BreakableGoldBrick.h" />
     <ClInclude Include="ItemGoldBrick.h" />
     <ClInclude Include="GoldBrickMulti.h" />
+    <ClInclude Include="GoldBrickWithButton.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="BuiderGoldBrick.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

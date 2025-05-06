@@ -19,7 +19,8 @@
 #include "BreakableGoldBrick.h"
 #include "GoldBrickMulti.h"
 #include "ItemGoldBrick.h"
-
+#include "Button.h"
+#include "GoldBrickWithButton.h"
 //define for Id map
 int mapAniId[][26] = {
 		{
@@ -155,11 +156,24 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithSpawnGate(e);
 	else if (dynamic_cast<GoldBrick*>(e->obj))
 	{
+		if (dynamic_cast<GoldBrickWithButton*>(e->obj))
+		{
+			if (e->nx != 0)
+			{
+				GoldBrickWithButton* brick = dynamic_cast<GoldBrickWithButton*>(e->obj);
+				brick->GotHit(e);
+			}
+		}
 		GoldBrick* brick = dynamic_cast<GoldBrick*>(e->obj);
 		if (e->ny > 0) // collision with top of brick
 		{
 			brick->GotHit(e);
 		}
+	}
+	else if (dynamic_cast<Button*>(e->obj))
+	{
+		Button* button = dynamic_cast<Button*>(e->obj);
+		button->GetPress();
 	}
 }
 

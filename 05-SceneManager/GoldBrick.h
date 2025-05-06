@@ -17,7 +17,7 @@ public:
 	}
 	void Render();
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	int IsCollidable() { return 1; }
+	int IsCollidable() { return 0; }
 	virtual void GotHit(LPCOLLISIONEVENT e) = 0;
 };
 

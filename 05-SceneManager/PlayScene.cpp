@@ -33,6 +33,8 @@
 #include "BreakableGoldBrick.h"
 #include "GoldBrickMulti.h"
 #include "ItemGoldBrick.h"
+#include "GoldBrickWithButton.h"
+#include "BuiderGoldBrick.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -243,11 +245,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Block(x, y, width, height, color);
 		break;
 	}
-	case OBJECT_TYPE_GOLD_BRICK:
+	case OBJECT_TYPE_BULDER_GOLD_BRICK:
 	{
-		obj = new BreakableGoldBrick(x, y);
+		int type = atoi(tokens[3].c_str());
+		vector<vector<int>> grid;
+		int width = atoi(tokens[4].c_str());
+		int height = atoi(tokens[5].c_str());
+		int curToken = 6;
+		for (int i = 0; i < height; i++)
+		{
+			vector<int> row;
+			for (int j = 0; j < width; j++)
+			{
+				row.push_back(atoi(tokens[curToken++].c_str()));
+			}
+			grid.push_back(row);
+		}
+		obj = new BuiderGoldBrick(x, y, type, grid);
 		break;
 	}
+	
 	case OBJECT_TYPE_PIPE:
 	{
 		float cell_width = (float)atof(tokens[3].c_str());

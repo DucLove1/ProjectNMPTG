@@ -35,6 +35,8 @@
 #define OBJECT_TYPE_GREEN_VENUS 32
 #define OBJECT_TYPE_PIRANHA_PLANT 33
 #define OBJECT_TYPE_GOLD_BRICK 34
+#define OBJECT_TYPE_BUTTON 35
+#define OBJECT_TYPE_BULDER_GOLD_BRICK 36
 #define OBJECT_TYPE_PORTAL	50
 
 
@@ -303,6 +305,11 @@
 #pragma endregion
 #pragma region GOLD_BRICK
 #define ID_SPRITE_GOLD_BRICK 340000
+#pragma endregion
+#pragma region BUTTON
+#define ID_SPRITE_BUTTON 350000
+#define ID_SPRITE_BUTTON_NORMAL (ID_SPRITE_BUTTON + 1000)
+#define ID_SPRITE_BUTTON_PRESSED (ID_SPRITE_BUTTON + 2000)
 #pragma endregion
 //Animations
 #pragma region ANIMATION
@@ -573,4 +580,7 @@
 #pragma region GOLD_BRICK
 #define ID_ANI_GOLD_BRICK_ACTIVE 34000
 #define ID_ANI_GOLD_BRICK_INACTIVE 34001
+#pragma endregion
+#pragma region BUTTON
+#define ID_ANI_BUTTON_NORMAL 35000
 #pragma endregion

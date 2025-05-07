@@ -5,7 +5,7 @@
 
 #include "Mario.h"
 #include "PlayScene.h"
-
+#include "GameClock.h"
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -35,9 +35,14 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_8:
 		mario->SetPickUp(true);
-
+		break;
 	case DIK_R: // reset
 		//Reload();
+	case DIK_D:
+		GameClock::GetInstance()->Pause();
+		break;
+	case DIK_C:
+		GameClock::GetInstance()->Resume();
 		break;
 	}
 }

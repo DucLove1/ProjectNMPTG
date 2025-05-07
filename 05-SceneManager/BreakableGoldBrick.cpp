@@ -1,6 +1,7 @@
 #include "BreakableGoldBrick.h"
 #include "Mario.h"
 #include "Sprites.h"
+#include "GameClock.h"
 #define ID_SPRITE_COIN 40001
 #define TIME_COIN_TO_BRICK 10000
 void BreakableGoldBrick::GoUp(DWORD dt)
@@ -67,7 +68,7 @@ void BreakableGoldBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void BreakableGoldBrick::UpdateStateCoin()
 {
-	if(GetTickCount64() - timerCoinState > TIME_COIN_TO_BRICK)
+	if(GameClock::GetInstance()->GetTime() - timerCoinState > TIME_COIN_TO_BRICK)
 	{
 		//timerCoinState = -1;
 		SetState(STATE_IDLE);
@@ -77,7 +78,7 @@ void BreakableGoldBrick::UpdateStateCoin()
 void BreakableGoldBrick::ChangeToCoin()
 {
 	SetState(STATE_COIN);
-	timerCoinState = GetTickCount64();
+	timerCoinState = GameClock::GetInstance()->GetTime();
 }
 
 void BreakableGoldBrick::Render()

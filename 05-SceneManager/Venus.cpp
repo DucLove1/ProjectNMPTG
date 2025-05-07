@@ -1,5 +1,6 @@
 #include "Venus.h"
 #include "Animations.h"
+#include "GameClock.h"
 #define DIFF_FROM_HEAD_RED 8.0f
 #define DIFF_FROM_HEAD_GREEN 5.0f
 void Venus::FollowMario()
@@ -104,8 +105,8 @@ void Venus::UpdateStateAppear(DWORD dt)
 	{
 		this->y = minY;
 		if (timer == -1)
-			timer = GetTickCount64();
-		else if (GetTickCount64() - timer > TIME_WAIT_TO_FIRE)
+			timer = GameClock::GetInstance()->GetTime();
+		else if (GameClock::GetInstance()->GetTime() - timer > TIME_WAIT_TO_FIRE)
 		{
 			SetState(ATTACK);
 			timer = -1;
@@ -116,14 +117,14 @@ void Venus::UpdateStateAttack(DWORD dt)
 {
 	if (timer == -1)
 	{
-		timer = GetTickCount64();
+		timer = GameClock::GetInstance()->GetTime();
 		float angle = ChooseAngle();
 		if (type == RED)
 			bullet->Fire(x, y - DIFF_FROM_HEAD_RED, angle);
 		else
 			bullet->Fire(x, y - DIFF_FROM_HEAD_GREEN, angle);
 	}
-	else if (GetTickCount64() - timer > TIME_WAIT_TO_HIDE)
+	else if (GameClock::GetInstance()->GetTime() - timer > TIME_WAIT_TO_HIDE)
 	{
 		SetState(HIDE);
 		timer = -1;
@@ -139,7 +140,7 @@ void Venus::UpdateStateHide(DWORD dt)
 	{
 		this->y = maxY;
 		if (timer == -1)
-			timer = GetTickCount64();
+			timer = GameClock::GetInstance()->GetTime();
 		else 
 		{
 			float marioX, marioY;
@@ -147,7 +148,7 @@ void Venus::UpdateStateHide(DWORD dt)
 			// mario is close to Venus, Venus doesn't appear
 			if (abs(marioX - this->x) <= DISTANCE_TO_APPEAR)
 				return;
-			if (GetTickCount64() - timer > TIME_WAIT_TO_APPEAR)
+			if (GameClock::GetInstance()->GetTime() - timer > TIME_WAIT_TO_APPEAR)
 			{
 				SetState(APPEAR);
 				timer = -1;

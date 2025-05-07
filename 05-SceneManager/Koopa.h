@@ -1,5 +1,6 @@
 #pragma once
 #include "CEnemy.h"
+#include "GameClock.h"
 #define GREEN_KOOPA 0
 #define RED_KOOPA 1
 #define KOOPA_GRAVITY 0.001f
@@ -67,6 +68,6 @@ public:
 	bool IsAlive() { return state != KNOCK_OUT; }
 
 	void ReleaseByPlayer(CMario* e);
-	bool IsTimeOut() { return (GetTickCount64() - timerInShell >= TIME_OUT_OF_SHELL); }
+	bool IsTimeOut() { return (GameClock::GetInstance()->GetTime() - timerInShell >= TIME_OUT_OF_SHELL); }
 
 };

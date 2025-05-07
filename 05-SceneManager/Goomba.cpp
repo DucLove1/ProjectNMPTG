@@ -1,5 +1,5 @@
 #include "Goomba.h"
-
+#include "GameClock.h"
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	if (state != DIE && state != KNOCK_OUT)
@@ -84,7 +84,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CGoomba::UpdateState()
 {
 	//DebugOut(L"on ground %d\n", onGround);
-	if ((state == DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
+	if ((state == DIE) && (GameClock::GetInstance()->GetTime() - die_start > GOOMBA_DIE_TIMEOUT))
 	{
 		isDeleted = true;
 		return;
@@ -92,7 +92,7 @@ void CGoomba::UpdateState()
 
 	if (state == HAS_WING)
 	{
-		ULONGLONG cur = GetTickCount64();
+		ULONGLONG cur = GameClock::GetInstance()->GetTime();
 		if (mario && cur - timerFollow <= TIME_FOLLOW)
 		{
 			float marioX, marioY;
@@ -109,7 +109,7 @@ void CGoomba::UpdateState()
 		{
 			vy = -GOOMBA_FLY_FORCE;
 			countJump = 0;
-			timerFly = GetTickCount64();
+			timerFly = GameClock::GetInstance()->GetTime();
 		}
 		else if (cur - timerFly >= TIME_JUMPING)
 		{
@@ -122,7 +122,7 @@ void CGoomba::UpdateState()
 	}
 	else if (state == KNOCK_OUT)
 	{
-		ULONGLONG time = GetTickCount64() - timerKnockOut;
+		ULONGLONG time = GameClock::GetInstance()->GetTime() - timerKnockOut;
 		if (time >= TIME_OUT_KNOCK_OUT)
 		{
 			isDeleted = true;
@@ -141,7 +141,7 @@ void CGoomba::UpdateState()
 void CGoomba::Render()
 {
 	int aniId = (type == GOOMBA) ? ID_ANI_GOOMBA_WALKING : ID_ANI_RED_GOOMBA_WALKING;
-	ULONGLONG cur = GetTickCount64();
+	ULONGLONG cur = GameClock::GetInstance()->GetTime();
 	switch (state)
 	{
 	case HAS_WING:
@@ -193,7 +193,7 @@ void CGoomba::KnockedOut(CGameObject* obj)
 
 void CGoomba::SetStateDie()
 {
-	die_start = GetTickCount64();
+	die_start = GameClock::GetInstance()->GetTime();
 	y += (GOOMBA_SPRITE_HEIGHT - GOOMBA_SPRITE_HEIGHT_DIE) / 2 + 1;
 	vx = 0;
 	vy = 0;
@@ -211,7 +211,7 @@ void CGoomba::SetStateHasNoWing()
 
 void CGoomba::SetStateHasWing()
 {
-	timerFly = GetTickCount64();
+	timerFly = GameClock::GetInstance()->GetTime();
 }
 
 void CGoomba::SetStateKockOut()
@@ -224,7 +224,7 @@ void CGoomba::SetStateKockOut()
 	vy = -0.15;
 	ax = nx * 0.000001f;
 	vx = abs(vx) * nx;
-	timerKnockOut = GetTickCount64();
+	timerKnockOut = GameClock::GetInstance()->GetTime();
 }
 
 void CGoomba::SetState(int state)

@@ -163,6 +163,7 @@
     <ClCompile Include="CQuestionBrick.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameClock.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GoldBrick.cpp" />
     <ClCompile Include="GoldBrickMulti.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="CQuestionBrick.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameClock.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GoldBrick.h" />
     <ClInclude Include="GoldBrickMulti.h" />

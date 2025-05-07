@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "debug.h"
 #include "Mario.h"
+#include "GameClock.h"
 void SpawnEnemy::GetEnemies(vector<pair<int, int>>& enemies)
 {
 	for (auto& type : enemies)
@@ -68,14 +69,14 @@ void SpawnEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (startTime == -1)
 		{
 			this->Spawn();
-			startTime = GetTickCount64();
+			startTime = GameClock::GetInstance()->GetTime();
 		}
 		else
 		{
-			if (GetTickCount64() - startTime > TIME_WAIT_TO_SPAWN)
+			if (GameClock::GetInstance()->GetTime() - startTime > TIME_WAIT_TO_SPAWN)
 			{
 				this->Spawn();
-				startTime = GetTickCount64();
+				startTime = GameClock::GetInstance()->GetTime();
 			}
 		}
 	}

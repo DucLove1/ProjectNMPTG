@@ -1,6 +1,7 @@
 #include "Button.h"
 #include "AssetIDs.h"
 #include "GoldBrickWithButton.h"
+#include "Animations.h"
 #define BUTTON_WIDTH 16
 #define BUTTON_HEIGHT 16
 #define BUTTON_HEIGHT_PRESSED 6

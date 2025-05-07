@@ -35,6 +35,7 @@
 #include "ItemGoldBrick.h"
 #include "GoldBrickWithButton.h"
 #include "BuiderGoldBrick.h"
+#include "GameClock.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -460,6 +461,8 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
+		if (i != 0 && GameClock::GetInstance()->IsPaused())
+			continue;
 		objects[i]->Update(dt, &coObjects);
 	}
 
@@ -484,7 +487,10 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	for (int i = 1; i < objects.size(); i++)
+	{
+		curObject = objects[i];
 		objects[i]->Render();
+	}
 	objects[0]->Render();
 }
 

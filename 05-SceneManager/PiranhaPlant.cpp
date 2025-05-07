@@ -1,4 +1,5 @@
 #include "PiranhaPlant.h"
+#include "GameClock.h"
 #define DIFF 5.0f
 void PiranhaPlant::UpdateStateAppear(DWORD dt)
 {
@@ -10,8 +11,8 @@ void PiranhaPlant::UpdateStateAppear(DWORD dt)
 	{
 		this->y = minY;
 		if (timer == -1)
-			timer = GetTickCount64();
-		else if (GetTickCount64() - timer > TIME_WAIT_TO_HIDE)
+			timer = GameClock::GetInstance()->GetTime();
+		else if (GameClock::GetInstance()->GetTime() - timer > TIME_WAIT_TO_HIDE)
 		{
 			SetState(HIDE);
 			timer = -1;
@@ -29,7 +30,7 @@ void PiranhaPlant::UpdateStateHide(DWORD dt)
 	{
 		this->y = maxY;
 		if (timer == -1)
-			timer = GetTickCount64();
+			timer = GameClock::GetInstance()->GetTime();
 		else
 		{
 			float mX, mY;
@@ -38,7 +39,7 @@ void PiranhaPlant::UpdateStateHide(DWORD dt)
 			{
 				return;
 			}
-			if (GetTickCount64() - timer > TIME_WAIT_TO_APPEAR)
+			if (GameClock::GetInstance()->GetTime() - timer > TIME_WAIT_TO_APPEAR)
 			{
 				SetState(APPEAR);
 				timer = -1;

@@ -4,8 +4,8 @@
 #include <d3dx10.h>
 #include <vector>
 
-#include "Animation.h"
-#include "Animations.h"
+//#include "Animation.h"
+//#include "Animations.h"
 #include "Sprites.h"
 #include "Collision.h"
 

@@ -4,7 +4,7 @@
 #include <queue>
 #define TIME_WAIT_TO_SPAWN 1000
 #define BBOX_WIDTH 16
-#define BBOX_HEIGHT 100
+#define BBOX_HEIGHT 500
 class SpawnEnemy : public CGameObject
 {
 private:

@@ -2,6 +2,7 @@
 #include "Goomba.h"
 #include "AssetIDs.h"
 #include "Mario.h"
+#include "GameClock.h"
 void Koopa::SetState(int state)
 {
 	switch (state)
@@ -117,7 +118,8 @@ void Koopa::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
 }
 void Koopa::UpdateStateInShell()
 {
-	ULONGLONG cur = GetTickCount64();
+	//ULONGLONG cur = GetTickCount64();
+	ULONGLONG cur = GameClock::GetInstance()->GetTime();
 	if (vx == 0 && cur - timerInShell >= TIME_OUT_OF_SHELL)
 	{
 		SetState(HAS_NO_WING);
@@ -126,7 +128,7 @@ void Koopa::UpdateStateInShell()
 }
 void Koopa::UpdateStateKnockOut()
 {
-	ULONGLONG time = GetTickCount64() - timerKnockOut;
+	ULONGLONG time = GameClock::GetInstance()->GetTime() - timerKnockOut;
 	if (time >= TIME_OUT_KNOCK_OUT)
 	{
 		isDeleted = true;
@@ -195,7 +197,7 @@ void Koopa::KickedFromTop(CGameObject* obj)
 		if (vx != 0)
 		{
 			vx = 0;
-			timerInShell = GetTickCount64();
+			timerInShell = GameClock::GetInstance()->GetTime();
 			return;
 		}
 		float objX, objY;
@@ -239,7 +241,7 @@ void Koopa::SetStateHasNoWing()
 void Koopa::SetStateInShellUp()
 {
 	vx = 0;
-	timerInShell = GetTickCount64();
+	timerInShell = GameClock::GetInstance()->GetTime();
 	if (this->state == HAS_NO_WING)
 	{
 		y += (KOOPA_SPRITE_HAS_NO_WING_HEIGHT - KOOPA_SPRITE_IN_SHELL_HEIGHT) / 2;
@@ -253,7 +255,7 @@ void Koopa::SetStateInShellUp()
 void Koopa::SetStateInShellDown()
 {
 	vx = 0;
-	timerInShell = GetTickCount64();
+	timerInShell = GameClock::GetInstance()->GetTime();
 	if (this->state == HAS_NO_WING)
 	{
 		y += (KOOPA_SPRITE_HAS_NO_WING_HEIGHT - KOOPA_SPRITE_IN_SHELL_HEIGHT) / 2;
@@ -275,7 +277,7 @@ void Koopa::SetStateKnockOut()
 	ax = -nx * 0.0005f;
 	//vx = abs(vx) * nx;
 	vx = 0.25f * nx;
-	timerKnockOut = GetTickCount64();
+	timerKnockOut = GameClock::GetInstance()->GetTime();
 }
 
 

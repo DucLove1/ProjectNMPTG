@@ -123,6 +123,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="BuiderGoldBrick.cpp" />
     <ClCompile Include="GameClock.cpp" />
+    <ClCompile Include="GameManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="BuiderGoldBrick.h" />
     <ClInclude Include="GameClock.h" />
+    <ClInclude Include="GameManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

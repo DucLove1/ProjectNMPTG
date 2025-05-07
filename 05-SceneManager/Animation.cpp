@@ -26,7 +26,8 @@ bool CAnimation::CheckObjectPause(CGameObject* object)
 void CAnimation::Render(float x, float y)
 {
 	CGameObject* curObject = ((LPPLAYSCENE(CGame::GetInstance()->GetCurrentScene())->GetCurObject()));
-	ULONGLONG now = (CheckObjectPause(curObject)) ? GameClock::GetInstance()->GetTime() : GetTickCount64();
+	bool checkObjectPause = CheckObjectPause(curObject);
+	ULONGLONG now = (checkObjectPause) ? GameClock::GetInstance()->GetTime() : GetTickCount64();
 	//ULONGLONG now = GameClock::GetInstance()->GetTime();
 	if (currentFrame == -1)
 	{

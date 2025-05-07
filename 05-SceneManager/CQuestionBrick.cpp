@@ -1,5 +1,5 @@
 #include "CQuestionBrick.h"
-
+#include "GameClock.h"
 void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	//CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
@@ -73,8 +73,8 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 		}
 		else// if (mario->GetLevel() == MARIO_LEVEL_BIG)
 		{
-			CLeaf* mr = new CLeaf(x, y);
-			scene->AddObject(mr);
+			this->item = new CLeaf(x, y);
+			scene->AddObject(item);
 		}
 		cdHit = CD_GOT_HIT;
 	}
@@ -104,7 +104,9 @@ void CQuestionBrick::Render()
 	if (timeCanHit <= 0) {
 		aniId = ID_ANI_QUESTION_BRICK_EMPTY;
 	}
-	if (item != NULL && !item->IsDeleted())
+	if (item != NULL && !item->IsDeleted() &&
+		!GameClock::GetInstance()->IsPaused() &&
+		!GameClock::GetInstance()->IsTempPaused())
 		item->Render();
 	animations->Get(aniId)->Render(x, y);
 

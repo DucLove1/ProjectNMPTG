@@ -4,7 +4,10 @@
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (y <= offSetEnd)
+	{
 		wasGrowUp = true;
+		canRender = false;
+	}
 
 	if (!wasGrowUp)
 	{

@@ -151,5 +151,3 @@ button.txt
 
 # hud
 25	0	0
-#text
-27	0	0

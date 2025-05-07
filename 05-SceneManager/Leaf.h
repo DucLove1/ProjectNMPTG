@@ -15,6 +15,7 @@ class CLeaf : public CGameObject
 
 	float firstForceHeight;
 	BOOLEAN gotFirstForce;
+	bool canRender;
 
 public:
 	CLeaf(float x, float y) : CGameObject(x, y)
@@ -24,6 +25,7 @@ public:
 		vy = LEAF_SPEED;
 		firstForceHeight = y - LEAF_BBOX_HEIGHT*3;
 		gotFirstForce = false;
+		canRender = true;
 	}
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

@@ -1,6 +1,10 @@
 #include "Animation.h"
 #include "debug.h"
-
+#include "GameClock.h"
+#include "GameObject.h"
+#include "Game.h"
+#include "PlayScene.h"
+#include "CEnemy.h"
 void CAnimation::Add(int spriteId, DWORD time)
 {
 	int t = time;
@@ -13,10 +17,17 @@ void CAnimation::Add(int spriteId, DWORD time)
 	LPANIMATION_FRAME frame = new CAnimationFrame(sprite, t);
 	frames.push_back(frame);
 }
-
+bool CAnimation::CheckObjectPause(CGameObject* object)
+{
+	if (dynamic_cast<CEnemy*>(object))
+		return true;
+	return false;
+}
 void CAnimation::Render(float x, float y)
 {
-	ULONGLONG now = GetTickCount64();
+	CGameObject* curObject = ((LPPLAYSCENE(CGame::GetInstance()->GetCurrentScene())->GetCurObject()));
+	ULONGLONG now = (CheckObjectPause(curObject)) ? GameClock::GetInstance()->GetTime() : GetTickCount64();
+	//ULONGLONG now = GameClock::GetInstance()->GetTime();
 	if (currentFrame == -1)
 	{
 		currentFrame = 0;

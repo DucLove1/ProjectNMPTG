@@ -68,8 +68,8 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 		//CMushroom* mr = new CMushroom(x, y, nx);
 		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
 		{
-			CMushroom* mr = new CMushroom(x, y, nx);
-			scene->AddObject(mr);
+			this->item = new CMushroom(x, y, nx);
+			scene->AddObject(item);
 		}
 		else// if (mario->GetLevel() == MARIO_LEVEL_BIG)
 		{
@@ -104,7 +104,8 @@ void CQuestionBrick::Render()
 	if (timeCanHit <= 0) {
 		aniId = ID_ANI_QUESTION_BRICK_EMPTY;
 	}
-
+	if (item != NULL && !item->IsDeleted())
+		item->Render();
 	animations->Get(aniId)->Render(x, y);
 
 	RenderBoundingBox();

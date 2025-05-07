@@ -2,6 +2,7 @@
 #include "CEnemy.h"
 #include "Game.h"
 #include "PlayScene.h"
+#include "GameClock.h"
 #define GOOMBA_GRAVITY 0.0015f
 #define GOOMBA_WALKING_SPEED 0.05f
 #define GOOMBA_JUMPING_FORCE 0.08f
@@ -62,7 +63,7 @@ public:
 		timerFly = 0;
 		countJump = 0;
 		this->mario = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-		this->timerFollow = GetTickCount64();
+		this->timerFollow = GameClock::GetInstance()->GetTime();
 	}
 	void SetState(int state) override;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom) override;

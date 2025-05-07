@@ -17,7 +17,7 @@ protected:
 	int typeOfHolder; // coin / mushrum / leaf
 	float cdAnim;
 	float cdHit;
-
+	CGameObject* item;
 public:
 	CQuestionBrick(float x, float y, int typeOfHolder, int timeCanHit = 1) : CBreakable(x, y)
 	{
@@ -27,6 +27,7 @@ public:
 		cdAnim = 0;
 		cdHit = 0;
 		this->timeCanHit = timeCanHit;
+		this->item = NULL;
 	}
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

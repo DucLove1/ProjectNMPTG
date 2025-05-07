@@ -10,7 +10,7 @@ class GreenKoopa : public Koopa
 public:
 	GreenKoopa(float x, float y, int state) : Koopa(x, y, GREEN_KOOPA, state)
 	{
-		this->vx = 0.05f;
+		this->vx = -0.05f;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) override;
 	void UpdateStateHasWing();

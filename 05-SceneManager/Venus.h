@@ -7,13 +7,15 @@
 #include "VenusBullet.h"
 #define RED 0
 #define GREEN 1
-#define BBOX_WIDTH 16
-#define BBOX_HEIGHT 32
+#define RED_BBOX_WIDTH 16
+#define RED_BBOX_HEIGHT 32
+#define GREEN_BBOX_WIDTH 16
+#define GREEN_BBOX_HEIGHT 25
 #define TIME_WAIT_TO_FIRE 1000
 #define TIME_WAIT_TO_HIDE 2000
 #define TIME_WAIT_TO_APPEAR 2000
 #define TIME_WAIT_TO_ATTACK 3000
-#define SPEED_Y 0.05f
+#define SPEED_Y 0.1f
 #define DISTANCE_TO_APPEAR 28.0f
 class Venus: public CEnemy
 {
@@ -23,8 +25,9 @@ class Venus: public CEnemy
 		ULONGLONG timer;
 		float maxY, minY;
 		int cur_quarant;
+		int type;
 		VenusBullet* bullet;
-		vector<int> angles = { 20,45,135,160,200,225,315,340 };
+		vector<vector<int>> angles = { {20,45},{135,160},{200,225},{315,340} };
 		void FollowMario();
 		void UpdateStateAppear(DWORD dt);
 		void UpdateStateAttack(DWORD dt);
@@ -38,8 +41,9 @@ class Venus: public CEnemy
 		this->timer = -1;
 		this->ax = 0;
 		this->ay = 0;
-		this->minY = y - 32;
-		this->maxY = y + 3;
+		this->type = type;
+		this->minY = (this->type == RED) ? (y - 32) : (y-27);
+		this->maxY = y + 16;
 		this->state = HIDE;
 		this->cur_quarant = 0;
 		this->bullet = new VenusBullet(x, y);
@@ -60,8 +64,7 @@ class Venus: public CEnemy
 	void KickedFromTop(CGameObject* obj) { return; }
 	void KnockedOut(CGameObject* obj) { return; }
 	void TouchTwoSide(CGameObject* obj) { return; }
-	bool IsAlive() { return true; }
-	int IsColliable() { return 1; }
+	int IsColliable() { return this->y <= maxY - 10; }
 
 
 };

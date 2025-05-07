@@ -55,8 +55,10 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 		float Mx, My, Ox, Oy;
 		this->GetPosition(Mx, My);
-		//if (dynamic_cast<CMario*>(e->obj) == NULL) return;
-		CMario* mario = (CMario*)e;
+		////if (dynamic_cast<CMario*>(e->obj) == NULL) return;
+		//CMario* mario = (CMario*)e;
+		CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+
 		mario->GetPosition(Ox, Oy);
 
 		float dir = Ox - Mx;

@@ -76,6 +76,15 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	//	}
 	//}
 	OnCollisionWithEnemy(e);
+
+	if (dynamic_cast<CQuestionBrick*>(e->obj) &&
+		(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
+		vx != 0)
+	{
+		CQuestionBrick* QB = dynamic_cast<CQuestionBrick*>(e->obj);
+		QB->GotHit(e);
+	}
+
 	// khong bi block boi e->obj thi return
 	if (!e->obj->IsBlocking())
 		return;

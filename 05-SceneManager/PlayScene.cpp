@@ -13,6 +13,8 @@
 #include "CQuestionBrick.h"
 #include "Leaf.h"
 #include "Mushroom.h"
+#include "HUDBorder.h"
+#include "TextMeshPro.h"
 
 #include "GreenKoopa.h"
 
@@ -305,6 +307,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int nx = atoi(tokens[3].c_str());
 		obj = new CMushroom(x, y, nx);
+		break;
+	}
+	case OBJECT_TYPE_HUD_BORDER:
+	{
+		obj = new CHUDBorder(x, y);
+		DebugOut(L"HUDCreated");
+		break;
+	}
+	case OBJECT_TYPE_HUD_TEXTMESHPRO:
+	{
+		string str = "TOI DA BI CON MEO";
+		obj = new CTextMeshPro(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_BIG_TREE:

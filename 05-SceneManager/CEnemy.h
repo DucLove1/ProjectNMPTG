@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Mario.h"
+#include "CQuestionBrick.h"
 class CEnemy : public CGameObject
 {
 	protected:

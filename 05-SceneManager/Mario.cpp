@@ -395,6 +395,14 @@ int CMario::GetAniId()
 			aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_LEFT);
 		return aniId;
 	}//early return at here to focus on animation
+	if (isSitting) // this case is sitting
+	{
+		if (nx >= 0)
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_RIGHT);
+		else
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_LEFT);
+		return aniId;
+	}
 
 	if (!isOnPlatform) // this case is Jump/fall out
 	{
@@ -429,13 +437,6 @@ int CMario::GetAniId()
 			else
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_JUMP_WALK_LEFT);
 		}
-	}
-	else if (isSitting) // this case is sitting
-	{
-		if (nx >= 0)
-			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_RIGHT);
-		else
-			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_LEFT);
 	}
 	else if (isPickUp) // this case is Pick the Koopa
 	{
@@ -565,7 +566,7 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		if (isSitting) break;
+		//if (isSitting) break;
 		if (isOnPlatform)
 		{
 			if (abs(this->vx) == MARIO_RUNNING_SPEED)
@@ -574,7 +575,13 @@ void CMario::SetState(int state)
 				vy = -MARIO_JUMP_SPEED_Y;
 		}
 		break;
-
+	case MARIO_STATE_SMALL_JUMP:
+		//if (isSitting) break;
+		if (isOnPlatform)
+		{
+			vy = -MARIO_JUMP_SPEED_Y;
+		}
+		break;
 	case MARIO_STATE_RELEASE_JUMP:
 		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
 		break;
@@ -585,8 +592,12 @@ void CMario::SetState(int state)
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
 			isPickUp = false;
-			vx = 0; vy = 0.0f;
+			//vx = 0; vy = 0.0f;
 			y += MARIO_SIT_HEIGHT_ADJUST;
+			if (vx * (vx + ax * 14) <= 0) {
+				vx = 0.0f;
+				ax = 0.0f;
+			}
 		}
 		break;
 
@@ -632,6 +643,7 @@ void CMario::SetState(int state)
 		break;
 	}
 
+	
 	CGameObject::SetState(state);
 }
 

@@ -111,6 +111,9 @@
     <ClCompile Include="Bushes.cpp" />
     <ClCompile Include="Cloud.cpp" />
     <ClCompile Include="LionBricks.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
+    <ClCompile Include="HUDBorder.cpp" />
+    <ClCompile Include="TextMeshPro.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />
     <ClCompile Include="GoldBrick.cpp" />
     <ClCompile Include="BreakableGoldBrick.cpp" />
@@ -165,6 +168,9 @@
     <ClInclude Include="Bushes.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="LionBricks.h" />
+    <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="HUDBorder.h" />
+    <ClInclude Include="TextMeshPro.h" />
     <ClInclude Include="PiranhaPlant.h" />
     <ClInclude Include="GoldBrick.h" />
     <ClInclude Include="BreakableGoldBrick.h" />

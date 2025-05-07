@@ -161,6 +161,7 @@
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CQuestionBrick.cpp" />
+    <ClCompile Include="TextMeshPro.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameClock.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="GreenKoopa.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="HUDBorder.cpp" />
     <ClCompile Include="ItemGoldBrick.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="Leaf.cpp" />
@@ -190,6 +192,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Venus.cpp" />
     <ClCompile Include="VenusBullet.cpp" />
@@ -213,6 +216,7 @@
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CQuestionBrick.h" />
+    <ClInclude Include="TextMeshPro.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameClock.h" />
@@ -223,6 +227,7 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="GreenKoopa.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="HUDBorder.h" />
     <ClInclude Include="ItemGoldBrick.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
@@ -244,6 +249,7 @@
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="UserInterface.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Venus.h" />
     <ClInclude Include="VenusBullet.h" />

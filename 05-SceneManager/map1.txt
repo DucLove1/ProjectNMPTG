@@ -15,6 +15,8 @@ big_tree.txt
 bush.txt
 cloud.txt
 lion_brick.txt
+HUDBorder.txt
+alphabet.txt
 green_venus.txt
 green_koopa.txt
 piranha.txt
@@ -24,7 +26,8 @@ button.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17, big_tree = 18, bushes = 19, cloud = 30, lion_brick = 31, green venus = 32, piranha =33, gold_brick = 34, bulder gold brick = 36, pipe = 9
+# type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17, big_tree = 18, bushes = 19, cloud = 30, lion_brick = 31, green venus = 32, piranha =33, gold_brick = 34, bulder gold brick = 36, pipe = 9, hud = 25
+
 # See OBJECT_TYPE constants in AssetIDs.h
 
 #mario
@@ -130,6 +133,9 @@ button.txt
 #red koopa
 12	550	100	1
 12	2144	80	1
+
+
+
 # spawner
 17	704	-150	1088	100	2	1	2	1	16	0
 17	1200	-100	1472	39	6	0	6	0	6	0
@@ -142,3 +148,8 @@ button.txt
 4	1244	-56
 # builder gold
 36	2000	109	1	11	3	0	0	1	1	1	3	0	0	0	0	0	0	1	1	1	1	1	0	0	0	1	0	1	1	1	1	1	1	1	0	0	1	1
+
+# hud
+25	0	0
+#text
+27	0	0

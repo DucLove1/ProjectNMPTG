@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 //
 // This file contains all IDs of game assets 
@@ -30,6 +30,11 @@
 #define OBJECT_TYPE_QUESTION_BRICK 20
 #define OBJECT_TYPE_LEAF 21
 #define OBJECT_TYPE_MUSHROOM 22
+#define OBJECT_TYPE_HUD_BORDER 25 //Border of HUD
+#define OBJECT_TYPE_HUD_MARKER 26 //the logo M / L on scene when u play one in two character
+#define OBJECT_TYPE_HUD_TEXTMESHPRO 27 //i mean... text(meshpro) <(")
+#define OBJECT_TYPE_HUD_CHAR 28 /// number and alp in there
+
 #define OBJECT_TYPE_CLOUD 30
 #define OBJECT_TYPE_LION_BRICKS 31
 #define OBJECT_TYPE_PORTAL	50
@@ -207,6 +212,11 @@
 #define ID_SPRITE_LEAF_RIGHT (ID_SPRITE_LEAF + 2000)
 
 #define ID_SPRITE_MUSHROOM 220000
+
+#define ID_SPRITE_HUD_BORDER 250000
+#define ID_SPRTIE_CHAR 280000
+//1->10 is 0,1,...,9
+//21->46 is A,...,Z
 
 #pragma region GREEN_KOOPA
 #define ID_SPRITE_GREEN_KOOPA 90000
@@ -522,7 +532,89 @@
 #define ID_ANI_LEAF_LEFT 21000
 #define ID_ANI_LEAF_RIGHT 21001
 
+
 #define ID_ANI_MUSHROOM 22001
+
+#define ID_ANI_HUD_BORDER 25001
+
+#define ID_ANI_TEXT_MESH_PRO 27000
+#define ID_ANI_CHAR 28000
+#define ID_ANI_CHAR_0 ID_ANI_CHAR + 1
+#define ID_ANI_CHAR_1 ID_ANI_CHAR + 2
+#define ID_ANI_CHAR_2 ID_ANI_CHAR + 3
+#define ID_ANI_CHAR_3 ID_ANI_CHAR + 4
+#define ID_ANI_CHAR_4 ID_ANI_CHAR + 5
+#define ID_ANI_CHAR_5 ID_ANI_CHAR + 6
+#define ID_ANI_CHAR_6 ID_ANI_CHAR + 7
+#define ID_ANI_CHAR_7 ID_ANI_CHAR + 8
+#define ID_ANI_CHAR_8 ID_ANI_CHAR + 9
+#define ID_ANI_CHAR_9 ID_ANI_CHAR + 10
+
+#define ID_ANI_CHAR_A ID_ANI_CHAR + 21
+#define ID_ANI_CHAR_B ID_ANI_CHAR + 22
+#define ID_ANI_CHAR_C ID_ANI_CHAR + 23
+#define ID_ANI_CHAR_D ID_ANI_CHAR + 24
+#define ID_ANI_CHAR_E ID_ANI_CHAR + 25
+#define ID_ANI_CHAR_F ID_ANI_CHAR + 26
+#define ID_ANI_CHAR_G ID_ANI_CHAR + 27
+#define ID_ANI_CHAR_H ID_ANI_CHAR + 28
+#define ID_ANI_CHAR_I ID_ANI_CHAR + 29
+#define ID_ANI_CHAR_J ID_ANI_CHAR + 30
+#define ID_ANI_CHAR_K ID_ANI_CHAR + 31
+#define ID_ANI_CHAR_L ID_ANI_CHAR + 32
+#define ID_ANI_CHAR_M ID_ANI_CHAR + 33
+#define ID_ANI_CHAR_N ID_ANI_CHAR + 34
+#define ID_ANI_CHAR_O ID_ANI_CHAR + 35
+#define ID_ANI_CHAR_P ID_ANI_CHAR + 36
+#define ID_ANI_CHAR_Q ID_ANI_CHAR + 37
+#define ID_ANI_CHAR_R ID_ANI_CHAR + 38
+#define ID_ANI_CHAR_S ID_ANI_CHAR + 39
+#define ID_ANI_CHAR_T ID_ANI_CHAR + 40
+#define ID_ANI_CHAR_U ID_ANI_CHAR + 41
+#define ID_ANI_CHAR_V ID_ANI_CHAR + 42
+#define ID_ANI_CHAR_W ID_ANI_CHAR + 43
+#define ID_ANI_CHAR_X ID_ANI_CHAR + 44
+#define ID_ANI_CHAR_Y ID_ANI_CHAR + 45
+#define ID_ANI_CHAR_Z ID_ANI_CHAR + 46
+#define ID_ANI_CHAR_0 ID_ANI_CHAR + 1
+#define ID_ANI_CHAR_1 ID_ANI_CHAR + 2
+#define ID_ANI_CHAR_2 ID_ANI_CHAR + 3
+#define ID_ANI_CHAR_3 ID_ANI_CHAR + 4
+#define ID_ANI_CHAR_4 ID_ANI_CHAR + 5
+#define ID_ANI_CHAR_5 ID_ANI_CHAR + 6
+#define ID_ANI_CHAR_6 ID_ANI_CHAR + 7
+#define ID_ANI_CHAR_7 ID_ANI_CHAR + 8
+#define ID_ANI_CHAR_8 ID_ANI_CHAR + 9
+#define ID_ANI_CHAR_9 ID_ANI_CHAR + 10
+
+#define ID_ANI_CHAR_A ID_ANI_CHAR + 21
+#define ID_ANI_CHAR_B ID_ANI_CHAR + 22
+#define ID_ANI_CHAR_C ID_ANI_CHAR + 23
+#define ID_ANI_CHAR_D ID_ANI_CHAR + 24
+#define ID_ANI_CHAR_E ID_ANI_CHAR + 25
+#define ID_ANI_CHAR_F ID_ANI_CHAR + 26
+#define ID_ANI_CHAR_G ID_ANI_CHAR + 27
+#define ID_ANI_CHAR_H ID_ANI_CHAR + 28
+#define ID_ANI_CHAR_I ID_ANI_CHAR + 29
+#define ID_ANI_CHAR_J ID_ANI_CHAR + 30
+#define ID_ANI_CHAR_K ID_ANI_CHAR + 31
+#define ID_ANI_CHAR_L ID_ANI_CHAR + 32
+#define ID_ANI_CHAR_M ID_ANI_CHAR + 33
+#define ID_ANI_CHAR_N ID_ANI_CHAR + 34
+#define ID_ANI_CHAR_O ID_ANI_CHAR + 35
+#define ID_ANI_CHAR_P ID_ANI_CHAR + 36
+#define ID_ANI_CHAR_Q ID_ANI_CHAR + 37
+#define ID_ANI_CHAR_R ID_ANI_CHAR + 38
+#define ID_ANI_CHAR_S ID_ANI_CHAR + 39
+#define ID_ANI_CHAR_T ID_ANI_CHAR + 40
+#define ID_ANI_CHAR_U ID_ANI_CHAR + 41
+#define ID_ANI_CHAR_V ID_ANI_CHAR + 42
+#define ID_ANI_CHAR_W ID_ANI_CHAR + 43
+#define ID_ANI_CHAR_X ID_ANI_CHAR + 44
+#define ID_ANI_CHAR_Y ID_ANI_CHAR + 45
+#define ID_ANI_CHAR_Z ID_ANI_CHAR + 46
+
+#pragma endregion
 
 #pragma region RED_VENUS
 #define ID_ANI_RED_VENUS_LEFT_UP 13000

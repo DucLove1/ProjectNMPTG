@@ -36,6 +36,7 @@ void CGameObject::RenderBoundingBox()
 	CGame::GetInstance()->GetCamPos(cx, cy);
 
 	CGame::GetInstance()->Draw(x - cx, y - cy, bbox, &rect, BBOX_ALPHA);
+	
 }
 
 CGameObject::~CGameObject()

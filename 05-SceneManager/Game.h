@@ -69,6 +69,19 @@ public:
 	// rect : if NULL, the whole texture will be drawn
 	//        if NOT NULL, only draw that portion of the texture 
 	void Draw(float x, float y, LPTEXTURE tex, RECT* rect = NULL, float alpha = 1.0f, int sprite_width = 0, int sprite_height = 0);
+	//Test draw on scene
+	//void DrawOnScene(float x, float y, LPTEXTURE tex, int l, int t, int r, int b, float alpha = 1.0f, int sprite_width = 0, int sprite_height = 0)
+	//{
+	//	RECT rect;
+	//	rect.left = l;
+	//	rect.top = t;
+	//	rect.right = r;
+	//	rect.bottom = b;
+
+	//	float cx, cy;
+	//	CGame::GetInstance()->GetCamPos(cx, cy);
+	//	this->Draw(x, y, tex, &rect, alpha, sprite_width, sprite_height);
+	//}
 
 	void Draw(float x, float y, LPTEXTURE tex, int l, int t, int r, int b, float alpha = 1.0f, int sprite_width = 0, int sprite_height = 0)
 	{

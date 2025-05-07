@@ -111,6 +111,9 @@
     <ClCompile Include="Bushes.cpp" />
     <ClCompile Include="Cloud.cpp" />
     <ClCompile Include="LionBricks.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
+    <ClCompile Include="HUDBorder.cpp" />
+    <ClCompile Include="TextMeshPro.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -156,6 +159,9 @@
     <ClInclude Include="Bushes.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="LionBricks.h" />
+    <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="HUDBorder.h" />
+    <ClInclude Include="TextMeshPro.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

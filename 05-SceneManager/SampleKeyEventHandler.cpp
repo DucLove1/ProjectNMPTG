@@ -19,6 +19,13 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
 		break;
+	case DIK_Z:
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
+			mario->SetState(MARIO_STATE_ATTACK);
+		break;
+	case DIK_X:
+		mario->SetState(MARIO_STATE_SMALL_JUMP);
+		break;
 	case DIK_1:
 		mario->SetLevel(MARIO_LEVEL_SMALL);
 		break;
@@ -50,6 +57,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_S:
+	case DIK_X:
 		mario->SetState(MARIO_STATE_RELEASE_JUMP);
 		break;
 	case DIK_DOWN:

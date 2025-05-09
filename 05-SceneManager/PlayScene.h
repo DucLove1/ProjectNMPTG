@@ -33,6 +33,7 @@ public:
 
 	virtual void Load();
 	virtual void Update(DWORD dt);
+	bool CheckObjectPause(CGameObject* object);
 	virtual void Render();
 	virtual void Unload();
 

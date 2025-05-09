@@ -2,6 +2,7 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 #include "PlayScene.h"
+#include "GameClock.h"
 int ItemGoldBrick::ChooseItem()
 {
 	if (this->wayChooseItem == RANDOM_ITEM)
@@ -57,7 +58,9 @@ void ItemGoldBrick::GotHit(LPCOLLISIONEVENT e)
 
 void ItemGoldBrick::Render()
 {
-	if (item != NULL && !item->IsDeleted())
+	if (item != NULL && !item->IsDeleted() && 
+		!GameClock::GetInstance()->IsPaused()  && 
+		!GameClock::GetInstance()->IsTempPaused())
 	{
 		item->Render();
 	}

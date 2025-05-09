@@ -110,7 +110,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	int x = mapAniId[0][0];
+	//int x = mapAniId[0][0];
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -327,7 +327,7 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 }
 void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 {
-	CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
+	//CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
 	if (level == MARIO_LEVEL_SMALL)
 	{
 		SetLevel(MARIO_LEVEL_BIG);

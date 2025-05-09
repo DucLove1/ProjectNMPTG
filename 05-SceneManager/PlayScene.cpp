@@ -38,6 +38,8 @@
 #include "GoldBrickWithButton.h"
 #include "BuiderGoldBrick.h"
 #include "GameClock.h"
+#include "Leaf.h"
+#include "Mushroom.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -466,7 +468,8 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-
+	if(GameClock::GetInstance()->IsPaused())
+		return;
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -475,8 +478,8 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (i != 0 && GameClock::GetInstance()->IsPaused())
-			continue;
+		if (i != 0 && GameClock::GetInstance()->IsTempPaused())
+			break;
 		objects[i]->Update(dt, &coObjects);
 	}
 
@@ -497,14 +500,25 @@ void CPlayScene::Update(DWORD dt)
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 	PurgeDeletedObjects();
 }
-
+bool CPlayScene::CheckObjectPause(CGameObject* object)
+{
+	if (dynamic_cast<CEnemy*>(object) || dynamic_cast<VenusBullet*>(object)
+		|| dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object))
+	{
+		return true;
+	}
+	return false;
+}
 void CPlayScene::Render()
 {
 	for (int i = 1; i < objects.size(); i++)
 	{
 		curObject = objects[i];
+		if (GameClock::GetInstance()->IsPaused() && CheckObjectPause(objects[i]))
+			continue;
 		objects[i]->Render();
 	}
+	if(!GameClock::GetInstance()->IsPaused())
 	objects[0]->Render();
 }
 

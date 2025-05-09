@@ -9,11 +9,13 @@ private:
     ULONGLONG pauseTime;
     ULONGLONG accumulatedPause;
     bool isPaused;
+    bool tempPaused;
     GameClock() {
         startTime = GetTickCount64();
         pauseTime = 0;
         accumulatedPause = 0;
         isPaused = false;
+        tempPaused = false;
     }
 public:
     static GameClock* GetInstance() {
@@ -37,7 +39,7 @@ public:
     }
 
     ULONGLONG GetTime() const {
-        if (isPaused) {
+        if (isPaused || tempPaused) {
             return pauseTime - startTime - accumulatedPause;
         }
         return GetTickCount64() - startTime - accumulatedPause;
@@ -45,6 +47,24 @@ public:
 
     bool IsPaused() const {
         return isPaused;
+    }
+
+    bool IsTempPaused() const {
+		return tempPaused;
+	}
+
+    void TempPause() {
+        if (!tempPaused) {
+            pauseTime = GetTickCount64();
+			tempPaused = true;
+		}
+	}
+
+    void ResumeTempPause() {
+        if (tempPaused) {
+            accumulatedPause += GetTickCount64() - pauseTime;
+            tempPaused = false;
+        }
     }
 };
 

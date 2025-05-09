@@ -1,12 +1,21 @@
 #include "CQuestionBrick.h"
-
+#include "GameClock.h"
 void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	//CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 	if (cdHit >= 0) {
 		cdHit -= dt;
 	}
+	switch (state)
+	{
+	case STATE_GO_UP:
+		GoUp(dt);
+		break;
+	case STATE_GO_DOWN:
+		GoDown(dt);
+		break;
 
+	}
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -52,6 +61,7 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 	if (cdHit <= 0) // can do 
 	{
 		timeCanHit--;
+		SetState(STATE_GO_UP);
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 		float Mx, My, Ox, Oy;
 		this->GetPosition(Mx, My);
@@ -68,15 +78,43 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 		//CMushroom* mr = new CMushroom(x, y, nx);
 		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
 		{
-			this->item = new CMushroom(x, y, nx);
+			// vi khi hit thi brick se chay len xuong, neu cho item cung vi tri voi cuc gach thi se bi lo cuc nam
+			this->item = new CMushroom(x, y - 8, nx);
 			scene->AddObject(item);
 		}
 		else// if (mario->GetLevel() == MARIO_LEVEL_BIG)
 		{
-			CLeaf* mr = new CLeaf(x, y);
-			scene->AddObject(mr);
+			this->item = new CLeaf(x, y);
+			scene->AddObject(item);
 		}
 		cdHit = CD_GOT_HIT;
+	}
+}
+
+void CQuestionBrick::GoUp(DWORD dt)
+{
+	if (this->y - SPEED_Y * dt > minY)
+	{
+		this->vy = -SPEED_Y;
+	}
+	else
+	{
+		this->y = minY;
+		SetState(STATE_GO_DOWN);
+	}
+}
+
+void CQuestionBrick::GoDown(DWORD dt)
+{
+	if (this->y + SPEED_Y * dt < maxY)
+	{
+		this->vy = SPEED_Y;
+	}
+	else
+	{
+		this->y = maxY;
+		this->vy = 0;
+		SetState(STATE_IDLE);
 	}
 }
 
@@ -104,14 +142,16 @@ void CQuestionBrick::Render()
 	if (timeCanHit <= 0) {
 		aniId = ID_ANI_QUESTION_BRICK_EMPTY;
 	}
-	if (item != NULL && !item->IsDeleted())
+	if (item != NULL && !item->IsDeleted() &&
+		!GameClock::GetInstance()->IsPaused() &&
+		!GameClock::GetInstance()->IsTempPaused())
 		item->Render();
 	animations->Get(aniId)->Render(x, y);
 
 	RenderBoundingBox();
 }
 
-void CQuestionBrick::GetBoundingBox( float &l, float &t, float &r, float &b) {
+void CQuestionBrick::GetBoundingBox(float& l, float& t, float& r, float& b) {
 	l = x - BRICK_BBOX_WIDTH / 2;
 	t = y - BRICK_BBOX_HEIGHT / 2;
 	r = l + BRICK_BBOX_WIDTH;

@@ -12,10 +12,15 @@ void VenusBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (this->angle == -1)
 		return;
-	this->x += cos(angle / 180.0f * 3.14) * speed * dt;
-	this->y += sin(angle / 180.0f * 3.14) * speed * dt;
+	this->vx = cos(angle / 180.0f * 3.14) * speed;
+	this->vy = sin(angle / 180.0f * 3.14) * speed;
+	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
-
+void VenusBullet::OnNoCollision(DWORD dt)
+{
+	this->x += this->vx * dt;
+	this->y += this->vy * dt;
+}
 void VenusBullet::Render()
 {
 	if(this->angle >= 90 && this->angle < 270)

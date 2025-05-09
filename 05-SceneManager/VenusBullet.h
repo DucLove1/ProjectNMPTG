@@ -17,9 +17,10 @@ public:
 		this->animId = -1;
 	}
 	int IsBlocking() { return 0; }
-	int IsCollidable() { return 1; }
+	int IsCollidable() { return 0; }
 	void Fire(float x, float y, float angle);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void OnNoCollision(DWORD dt);
 	void Render();
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 };

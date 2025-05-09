@@ -23,6 +23,9 @@ private:
 	int type;
 	int lastAnimationId;
 	ULONGLONG timerKnockOut;
+
+	BOOLEAN isHolded;
+
 	void SetStateHasWing();
 	void SetStateHasNoWing();
 	void SetStateInShellUp();
@@ -49,6 +52,7 @@ public:
 		this->onGround = false;
 		timerInShell = 0;
 		this->lastAnimationId = -1;
+		isHolded = false;
 	}
 	void SetState(int state) override;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom) override;
@@ -56,8 +60,8 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e) override;
 	void OnCollisionWithEnemy(LPCOLLISIONEVENT e);
 	//void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) override;
-	void UpdateStateInShell();
-	void UpdateStateKnockOut();
+	void UpdateStateInShell(DWORD dt);
+	void UpdateStateKnockOut(DWORD dt);
 	void Render() override;
 	void KickedFromTop(CGameObject*);
 	void MoveInShell(int direction);
@@ -69,5 +73,7 @@ public:
 
 	void ReleaseByPlayer(CMario* e);
 	bool IsTimeOut() { return (GameClock::GetInstance()->GetTime() - timerInShell >= TIME_OUT_OF_SHELL); }
+	void SetHolded(bool isHolded) { this->isHolded = isHolded; }
+	bool IsHolded() { return isHolded; }
 
 };

@@ -319,7 +319,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_HUD_TEXTMESHPRO:
 	{
-		string str = "TOI DA BI CON MEO";
+		string str = "TOI DA BI CON meo";
 		obj = new CTextMeshPro(x, y, str);
 		break;
 	}

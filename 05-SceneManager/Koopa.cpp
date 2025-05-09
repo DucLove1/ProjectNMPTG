@@ -57,6 +57,7 @@ void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 
 void Koopa::OnNoCollision(DWORD dt)
 {
+	if (IsHolded()) return;
 	x += vx * dt;
 	y += vy * dt;
 	onGround = false;
@@ -76,6 +77,7 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	//	}
 	//}
 	OnCollisionWithEnemy(e);
+
 
 	if (dynamic_cast<CQuestionBrick*>(e->obj) &&
 		(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
@@ -125,7 +127,7 @@ void Koopa::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
 		}
 	}
 }
-void Koopa::UpdateStateInShell()
+void Koopa::UpdateStateInShell(DWORD dt)
 {
 	//ULONGLONG cur = GetTickCount64();
 	ULONGLONG cur = GameClock::GetInstance()->GetTime();
@@ -134,8 +136,13 @@ void Koopa::UpdateStateInShell()
 		SetState(HAS_NO_WING);
 		timerInShell = 0;
 	}
+	if(IsHolded())
+	{
+		x += vx * dt;
+		y += vy * dt;
+	}
 }
-void Koopa::UpdateStateKnockOut()
+void Koopa::UpdateStateKnockOut(DWORD dt)
 {
 	ULONGLONG time = GameClock::GetInstance()->GetTime() - timerKnockOut;
 	if (time >= TIME_OUT_KNOCK_OUT)
@@ -148,6 +155,11 @@ void Koopa::UpdateStateKnockOut()
 		ay = GOOMBA_GRAVITY * 1.5;
 		ax = 0;
 		return;
+	}
+	if (IsHolded())
+	{
+		x += vx * dt;
+		y += vy * dt;
 	}
 }
 void Koopa::Render()

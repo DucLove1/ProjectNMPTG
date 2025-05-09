@@ -126,6 +126,7 @@ class CMario : public CGameObject
 	int coin;
 
 	LPGAMEOBJECT item;
+	int preNx;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
@@ -167,6 +168,7 @@ public:
 		coin = 0;
 
 		this->item = nullptr;
+		preNx = nx;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -183,7 +185,7 @@ public:
 	int GetNx() { return nx; }
 
 	void SetPickUp(BOOLEAN pick) { isPickUp = pick; }
-	void PickingItem();
+	void PickingItem(DWORD dt);
 	void ReleaseItem(CGameObject* item);
 
 	void OnNoCollision(DWORD dt);

@@ -14,10 +14,10 @@ void RedKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		break;
 	case IN_SHELL_UP:
 	case IN_SHELL_DOWN:
-		UpdateStateInShell();
+		UpdateStateInShell(dt);
 		break;
 	case KNOCK_OUT:
-		UpdateStateKnockOut();
+		UpdateStateKnockOut(dt);
 		break;
 	}
 	CCollision::GetInstance()->Process(this, dt, coObjects);

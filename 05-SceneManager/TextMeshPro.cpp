@@ -7,20 +7,21 @@
 
 void CTextMeshPro::Render()
 {
-	CMario * mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	int level = mario->GetLevel();
-	SetText("CURRENT LEVEL " + to_string(level));
-	this->id = ID_ANI_TEXT_MESH_PRO;
+	//CMario * mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	//int level = mario->GetLevel();
+	//SetText("CURRENT LEVEL " + to_string(level));
+	//this->id = ID_ANI_TEXT_MESH_PRO;
 	//CUserInterface::Render();
 	for (auto c : text)
 	{
 		c->Render();
-		DebugOut(L"%d \n", c->characterId);
+		//DebugOut(L"%d \n", c->characterId);
 	}
-	DebugOut(L"Was done\n");
+	//DebugOut(L"Was done\n");
 }
 int CTextMeshPro::HashIDChar(char c)
 {
+	c = toupper(c);
 	if (c >= '0' && c <= '9')
 		return 28000 + (c - '0') + 1;     // '0' → 28001, '1' → 28002, ..., '9' → 28010
 	else if (c >= 'A' && c <= 'Z')
@@ -42,7 +43,6 @@ void CTextMeshPro::GenerateText()
 	{
 		character = new CCharacters(x + i * 10 + modifier, y, HashIDChar(textString[i]));
 		text.push_back(character);
-		DebugOut(L"%f-%f \n", x + i * 10 + modifier, y);
 	}
 }
 

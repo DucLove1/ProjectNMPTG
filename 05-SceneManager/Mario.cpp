@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include "debug.h"
 
 #include "Mario.h"
@@ -75,10 +75,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-	
+
 	if (isPickUp) {
 		DebugOut(L"PreCall");
-		PickingItem();
+		PickingItem(dt);
 	}
 	else {
 		if (item != nullptr) {
@@ -108,6 +108,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = 0.f;
 		return;
 	}
+	preNx = nx;
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	int x = mapAniId[0][0];
@@ -330,6 +331,7 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 	CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
 	if (level == MARIO_LEVEL_SMALL)
 	{
+		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 		SetLevel(MARIO_LEVEL_BIG);
 		SetPowerUP(true);
 		//SetSelfPausing(true);
@@ -643,7 +645,7 @@ void CMario::SetState(int state)
 		break;
 	}
 
-	
+
 	CGameObject::SetState(state);
 }
 
@@ -697,21 +699,38 @@ void CMario::DecreaseLevel()
 	}
 }
 
-void CMario::PickingItem() {
+void CMario::PickingItem(DWORD dt) {
 	if (this->item == nullptr) return;
-
-	item->SetSpeed(0, 0);
-
-	if (nx >= 0)
-		item->SetPosition(this->x + 16, this->y);
-	else
-		item->SetPosition(this->x - 16, this->y);
+	float fdt = (float)dt;
 
 	if (dynamic_cast<Koopa*>(item))
 	{
 		Koopa* koopa = dynamic_cast<Koopa*>(item);
+		koopa->SetHolded(true);
+
+		//IF YOU READ THIS LINE "BẠN ĐÃ BỊ CON MÈO"
+		//if (preNx * nx <= 0) {
+		//	item->SetPosition(this->x + 16 * nx, this->y);
+		//}
+		//float tempVy = 0;
+		//if (!isOnPlatform) {
+		//	tempVy = this->vy;
+		//	DebugOut(L"SET temp %f", tempVy);
+		//}
+		//DebugOut(L"SEEE temp %f", tempVy);
+		//item->SetSpeed(this->vx, tempVy);
+
+		float targetX = x + 16 * nx + (this->vx * fdt), targetY = y + (this->vy * fdt);
+		float curX, curY;
+		item->GetPosition(curX, curY);
+		float kVx = (targetX - curX) / (float)fdt, kVy = (targetY - curY) / (float)fdt;
+		item->SetSpeed(kVx, kVy);
+		koopa->SetAccelation(0, 0);
+
 		if (koopa->IsTimeOut())
+		{
 			isPickUp = false;
+		}
 	}
 
 }
@@ -719,6 +738,7 @@ void CMario::ReleaseItem(CGameObject* item) {
 	Koopa* koopa = dynamic_cast<Koopa*> (item);
 	if (koopa == nullptr) return;
 
+	koopa->SetHolded(false);
+	koopa->SetAccelation(0.f, KOOPA_GRAVITY);
 	koopa->ReleaseByPlayer(this);
-
 }

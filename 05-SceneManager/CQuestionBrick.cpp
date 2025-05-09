@@ -144,11 +144,12 @@ void CQuestionBrick::Render()
 	}
 	if (item != NULL && !item->IsDeleted() &&
 		!GameClock::GetInstance()->IsPaused() &&
-		!GameClock::GetInstance()->IsTempPaused())
+		!GameClock::GetInstance()->IsTempPaused()&&
+		(dynamic_cast<CLeaf*>(item) || dynamic_cast<CMushroom*>(item)))
 		item->Render();
 	animations->Get(aniId)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CQuestionBrick::GetBoundingBox(float& l, float& t, float& r, float& b) {

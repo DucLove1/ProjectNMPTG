@@ -40,6 +40,7 @@
 #include "GameClock.h"
 #include "Leaf.h"
 #include "Mushroom.h"
+#include "Wall.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -347,6 +348,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int width = atoi(tokens[3].c_str());
 		int height = atoi(tokens[4].c_str());
 		obj = new LionBricks(x, y, width, height);
+		break;
+	}
+	case OBJECT_TYPE_WALL:
+	{
+		obj = new Wall(x, y);
 		break;
 	}
 	case OBJECT_TYPE_PLATFORM:

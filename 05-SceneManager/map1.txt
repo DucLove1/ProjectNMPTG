@@ -26,12 +26,14 @@ button.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17, big_tree = 18, bushes = 19, cloud = 30, lion_brick = 31, green venus = 32, piranha =33, gold_brick = 34, bulder gold brick = 36, pipe = 9, hud = 25
+# type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17, big_tree = 18, bushes = 19, cloud = 30, lion_brick = 31, green venus = 32, piranha =33, gold_brick = 34, bulder gold brick = 36, pipe = 9, hud = 25, wall = 37
 
 # See OBJECT_TYPE constants in AssetIDs.h
 
 #mario
-0	1500	10
+0	20	10
+#wall
+37	0	40
 #ground
 15	0	157	42	1
 15	672	141	29	2

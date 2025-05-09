@@ -21,7 +21,7 @@ public:
 	CMushroom(float x, float y, int nx) : CGameObject(x, y) 
 	{
 		offSetBegin = this->y;
-		offSetEnd = this->y - MUSHROOM_BBOX_HEIGHT;
+		offSetEnd = this->y - MUSHROOM_BBOX_HEIGHT+6;
 		vx = MUSHROOM_SPEED_X;
 		this->nx = nx;
 		wasGrowUp = false;

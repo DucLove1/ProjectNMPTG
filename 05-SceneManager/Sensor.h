@@ -23,7 +23,7 @@ public:
 		isOn = false;
 	}
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	void Render() { RenderBoundingBox(); }
+	void Render() { /*RenderBoundingBox(); */ }
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	void FollowEnemy();
 	int IsCollidable() { return 1; }

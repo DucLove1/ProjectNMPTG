@@ -124,6 +124,7 @@
     <ClCompile Include="BuiderGoldBrick.cpp" />
     <ClCompile Include="GameClock.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="BuiderGoldBrick.h" />
     <ClInclude Include="GameClock.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

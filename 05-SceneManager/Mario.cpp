@@ -79,7 +79,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx += ax * dt;
 
 	if (isPickUp) {
-		DebugOut(L"PreCall");
 		PickingItem(dt);
 	}
 	else {
@@ -545,9 +544,9 @@ void CMario::Render()
 	}
 	animations->Get(aniId)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 
-	DebugOutTitle(L"Coins: %d", coin);
+	//DebugOutTitle(L"Coins: %d", coin);
 }
 
 void CMario::SetState(int state)
@@ -714,7 +713,10 @@ void CMario::DecreaseLevel()
 }
 
 void CMario::PickingItem(DWORD dt) {
-	if (this->item == nullptr) return;
+	if (this->item == nullptr || this->item->IsDeleted()) {
+		//ReleaseItem(item);
+		return;
+	}
 	float fdt = (float)dt;
 
 	if (dynamic_cast<Koopa*>(item))
@@ -749,10 +751,14 @@ void CMario::PickingItem(DWORD dt) {
 
 }
 void CMario::ReleaseItem(CGameObject* item) {
+	if (item == nullptr || item->IsDeleted()) {
+		return;
+	}
 	Koopa* koopa = dynamic_cast<Koopa*> (item);
 	if (koopa == nullptr) return;
 
 	koopa->SetHolded(false);
 	koopa->SetAccelation(0.f, KOOPA_GRAVITY);
 	koopa->ReleaseByPlayer(this);
+	//this->item = nullptr;
 }

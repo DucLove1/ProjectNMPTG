@@ -201,7 +201,7 @@ void Koopa::Render()
 		lastAnimationId = aniId;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 void Koopa::KickedFromTop(CGameObject* obj)
 {

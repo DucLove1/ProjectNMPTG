@@ -1,5 +1,6 @@
 #include "Goomba.h"
 #include "GameClock.h"
+#include "Wall.h"
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	if (state != DIE && state != KNOCK_OUT)
@@ -56,8 +57,10 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 		}
 		return;
 	}
-	if (!e->obj->IsBlocking()) return; 
-
+	if (!e->obj->IsBlocking())
+	{
+		return;
+	}
 	if (e->ny != 0 )
 	{
 		vy = 0;

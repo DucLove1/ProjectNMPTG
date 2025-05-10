@@ -198,6 +198,7 @@
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Venus.cpp" />
     <ClCompile Include="VenusBullet.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Venus.h" />
     <ClInclude Include="VenusBullet.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

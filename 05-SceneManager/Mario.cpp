@@ -104,7 +104,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		recovery_start = 0;
 		isRecovering = 0;
 	}
-
 	if (isPowerUp
 		|| GetTickCount64() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR) {
 		vy = 0.f;

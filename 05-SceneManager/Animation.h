@@ -6,6 +6,7 @@
 #include "Sprites.h"
 #include "AnimationFrame.h"
 #include "GameObject.h"
+#include "debug.h"
 using namespace std;
 
 class CAnimation

@@ -1,5 +1,6 @@
 #include "Goomba.h"
-
+#include "GameClock.h"
+#include "Wall.h"
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	if (state != DIE && state != KNOCK_OUT)
@@ -56,8 +57,10 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 		}
 		return;
 	}
-	if (!e->obj->IsBlocking()) return; 
-
+	if (!e->obj->IsBlocking())
+	{
+		return;
+	}
 	if (e->ny != 0 )
 	{
 		vy = 0;
@@ -84,7 +87,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CGoomba::UpdateState()
 {
 	//DebugOut(L"on ground %d\n", onGround);
-	if ((state == DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
+	if ((state == DIE) && (GameClock::GetInstance()->GetTime() - die_start > GOOMBA_DIE_TIMEOUT))
 	{
 		isDeleted = true;
 		return;
@@ -92,13 +95,26 @@ void CGoomba::UpdateState()
 
 	if (state == HAS_WING)
 	{
-		if (countJump >= 3 && onGround && GetTickCount64() - timerFly >= TIME_FLYING)
+		ULONGLONG cur = GameClock::GetInstance()->GetTime();
+		if (mario && cur - timerFollow <= TIME_FOLLOW)
+		{
+			float marioX, marioY;
+			mario->GetPosition(marioX, marioY);
+			if (abs(marioX - this->x) >= DISTANCE_FOLLOW)
+			{
+				if (marioX > this->x)
+					vx = abs(vx);
+				else
+					vx = -abs(vx);
+			}
+		}
+		if (countJump >= 3 && onGround && cur - timerFly >= TIME_FLYING)
 		{
 			vy = -GOOMBA_FLY_FORCE;
 			countJump = 0;
-			timerFly = GetTickCount64();
+			timerFly = GameClock::GetInstance()->GetTime();
 		}
-		else if (GetTickCount64() - timerFly >= TIME_JUMPING)
+		else if (cur - timerFly >= TIME_JUMPING)
 		{
 			if (onGround)
 			{
@@ -109,7 +125,7 @@ void CGoomba::UpdateState()
 	}
 	else if (state == KNOCK_OUT)
 	{
-		ULONGLONG time = GetTickCount64() - timerKnockOut;
+		ULONGLONG time = GameClock::GetInstance()->GetTime() - timerKnockOut;
 		if (time >= TIME_OUT_KNOCK_OUT)
 		{
 			isDeleted = true;
@@ -128,7 +144,7 @@ void CGoomba::UpdateState()
 void CGoomba::Render()
 {
 	int aniId = (type == GOOMBA) ? ID_ANI_GOOMBA_WALKING : ID_ANI_RED_GOOMBA_WALKING;
-	ULONGLONG cur = GetTickCount64();
+	ULONGLONG cur = GameClock::GetInstance()->GetTime();
 	switch (state)
 	{
 	case HAS_WING:
@@ -180,7 +196,7 @@ void CGoomba::KnockedOut(CGameObject* obj)
 
 void CGoomba::SetStateDie()
 {
-	die_start = GetTickCount64();
+	die_start = GameClock::GetInstance()->GetTime();
 	y += (GOOMBA_SPRITE_HEIGHT - GOOMBA_SPRITE_HEIGHT_DIE) / 2 + 1;
 	vx = 0;
 	vy = 0;
@@ -198,7 +214,7 @@ void CGoomba::SetStateHasNoWing()
 
 void CGoomba::SetStateHasWing()
 {
-	timerFly = GetTickCount64();
+	timerFly = GameClock::GetInstance()->GetTime();
 }
 
 void CGoomba::SetStateKockOut()
@@ -211,7 +227,7 @@ void CGoomba::SetStateKockOut()
 	vy = -0.15;
 	ax = nx * 0.000001f;
 	vx = abs(vx) * nx;
-	timerKnockOut = GetTickCount64();
+	timerKnockOut = GameClock::GetInstance()->GetTime();
 }
 
 void CGoomba::SetState(int state)

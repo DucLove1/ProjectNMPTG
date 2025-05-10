@@ -9,7 +9,10 @@
 #define LEAF_ITEM 4
 
 #define CD_GOT_HIT 50
-
+#define STATE_GO_UP 1
+#define STATE_GO_DOWN 2
+#define STATE_IDLE 0
+#define SPEED_Y 0.1f
 class CQuestionBrick : public CBreakable
 {
 protected:
@@ -17,7 +20,8 @@ protected:
 	int typeOfHolder; // coin / mushrum / leaf
 	float cdAnim;
 	float cdHit;
-
+	CGameObject* item;
+	float maxY, minY;
 public:
 	CQuestionBrick(float x, float y, int typeOfHolder, int timeCanHit = 1) : CBreakable(x, y)
 	{
@@ -27,6 +31,9 @@ public:
 		cdAnim = 0;
 		cdHit = 0;
 		this->timeCanHit = timeCanHit;
+		this->item = NULL;
+		this->maxY = y;
+		this->minY = y - 8;
 	}
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -37,6 +44,8 @@ public:
 	int IsBlocking() { return 1; }
 
 	int GetTypeOfHolder() { return this->typeOfHolder; }
+	void GoUp(DWORD dt);
+	void GoDown(DWORD dt);
 
 };
 

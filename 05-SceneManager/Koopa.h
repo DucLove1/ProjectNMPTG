@@ -1,9 +1,10 @@
 #pragma once
 #include "CEnemy.h"
+#include "GameClock.h"
 #define GREEN_KOOPA 0
 #define RED_KOOPA 1
 #define KOOPA_GRAVITY 0.001f
-#define KOOPA_WALKING_SPEED 0.05f
+#define KOOPA_WALKING_SPEED 0.03f
 #define KOOPA_JUMPING_FORCE 0.08f
 #define KOOPA_IN_SHELL_SPEED 0.15f
 
@@ -22,6 +23,9 @@ private:
 	int type;
 	int lastAnimationId;
 	ULONGLONG timerKnockOut;
+
+	BOOLEAN isHolded;
+
 	void SetStateHasWing();
 	void SetStateHasNoWing();
 	void SetStateInShellUp();
@@ -48,6 +52,7 @@ public:
 		this->onGround = false;
 		timerInShell = 0;
 		this->lastAnimationId = -1;
+		isHolded = false;
 	}
 	void SetState(int state) override;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom) override;
@@ -55,8 +60,8 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e) override;
 	void OnCollisionWithEnemy(LPCOLLISIONEVENT e);
 	//void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) override;
-	void UpdateStateInShell();
-	void UpdateStateKnockOut();
+	void UpdateStateInShell(DWORD dt);
+	void UpdateStateKnockOut(DWORD dt);
 	void Render() override;
 	void KickedFromTop(CGameObject*);
 	void MoveInShell(int direction);
@@ -67,6 +72,8 @@ public:
 	bool IsAlive() { return state != KNOCK_OUT; }
 
 	void ReleaseByPlayer(CMario* e);
-	bool IsTimeOut() { return (GetTickCount64() - timerInShell >= TIME_OUT_OF_SHELL); }
+	bool IsTimeOut() { return (GameClock::GetInstance()->GetTime() - timerInShell >= TIME_OUT_OF_SHELL); }
+	void SetHolded(bool isHolded) { this->isHolded = isHolded; }
+	bool IsHolded() { return isHolded; }
 
 };

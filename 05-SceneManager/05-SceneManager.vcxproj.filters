@@ -106,6 +106,25 @@
     <ClCompile Include="VenusBullet.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="SpawnEnemy.cpp" />
+    <ClCompile Include="BackgroundObject.cpp" />
+    <ClCompile Include="BigTree.cpp" />
+    <ClCompile Include="Bushes.cpp" />
+    <ClCompile Include="Cloud.cpp" />
+    <ClCompile Include="LionBricks.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
+    <ClCompile Include="HUDBorder.cpp" />
+    <ClCompile Include="TextMeshPro.cpp" />
+    <ClCompile Include="PiranhaPlant.cpp" />
+    <ClCompile Include="GoldBrick.cpp" />
+    <ClCompile Include="BreakableGoldBrick.cpp" />
+    <ClCompile Include="ItemGoldBrick.cpp" />
+    <ClCompile Include="GoldBrickMulti.cpp" />
+    <ClCompile Include="GoldBrickWithButton.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="BuiderGoldBrick.cpp" />
+    <ClCompile Include="GameClock.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -146,6 +165,25 @@
     <ClInclude Include="VenusBullet.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="SpawnEnemy.h" />
+    <ClInclude Include="BackgroundObject.h" />
+    <ClInclude Include="BigTree.h" />
+    <ClInclude Include="Bushes.h" />
+    <ClInclude Include="Cloud.h" />
+    <ClInclude Include="LionBricks.h" />
+    <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="HUDBorder.h" />
+    <ClInclude Include="TextMeshPro.h" />
+    <ClInclude Include="PiranhaPlant.h" />
+    <ClInclude Include="GoldBrick.h" />
+    <ClInclude Include="BreakableGoldBrick.h" />
+    <ClInclude Include="ItemGoldBrick.h" />
+    <ClInclude Include="GoldBrickMulti.h" />
+    <ClInclude Include="GoldBrickWithButton.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="BuiderGoldBrick.h" />
+    <ClInclude Include="GameClock.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

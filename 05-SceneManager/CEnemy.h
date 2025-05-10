@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Mario.h"
+#include "CQuestionBrick.h"
 class CEnemy : public CGameObject
 {
 	protected:
@@ -17,9 +18,11 @@ public:
 	}
 	virtual int IsCollidable() {return 1;}
 	virtual int IsBlocking() { return 0; }
-	virtual void KickedFromTop(CGameObject*) = 0;
-	virtual void KnockedOut(CGameObject*) = 0;
-	virtual void TouchTwoSide(CGameObject*) = 0;
-	virtual bool IsAlive() = 0;
+	virtual void KickedFromTop(CGameObject*) {};
+	virtual void KnockedOut(CGameObject*) {};
+	virtual void TouchTwoSide(CGameObject*) {};
+	virtual bool IsAlive() { return true; };
+	void SetAccelation(float ax, float ay) 
+		{ this->ax = ax; this->ay = ay; }
 };
 

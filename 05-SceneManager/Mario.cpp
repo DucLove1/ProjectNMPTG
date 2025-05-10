@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include "debug.h"
 
 #include "Mario.h"
@@ -12,9 +12,16 @@
 #include "Breakable.h"
 #include "Leaf.h"
 #include "Koopa.h"
+#include "Venus.h"
+#include "VenusBullet.h"
 #include "Collision.h"
 #include "SpawnEnemy.h"
-
+#include "BreakableGoldBrick.h"
+#include "GoldBrickMulti.h"
+#include "ItemGoldBrick.h"
+#include "Button.h"
+#include "GoldBrickWithButton.h"
+#include "GameManager.h"
 
 //define for Id map
 int mapAniId[][26] = {
@@ -72,8 +79,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx += ax * dt;
 
 	if (isPickUp) {
-		DebugOut(L"PreCall");
-		PickingItem();
+		PickingItem(dt);
 	}
 	else {
 		if (item != nullptr) {
@@ -97,20 +103,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		recovery_start = 0;
 		isRecovering = 0;
 	}
-
 	if (isPowerUp
 		|| GetTickCount64() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR) {
 		vy = 0.f;
 		return;
 	}
+	preNx = nx;
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	int x = mapAniId[0][0];
+	//int x = mapAniId[0][0];
 }
 
 void CMario::OnNoCollision(DWORD dt)
 {
-	
+
 	x += vx * dt;
 	y += vy * dt;
 	isOnPlatform = false;
@@ -133,6 +139,10 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<Koopa*>(e->obj))
 		OnCollisionWithKoopa(e);
+	else if (dynamic_cast<Venus*>(e->obj))
+		OnCollisionWithVenus(e);
+	else if (dynamic_cast<VenusBullet*>(e->obj))
+		OnCollisionWithFireBall(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
@@ -141,6 +151,31 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBrick(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
 		OnCollisionWithLeaf(e);
+	else if (dynamic_cast<CMushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<SpawnEnemy*> (e->obj))
+		OnCollisionWithSpawnGate(e);
+	else if (dynamic_cast<GoldBrick*>(e->obj))
+	{
+		if (dynamic_cast<GoldBrickWithButton*>(e->obj))
+		{
+			if (e->nx != 0)
+			{
+				GoldBrickWithButton* brick = dynamic_cast<GoldBrickWithButton*>(e->obj);
+				brick->GotHit(e);
+			}
+		}
+		GoldBrick* brick = dynamic_cast<GoldBrick*>(e->obj);
+		if (e->ny > 0) // collision with top of brick
+		{
+			brick->GotHit(e);
+		}
+	}
+	else if (dynamic_cast<Button*>(e->obj))
+	{
+		Button* button = dynamic_cast<Button*>(e->obj);
+		button->GetPress();
+	}
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -270,6 +305,13 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithVenus(LPCOLLISIONEVENT e)
+{
+	if (untouchable == 0) {
+		DecreaseLevel();
+	}
+}
+
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
@@ -286,9 +328,11 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 }
 void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 {
-	CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
+	//CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
 	if (level == MARIO_LEVEL_SMALL)
 	{
+		GameManager::GetInstance()->AddScore(1000);
+		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 		SetLevel(MARIO_LEVEL_BIG);
 		SetPowerUP(true);
 		//SetSelfPausing(true);
@@ -296,12 +340,48 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 	}
 	else if (level == MARIO_LEVEL_BIG)
 	{
+		GameManager::GetInstance()->AddScore(1000);
 		SetLevel(MARIO_LEVEL_TAIL);
 		SetPowerUP(true);
 		//SetSelfPausing(true);
 		e->obj->Delete();
 	}
-	DebugOut(L"Leaf, got it by mario\n");
+	else 
+	{
+		GameManager::GetInstance()->AddScore(1000);
+		DebugOut(L"Score ++\n");
+		e->obj->Delete();
+	}
+}
+
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	if (level == MARIO_LEVEL_SMALL)
+	{
+		GameManager::GetInstance()->AddScore(1000);
+		SetLevel(MARIO_LEVEL_BIG);
+		SetPowerUP(true);
+		e->obj->Delete();
+	}
+	else
+	{
+		GameManager::GetInstance()->AddScore(1000);
+		DebugOut(L"Score ++\n");
+		e->obj->Delete();
+	}
+}
+void CMario::OnCollisionWithFireBall(LPCOLLISIONEVENT e)
+{
+	if (untouchable == 0) {
+		DecreaseLevel();
+		//e->obj->Delete();
+	}
+}
+
+void CMario::OnCollisionWithSpawnGate(LPCOLLISIONEVENT e)
+{
+	SpawnEnemy* spawnGate = dynamic_cast<SpawnEnemy*>(e->obj);
+	spawnGate->TouchedByMario();
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
@@ -322,14 +402,22 @@ int CMario::GetAniId()
 {
 	int aniId = -1;
 
-	if (isPowerUp) 
+	if (isPowerUp)
 	{
-		if(nx>=0)
-		aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_RIGHT);
-		else 
+		if (nx >= 0)
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_RIGHT);
+		else
 			aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_LEFT);
 		return aniId;
 	}//early return at here to focus on animation
+	if (isSitting) // this case is sitting
+	{
+		if (nx >= 0)
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_RIGHT);
+		else
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_LEFT);
+		return aniId;
+	}
 
 	if (!isOnPlatform) // this case is Jump/fall out
 	{
@@ -364,13 +452,6 @@ int CMario::GetAniId()
 			else
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_JUMP_WALK_LEFT);
 		}
-	}
-	else if (isSitting) // this case is sitting
-	{
-		if (nx >= 0)
-			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_RIGHT);
-		else
-			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_LEFT);
 	}
 	else if (isPickUp) // this case is Pick the Koopa
 	{
@@ -452,7 +533,7 @@ void CMario::Render()
 	//render while after got hit (I/We call it is recovery state-but not actually state bruh)
 	if (isRecovering)
 	{
-		if (((GetTickCount64() - recovery_start) % MARIO_HIDDEN_GAP_WHILE_RECOVERY) >= MARIO_HIDDEN_GAP_WHILE_RECOVERY/2) return;
+		if (((GetTickCount64() - recovery_start) % MARIO_HIDDEN_GAP_WHILE_RECOVERY) >= MARIO_HIDDEN_GAP_WHILE_RECOVERY / 2) return;
 	}
 	//render while isPowerUp got a new anim 
 	if (isPowerUp) {
@@ -463,9 +544,9 @@ void CMario::Render()
 	}
 	animations->Get(aniId)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 
-	DebugOutTitle(L"Coins: %d", coin);
+	//DebugOutTitle(L"Coins: %d", coin);
 }
 
 void CMario::SetState(int state)
@@ -500,7 +581,7 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		if (isSitting) break;
+		//if (isSitting) break;
 		if (isOnPlatform)
 		{
 			if (abs(this->vx) == MARIO_RUNNING_SPEED)
@@ -509,7 +590,13 @@ void CMario::SetState(int state)
 				vy = -MARIO_JUMP_SPEED_Y;
 		}
 		break;
-
+	case MARIO_STATE_SMALL_JUMP:
+		//if (isSitting) break;
+		if (isOnPlatform)
+		{
+			vy = -MARIO_JUMP_SPEED_Y;
+		}
+		break;
 	case MARIO_STATE_RELEASE_JUMP:
 		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
 		break;
@@ -520,8 +607,12 @@ void CMario::SetState(int state)
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
 			isPickUp = false;
-			vx = 0; vy = 0.0f;
+			//vx = 0; vy = 0.0f;
 			y += MARIO_SIT_HEIGHT_ADJUST;
+			if (vx * (vx + ax * 14) <= 0) {
+				vx = 0.0f;
+				ax = 0.0f;
+			}
 		}
 		break;
 
@@ -567,6 +658,7 @@ void CMario::SetState(int state)
 		break;
 	}
 
+
 	CGameObject::SetState(state);
 }
 
@@ -609,7 +701,7 @@ void CMario::SetLevel(int l)
 }
 void CMario::DecreaseLevel()
 {
-	if(level == MARIO_LEVEL_SMALL) {
+	if (level == MARIO_LEVEL_SMALL) {
 		SetState(MARIO_STATE_DIE);
 	}
 	else
@@ -620,28 +712,53 @@ void CMario::DecreaseLevel()
 	}
 }
 
-void CMario::PickingItem() {
-	if (this->item == nullptr) return;
-
-	item->SetSpeed(0, 0);
-
-	if (nx >= 0)
-		item->SetPosition(this->x + 16, this->y);
-	else
-		item->SetPosition(this->x - 16, this->y);
+void CMario::PickingItem(DWORD dt) {
+	if (this->item == nullptr || this->item->IsDeleted()) {
+		//ReleaseItem(item);
+		return;
+	}
+	float fdt = (float)dt;
 
 	if (dynamic_cast<Koopa*>(item))
 	{
 		Koopa* koopa = dynamic_cast<Koopa*>(item);
+		koopa->SetHolded(true);
+
+		//IF YOU READ THIS LINE "BẠN ĐÃ BỊ CON MÈO"
+		//if (preNx * nx <= 0) {
+		//	item->SetPosition(this->x + 16 * nx, this->y);
+		//}
+		//float tempVy = 0;
+		//if (!isOnPlatform) {
+		//	tempVy = this->vy;
+		//	DebugOut(L"SET temp %f", tempVy);
+		//}
+		//DebugOut(L"SEEE temp %f", tempVy);
+		//item->SetSpeed(this->vx, tempVy);
+
+		float targetX = x + 16 * nx + (this->vx * fdt), targetY = y + (this->vy * fdt);
+		float curX, curY;
+		item->GetPosition(curX, curY);
+		float kVx = (targetX - curX) / (float)fdt, kVy = (targetY - curY) / (float)fdt;
+		item->SetSpeed(kVx, kVy);
+		koopa->SetAccelation(0, 0);
+
 		if (koopa->IsTimeOut())
+		{
 			isPickUp = false;
+		}
 	}
 
 }
 void CMario::ReleaseItem(CGameObject* item) {
+	if (item == nullptr || item->IsDeleted()) {
+		return;
+	}
 	Koopa* koopa = dynamic_cast<Koopa*> (item);
 	if (koopa == nullptr) return;
 
+	koopa->SetHolded(false);
+	koopa->SetAccelation(0.f, KOOPA_GRAVITY);
 	koopa->ReleaseByPlayer(this);
-
+	//this->item = nullptr;
 }

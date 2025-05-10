@@ -13,6 +13,8 @@
 #include "CQuestionBrick.h"
 #include "Leaf.h"
 #include "Mushroom.h"
+#include "HUDBorder.h"
+#include "TextMeshPro.h"
 
 #include "GreenKoopa.h"
 
@@ -23,6 +25,23 @@
 #include "Venus.h"
 #include "Ground.h"
 #include "SpawnEnemy.h"
+#include "Goomba.h"
+#include "BigTree.h"
+#include "Bushes.h"
+#include "Cloud.h"
+#include "LionBricks.h"
+#include "PiranhaPlant.h"
+#include "GoldBrick.h"
+#include "BreakableGoldBrick.h"
+#include "GoldBrickMulti.h"
+#include "ItemGoldBrick.h"
+#include "GoldBrickWithButton.h"
+#include "BuiderGoldBrick.h"
+#include "GameClock.h"
+#include "Leaf.h"
+#include "Mushroom.h"
+#include "BouncingCoin.h"
+#include "Wall.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -155,15 +174,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_RED_VENUS:
 	{
-		int type = atoi(tokens[3].c_str());
-		obj = new Venus(x, y, type);
+		obj = new Venus(x, y, RED);
 		// pipe
-		float cell_width = (float)atof(tokens[4].c_str());
-		float cell_height = (float)atof(tokens[5].c_str());
-		int length = atoi(tokens[6].c_str());
-		int sprite_begin = atoi(tokens[7].c_str());
-		int sprite_middle = atoi(tokens[8].c_str());
-		int sprite_end = atoi(tokens[9].c_str());
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int sprite_begin = atoi(tokens[6].c_str());
+		int sprite_middle = atoi(tokens[7].c_str());
+		int sprite_end = atoi(tokens[8].c_str());
 		CPipe* pipe = new CPipe(
 			x, y - 8,
 			cell_width, cell_height, length,
@@ -172,7 +190,43 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects.push_back(pipe);
 		return;
 		break;
-	
+
+	}
+	case OBJECT_TYPE_GREEN_VENUS:
+	{
+		obj = new Venus(x, y, GREEN);
+		// pipe
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int sprite_begin = atoi(tokens[6].c_str());
+		int sprite_middle = atoi(tokens[7].c_str());
+		int sprite_end = atoi(tokens[8].c_str());
+		CPipe* pipe = new CPipe(
+			x, y - 8,
+			cell_width, cell_height, length,
+			sprite_begin, sprite_middle, sprite_end);
+		objects.push_back(obj);
+		objects.push_back(pipe);
+		return;
+	}
+	case OBJECT_TYPE_PIRANHA_PLANT:
+	{
+		obj = new PiranhaPlant(x, y);
+		// pipe
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int sprite_begin = atoi(tokens[6].c_str());
+		int sprite_middle = atoi(tokens[7].c_str());
+		int sprite_end = atoi(tokens[8].c_str());
+		CPipe* pipe = new CPipe(
+			x, y - 8,
+			cell_width, cell_height, length,
+			sprite_begin, sprite_middle, sprite_end);
+		objects.push_back(obj);
+		objects.push_back(pipe);
+		return;
 	}
 	case OBJECT_TYPE_SPAWNER:
 	{
@@ -198,6 +252,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Block(x, y, width, height, color);
 		break;
 	}
+	case OBJECT_TYPE_BULDER_GOLD_BRICK:
+	{
+		int type = atoi(tokens[3].c_str());
+		vector<vector<int>> grid;
+		int width = atoi(tokens[4].c_str());
+		int height = atoi(tokens[5].c_str());
+		int curToken = 6;
+		for (int i = 0; i < height; i++)
+		{
+			vector<int> row;
+			for (int j = 0; j < width; j++)
+			{
+				row.push_back(atoi(tokens[curToken++].c_str()));
+			}
+			grid.push_back(row);
+		}
+		obj = new BuiderGoldBrick(x, y, type, grid);
+		break;
+	}
+	
 	case OBJECT_TYPE_PIPE:
 	{
 		float cell_width = (float)atof(tokens[3].c_str());
@@ -239,7 +313,54 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMushroom(x, y, nx);
 		break;
 	}
-
+	case OBJECT_TYPE_BOUNCING_COIN:
+	{
+		obj = new CBouncingCoin(x, y);
+		break;
+	}
+	case OBJECT_TYPE_HUD_BORDER:
+	{
+		obj = new CHUDBorder(x, y);
+		DebugOut(L"HUDCreated");
+		break;
+	}
+	case OBJECT_TYPE_HUD_TEXTMESHPRO:
+	{
+		string str = "TOI DA BI CON meo";
+		obj = new CTextMeshPro(x, y, str);
+		break;
+	}
+	case OBJECT_TYPE_BIG_TREE:
+	{
+		int height = atoi(tokens[3].c_str());
+		int position = atoi(tokens[4].c_str());
+		obj = new BigTree(x, y, height, position);
+		break;
+	}
+	case OBJECT_TYPE_BUSHES:
+	{
+		int width = atoi(tokens[3].c_str());
+		obj = new Bushes(x, y, width);
+		break;
+	}
+	case OBJECT_TYPE_CLOUD:
+	{
+		int width = atoi(tokens[3].c_str());
+		obj = new Cloud(x, y, width);
+		break;
+	}
+	case OBJECT_TYPE_LION_BRICKS:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		obj = new LionBricks(x, y, width, height);
+		break;
+	}
+	case OBJECT_TYPE_WALL:
+	{
+		obj = new Wall(x, y);
+		break;
+	}
 	case OBJECT_TYPE_PLATFORM:
 	{
 
@@ -359,7 +480,8 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-
+	if(GameClock::GetInstance()->IsPaused())
+		return;
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -368,6 +490,8 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
+		if (i != 0 && GameClock::GetInstance()->IsTempPaused())
+			break;
 		objects[i]->Update(dt, &coObjects);
 	}
 
@@ -385,14 +509,29 @@ void CPlayScene::Update(DWORD dt)
 	if (cx < 0) cx = 0;
 
 	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-
+	//CGame::GetInstance()->SetCamPos(cx, cy);
 	PurgeDeletedObjects();
 }
-
+bool CPlayScene::CheckObjectPause(CGameObject* object)
+{
+	if (dynamic_cast<CEnemy*>(object) || dynamic_cast<VenusBullet*>(object)
+		|| dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object))
+	{
+		return true;
+	}
+	return false;
+}
 void CPlayScene::Render()
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 1; i < objects.size(); i++)
+	{
+		curObject = objects[i];
+		if (GameClock::GetInstance()->IsPaused() && CheckObjectPause(objects[i]))
+			continue;
 		objects[i]->Render();
+	}
+	if(!GameClock::GetInstance()->IsPaused())
+	objects[0]->Render();
 }
 
 /*

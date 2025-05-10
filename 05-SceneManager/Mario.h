@@ -10,13 +10,13 @@
 #define MARIO_WALKING_SPEED		0.15f
 #define MARIO_RUNNING_SPEED		0.2f
 
-#define MARIO_ACCEL_WALK_X	0.0002f
-#define MARIO_ACCEL_RUN_X	0.0003f
+#define MARIO_ACCEL_WALK_X	0.00025f
+#define MARIO_ACCEL_RUN_X	0.00035f
 
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
 
-#define MARIO_GRAVITY			0.002f
+#define MARIO_GRAVITY			0.0015f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
@@ -27,6 +27,7 @@
 
 #define MARIO_STATE_JUMP			300
 #define MARIO_STATE_RELEASE_JUMP    301
+#define MARIO_STATE_SMALL_JUMP		302
 
 #define MARIO_STATE_RUNNING_RIGHT	400
 #define MARIO_STATE_RUNNING_LEFT	500
@@ -34,8 +35,11 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
+#define MARIO_STATE_ATTACK			650
+
 #define MARIO_STATE_POWERUP		700
 
+#define MARIO_MTIME_ONAIR		450
 
 #pragma endregion
 
@@ -107,6 +111,8 @@ class CMario : public CGameObject
 	ULONGLONG untouchable_start;
 
 	BOOLEAN isOnPlatform;
+	//ULONGLONG jump_start;
+
 	BOOLEAN isPickUp;
 
 	int isRecovering;
@@ -114,12 +120,13 @@ class CMario : public CGameObject
 
 	bool isPowerUp;
 	//bool isSelfPausing;
-	ULONGLONG anchor_start;
+	ULONGLONG anchor_start; // time to anchor on air 
 
 
 	int coin;
 
 	LPGAMEOBJECT item;
+	int preNx;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
@@ -127,6 +134,10 @@ class CMario : public CGameObject
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
+	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
+	void OnCollisionWithFireBall(LPCOLLISIONEVENT e);
+	void OnCollisionWithVenus(LPCOLLISIONEVENT e);
+	void OnCollisionWithSpawnGate(LPCOLLISIONEVENT e);
 
 	int ConvertAniTypeToAniId(int animation_type);
 	int GetAniId();
@@ -139,7 +150,7 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
-		level = MARIO_LEVEL_TAIL;
+		level = MARIO_LEVEL_SMALL;
 
 		untouchable = 0;
 		untouchable_start = -1;
@@ -149,12 +160,15 @@ public:
 
 		isPowerUp = false;
 		//isSelfPausing = false;
+		anchor_start = -1;
 
 		isOnPlatform = false;
+		//jump_start = -1;
 		isPickUp = false;
 		coin = 0;
 
 		this->item = nullptr;
+		preNx = nx;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -171,7 +185,7 @@ public:
 	int GetNx() { return nx; }
 
 	void SetPickUp(BOOLEAN pick) { isPickUp = pick; }
-	void PickingItem();
+	void PickingItem(DWORD dt);
 	void ReleaseItem(CGameObject* item);
 
 	void OnNoCollision(DWORD dt);

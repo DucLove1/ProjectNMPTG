@@ -15,16 +15,18 @@ class CMushroom : public CGameObject
 	float offSetEnd;
 	float ay;
 	BOOLEAN wasGrowUp;
+	bool canRender;
 
 public:
 	CMushroom(float x, float y, int nx) : CGameObject(x, y) 
 	{
 		offSetBegin = this->y;
-		offSetEnd = this->y - MUSHROOM_BBOX_HEIGHT;
+		offSetEnd = this->y - MUSHROOM_BBOX_HEIGHT+6;
 		vx = MUSHROOM_SPEED_X;
 		this->nx = nx;
 		wasGrowUp = false;
 		this->ay = 0;
+		canRender = true;
 	}
 
 	void Render();

@@ -1,5 +1,8 @@
 #include "Venus.h"
 #include "Animations.h"
+#include "GameClock.h"
+#define DIFF_FROM_HEAD_RED 8.0f
+#define DIFF_FROM_HEAD_GREEN 5.0f
 void Venus::FollowMario()
 {
 	float marioX, marioY;
@@ -7,7 +10,7 @@ void Venus::FollowMario()
 	float x, y;
 	this->GetPosition(x, y);
 	nx = (marioX < x) ? -1 : 1;
-	ny = (marioY < y) ? -1 : 1;
+	ny = (marioY < y - DIFF_FROM_HEAD_RED) ? -1 : 1;
 }
 
 void Venus::Render()
@@ -22,16 +25,16 @@ void Venus::Render()
 		switch (cur_quarant)
 		{
 		case 1:
-			aniId = ID_ANI_RED_VENUS_RIGHT_DOWN_FIRE;
+			aniId = (type == RED) ? ID_ANI_RED_VENUS_RIGHT_DOWN_FIRE : ID_ANI_GREEN_VENUS_RIGHT_DOWN_FIRE;
 			break;
 		case 2:
-			aniId = ID_ANI_RED_VENUS_LEFT_DOWN_FIRE;
+			aniId = (type == RED) ? ID_ANI_RED_VENUS_LEFT_DOWN_FIRE : ID_ANI_GREEN_VENUS_LEFT_DOWN_FIRE;
 			break;
 		case 3:
-			aniId = ID_ANI_RED_VENUS_LEFT_UP_FIRE;
+			aniId = (type == RED) ? ID_ANI_RED_VENUS_LEFT_UP_FIRE : ID_ANI_GREEN_VENUS_LEFT_UP_FIRE;
 			break;
 		case 4:
-			aniId = ID_ANI_RED_VENUS_RIGHT_UP_FIRE;
+			aniId = (type == RED) ? ID_ANI_RED_VENUS_RIGHT_UP_FIRE : ID_ANI_GREEN_VENUS_RIGHT_UP_FIRE;
 			break;
 		}
 	}
@@ -42,16 +45,16 @@ void Venus::Render()
 		switch (cur_quarant)
 		{
 		case 1:
-			aniId = ID_ANI_RED_VENUS_RIGHT_DOWN;
+			aniId = (type == RED) ? ID_ANI_RED_VENUS_RIGHT_DOWN : ID_ANI_GREEN_VENUS_RIGHT_DOWN;
 			break;
 		case 2:
-			aniId = ID_ANI_RED_VENUS_LEFT_DOWN;
+			aniId = (type == RED) ? ID_ANI_RED_VENUS_LEFT_DOWN : ID_ANI_GREEN_VENUS_LEFT_DOWN;
 			break;
 		case 3:
-			aniId = ID_ANI_RED_VENUS_LEFT_UP;
+			aniId = (type == RED) ? ID_ANI_RED_VENUS_LEFT_UP : ID_ANI_GREEN_VENUS_LEFT_UP;
 			break;
 		case 4:
-			aniId = ID_ANI_RED_VENUS_RIGHT_UP;
+			aniId = (type == RED) ? ID_ANI_RED_VENUS_RIGHT_UP : ID_ANI_GREEN_VENUS_RIGHT_UP;
 			break;
 		}
 	}
@@ -102,8 +105,8 @@ void Venus::UpdateStateAppear(DWORD dt)
 	{
 		this->y = minY;
 		if (timer == -1)
-			timer = GetTickCount64();
-		else if (GetTickCount64() - timer > TIME_WAIT_TO_FIRE)
+			timer = GameClock::GetInstance()->GetTime();
+		else if (GameClock::GetInstance()->GetTime() - timer > TIME_WAIT_TO_FIRE)
 		{
 			SetState(ATTACK);
 			timer = -1;
@@ -114,11 +117,14 @@ void Venus::UpdateStateAttack(DWORD dt)
 {
 	if (timer == -1)
 	{
-		timer = GetTickCount64();
+		timer = GameClock::GetInstance()->GetTime();
 		float angle = ChooseAngle();
-		bullet->Fire(x,y - 4.5f,angle);
+		if (type == RED)
+			bullet->Fire(x, y - DIFF_FROM_HEAD_RED, angle);
+		else
+			bullet->Fire(x, y - DIFF_FROM_HEAD_GREEN, angle);
 	}
-	else if (GetTickCount64() - timer > TIME_WAIT_TO_HIDE)
+	else if (GameClock::GetInstance()->GetTime() - timer > TIME_WAIT_TO_HIDE)
 	{
 		SetState(HIDE);
 		timer = -1;
@@ -132,18 +138,21 @@ void Venus::UpdateStateHide(DWORD dt)
 	}
 	else
 	{
-		// mario is close to Venus, Venus doesn't appear
-		float marioX, marioY;
-		mario->GetPosition(marioX, marioY);
-		if (abs(marioX - this->x) <= DISTANCE_TO_APPEAR)
-			return;
 		this->y = maxY;
 		if (timer == -1)
-			timer = GetTickCount64();
-		else if (GetTickCount64() - timer > TIME_WAIT_TO_APPEAR)
+			timer = GameClock::GetInstance()->GetTime();
+		else 
 		{
-			SetState(APPEAR);
-			timer = -1;
+			float marioX, marioY;
+			mario->GetPosition(marioX, marioY);
+			// mario is close to Venus, Venus doesn't appear
+			if (abs(marioX - this->x) <= DISTANCE_TO_APPEAR)
+				return;
+			if (GameClock::GetInstance()->GetTime() - timer > TIME_WAIT_TO_APPEAR)
+			{
+				SetState(APPEAR);
+				timer = -1;
+			}
 		}
 	}
 }
@@ -153,7 +162,7 @@ float Venus::ChooseAngle()
 	float marioX, marioY;
 	mario->GetPosition(marioX, marioY);
 	float deltaX = abs(marioX - this->x);
-	float deltaY = abs(marioY - (this->y-4.5f));
+	float deltaY = abs(marioY - (type == RED) ? (this->y - DIFF_FROM_HEAD_RED) : (this->y - DIFF_FROM_HEAD_GREEN));
 	float angle = atan2f(deltaY, deltaX) * 180 / 3.14;
 	// normalize the angle to be in the range of [0, 360)
 	switch (cur_quarant)
@@ -171,25 +180,40 @@ float Venus::ChooseAngle()
 		break;
 	}
 	int res = 0;
-	float curDiff;
-	float minDiff = INT_MAX;
-	for (int& curAngle : angles)
+	// check the special angles
+	int quadrant = FindQuardrant();
+	if(angle < angles[quadrant - 1][0])
 	{
-		curDiff = abs(angle - curAngle);
-		if (curDiff < minDiff)
-		{
-			minDiff = curDiff;
-			res = curAngle;
-		}
+		res = angles[quadrant - 1][0];
+	}
+	else if(angle > angles[quadrant - 1][1])
+	{
+		res = angles[quadrant - 1][1];
+	}
+	else
+	{
+		/*res = (abs(angle - angles[quadrant - 1][0]) <= abs(angle - angles[quadrant - 1][1])) 
+			? angles[quadrant - 1][0] : angles[quadrant - 1][1];*/
+		res = angles[quadrant - 1][1];
 	}
 	return res;
 }
 void Venus::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x - BBOX_WIDTH / 2;
-	t = y - BBOX_HEIGHT / 2;
-	r = l + BBOX_WIDTH;
-	b = t + BBOX_HEIGHT;
+	if (type == RED)
+	{
+		l = x - RED_BBOX_WIDTH / 2;
+		t = y - RED_BBOX_HEIGHT / 2;
+		r = l + RED_BBOX_WIDTH;
+		b = t + RED_BBOX_HEIGHT;
+	}
+		else
+	{
+		l = x - GREEN_BBOX_WIDTH / 2;
+		t = y - GREEN_BBOX_HEIGHT / 2;
+		r = l + GREEN_BBOX_WIDTH;
+		b = t + GREEN_BBOX_HEIGHT;
+	}
 }
 
 void Venus::SetState(int state)

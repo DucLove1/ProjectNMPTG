@@ -1,6 +1,11 @@
 #include "Animation.h"
 #include "debug.h"
-
+#include "GameClock.h"
+#include "GameObject.h"
+#include "Game.h"
+#include "PlayScene.h"
+#include "CEnemy.h"
+#include "VenusBullet.h"
 void CAnimation::Add(int spriteId, DWORD time)
 {
 	int t = time;
@@ -13,10 +18,20 @@ void CAnimation::Add(int spriteId, DWORD time)
 	LPANIMATION_FRAME frame = new CAnimationFrame(sprite, t);
 	frames.push_back(frame);
 }
-
+bool CAnimation::CheckObjectPause(CGameObject* object)
+{
+	if (dynamic_cast<CEnemy*>(object) || dynamic_cast<CQuestionBrick*>(object) ||
+		dynamic_cast<VenusBullet*>(object) || dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object))
+		return true;
+	return false;
+}
 void CAnimation::Render(float x, float y)
 {
-	ULONGLONG now = GetTickCount64();
+	CGameObject* curObject = ((LPPLAYSCENE(CGame::GetInstance()->GetCurrentScene())->GetCurObject()));
+	bool checkObjectPause = CheckObjectPause(curObject);
+	ULONGLONG now = (checkObjectPause) ? GameClock::GetInstance()->GetTime() : GetTickCount64();
+	/*if (dynamic_cast<CMario*>(curObject))
+		now = GetTickCount64();*/
 	if (currentFrame == -1)
 	{
 		currentFrame = 0;

@@ -2,6 +2,7 @@
 #include "Goomba.h"
 #include "AssetIDs.h"
 #include "Mario.h"
+#include "GameClock.h"
 void Koopa::SetState(int state)
 {
 	switch (state)
@@ -21,7 +22,7 @@ void Koopa::SetState(int state)
 	case KNOCK_OUT:
 		SetStateKnockOut();
 		break;
-	
+
 	}
 	CGameObject::SetState(state);
 }
@@ -56,6 +57,7 @@ void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 
 void Koopa::OnNoCollision(DWORD dt)
 {
+	if (IsHolded()) return;
 	x += vx * dt;
 	y += vy * dt;
 	onGround = false;
@@ -75,6 +77,16 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	//	}
 	//}
 	OnCollisionWithEnemy(e);
+
+
+	if (dynamic_cast<CQuestionBrick*>(e->obj) &&
+		(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
+		vx != 0 && !isHolded)
+	{
+		CQuestionBrick* QB = dynamic_cast<CQuestionBrick*>(e->obj);
+		QB->GotHit(e);
+	}
+
 	// khong bi block boi e->obj thi return
 	if (!e->obj->IsBlocking())
 		return;
@@ -107,26 +119,39 @@ void Koopa::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
 				{
 					float vx, vy;
 					koopa->GetSpeed(vx, vy);
-					if(vx != 0)
+					if (vx != 0)
+					{
 						this->KnockedOut(koopa);
+					}
 				}
 			}
 			enemy->KnockedOut(this);
+			if (isHolded) {
+				/*isHolded = false;
+				this->KnockedOut(this);*/
+				this->Delete();
+			}
 		}
 	}
 }
-void Koopa::UpdateStateInShell()
+void Koopa::UpdateStateInShell(DWORD dt)
 {
-	ULONGLONG cur = GetTickCount64();
+	//ULONGLONG cur = GetTickCount64();
+	ULONGLONG cur = GameClock::GetInstance()->GetTime();
 	if (vx == 0 && cur - timerInShell >= TIME_OUT_OF_SHELL)
 	{
 		SetState(HAS_NO_WING);
 		timerInShell = 0;
 	}
+	if (IsHolded())
+	{
+		x += vx * dt;
+		y += vy * dt;
+	}
 }
-void Koopa::UpdateStateKnockOut()
+void Koopa::UpdateStateKnockOut(DWORD dt)
 {
-	ULONGLONG time = GetTickCount64() - timerKnockOut;
+	ULONGLONG time = GameClock::GetInstance()->GetTime() - timerKnockOut;
 	if (time >= TIME_OUT_KNOCK_OUT)
 	{
 		isDeleted = true;
@@ -137,6 +162,11 @@ void Koopa::UpdateStateKnockOut()
 		ay = GOOMBA_GRAVITY * 1.5;
 		ax = 0;
 		return;
+	}
+	if (IsHolded())
+	{
+		x += vx * dt;
+		y += vy * dt;
 	}
 }
 void Koopa::Render()
@@ -169,7 +199,7 @@ void Koopa::Render()
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN_MOVE : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN_MOVE;
 		break;
 	case KNOCK_OUT:
-		    aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_KNOCK_OUT : ID_ANI_GREEN_KOOPA_KNOCK_OUT;
+		aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_KNOCK_OUT : ID_ANI_GREEN_KOOPA_KNOCK_OUT;
 		break;
 	}
 	if (lastAnimationId != aniId)
@@ -177,8 +207,14 @@ void Koopa::Render()
 		CAnimations::GetInstance()->Get(aniId)->Reset();
 		lastAnimationId = aniId;
 	}
+
+	if (this->isHolded)
+	{
+		aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN;
+	}
+
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 void Koopa::KickedFromTop(CGameObject* obj)
 {
@@ -195,7 +231,7 @@ void Koopa::KickedFromTop(CGameObject* obj)
 		if (vx != 0)
 		{
 			vx = 0;
-			timerInShell = GetTickCount64();
+			timerInShell = GameClock::GetInstance()->GetTime();
 			return;
 		}
 		float objX, objY;
@@ -239,7 +275,7 @@ void Koopa::SetStateHasNoWing()
 void Koopa::SetStateInShellUp()
 {
 	vx = 0;
-	timerInShell = GetTickCount64();
+	timerInShell = GameClock::GetInstance()->GetTime();
 	if (this->state == HAS_NO_WING)
 	{
 		y += (KOOPA_SPRITE_HAS_NO_WING_HEIGHT - KOOPA_SPRITE_IN_SHELL_HEIGHT) / 2;
@@ -253,7 +289,7 @@ void Koopa::SetStateInShellUp()
 void Koopa::SetStateInShellDown()
 {
 	vx = 0;
-	timerInShell = GetTickCount64();
+	timerInShell = GameClock::GetInstance()->GetTime();
 	if (this->state == HAS_NO_WING)
 	{
 		y += (KOOPA_SPRITE_HAS_NO_WING_HEIGHT - KOOPA_SPRITE_IN_SHELL_HEIGHT) / 2;
@@ -275,7 +311,7 @@ void Koopa::SetStateKnockOut()
 	ax = -nx * 0.0005f;
 	//vx = abs(vx) * nx;
 	vx = 0.25f * nx;
-	timerKnockOut = GetTickCount64();
+	timerKnockOut = GameClock::GetInstance()->GetTime();
 }
 
 
@@ -285,7 +321,7 @@ void Koopa::ReleaseByPlayer(CMario* player)
 	if (player == NULL) return;
 	int nx = player->GetNx();
 	if (this->state == IN_SHELL_DOWN) {
-		if(nx >= 0)
+		if (nx >= 0)
 			MoveInShell(1);
 		else
 			MoveInShell(-1);

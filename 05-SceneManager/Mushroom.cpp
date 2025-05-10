@@ -4,7 +4,10 @@
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (y <= offSetEnd)
+	{
 		wasGrowUp = true;
+		canRender = false;
+	}
 
 	if (!wasGrowUp)
 	{
@@ -26,8 +29,12 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMushroom::Render()
 {
-	CAnimations* animations = CAnimations::GetInstance();
-	animations->Get(ID_ANI_MUSHROOM)->Render(x, y);
+	if (canRender)
+	{
+		CAnimations* animations = CAnimations::GetInstance();
+		animations->Get(ID_ANI_MUSHROOM)->Render(x, y);
+	}
+	canRender = !canRender;
 	//RenderBoundingBox();
 }
 

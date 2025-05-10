@@ -5,7 +5,7 @@
 
 #include "Mario.h"
 #include "PlayScene.h"
-
+#include "GameManager.h"
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -18,6 +18,13 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
+		break;
+	case DIK_Z:
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
+			mario->SetState(MARIO_STATE_ATTACK);
+		break;
+	case DIK_X:
+		mario->SetState(MARIO_STATE_SMALL_JUMP);
 		break;
 	case DIK_1:
 		mario->SetLevel(MARIO_LEVEL_SMALL);
@@ -35,9 +42,15 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_8:
 		mario->SetPickUp(true);
-
+		break;
 	case DIK_R: // reset
 		//Reload();
+		break;
+	case DIK_D:
+		GameManager::GetInstance()->PauseGame();
+		break;
+	case DIK_C:
+		GameManager::GetInstance()->ResumeGame();
 		break;
 	}
 }
@@ -50,6 +63,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_S:
+	case DIK_X:
 		mario->SetState(MARIO_STATE_RELEASE_JUMP);
 		break;
 	case DIK_DOWN:

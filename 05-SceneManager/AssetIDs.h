@@ -30,6 +30,7 @@
 #define OBJECT_TYPE_QUESTION_BRICK 20
 #define OBJECT_TYPE_LEAF 21
 #define OBJECT_TYPE_MUSHROOM 22
+#define OBJECT_TYPE_BOUNCING_COIN 23
 #define OBJECT_TYPE_HUD_BORDER 25 //Border of HUD
 #define OBJECT_TYPE_HUD_MARKER 26 //the logo M / L on scene when u play one in two character
 #define OBJECT_TYPE_HUD_TEXTMESHPRO 27 //i mean... text(meshpro) <(")
@@ -217,6 +218,8 @@
 #define ID_SPRITE_LEAF_RIGHT (ID_SPRITE_LEAF + 2000)
 
 #define ID_SPRITE_MUSHROOM 220000
+
+#define ID_SPRITE_BOUNCING_COIN 230000
 
 #define ID_SPRITE_HUD_BORDER 250000
 #define ID_SPRTIE_CHAR 280000
@@ -560,6 +563,8 @@
 
 
 #define ID_ANI_MUSHROOM 22001
+
+#define ID_ANI_BOUNCING_COIN 23001
 
 #define ID_ANI_HUD_BORDER 25001
 

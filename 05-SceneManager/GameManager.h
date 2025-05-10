@@ -28,5 +28,7 @@ public:
 	void ResumeWhenDoneTransform();
 	void PauseGame();
 	void ResumeGame();
+	void AddScore(int score) { this->score += score; }
+	int GetScore() { return score; }
 };
 

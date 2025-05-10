@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "PlayScene.h"
 #include "Mario.h"
+#include "GameManager.h"
 
 void CTextMeshPro::Render()
 {
@@ -12,6 +13,8 @@ void CTextMeshPro::Render()
 	//SetText("CURRENT LEVEL " + to_string(level));
 	//this->id = ID_ANI_TEXT_MESH_PRO;
 	//CUserInterface::Render();
+	SetText(to_string(GameManager::GetInstance()->GetScore()));
+
 	for (auto c : text)
 	{
 		c->Render();
@@ -56,5 +59,5 @@ void CCharacters::Render()
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
 	animations->Get(id)
-		->Render(cx + x + 100, cy + y + 100);
+		->Render(cx + x + 75, cy + y + 189);
 }

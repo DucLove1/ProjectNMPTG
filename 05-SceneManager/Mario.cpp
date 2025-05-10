@@ -22,6 +22,7 @@
 #include "Button.h"
 #include "GoldBrickWithButton.h"
 #include "GameManager.h"
+
 //define for Id map
 int mapAniId[][26] = {
 		{
@@ -331,6 +332,7 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 	//CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
 	if (level == MARIO_LEVEL_SMALL)
 	{
+		GameManager::GetInstance()->AddScore(1000);
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 		SetLevel(MARIO_LEVEL_BIG);
 		SetPowerUP(true);
@@ -339,23 +341,35 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 	}
 	else if (level == MARIO_LEVEL_BIG)
 	{
+		GameManager::GetInstance()->AddScore(1000);
 		SetLevel(MARIO_LEVEL_TAIL);
 		SetPowerUP(true);
 		//SetSelfPausing(true);
 		e->obj->Delete();
 	}
-	DebugOut(L"Leaf, got it by mario\n");
+	else 
+	{
+		GameManager::GetInstance()->AddScore(1000);
+		DebugOut(L"Score ++\n");
+		e->obj->Delete();
+	}
 }
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 	if (level == MARIO_LEVEL_SMALL)
 	{
+		GameManager::GetInstance()->AddScore(1000);
 		SetLevel(MARIO_LEVEL_BIG);
 		SetPowerUP(true);
 		e->obj->Delete();
 	}
-	//else score ++;
+	else
+	{
+		GameManager::GetInstance()->AddScore(1000);
+		DebugOut(L"Score ++\n");
+		e->obj->Delete();
+	}
 }
 void CMario::OnCollisionWithFireBall(LPCOLLISIONEVENT e)
 {

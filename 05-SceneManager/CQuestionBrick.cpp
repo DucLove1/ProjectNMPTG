@@ -1,5 +1,6 @@
 #include "CQuestionBrick.h"
 #include "GameClock.h"
+#include "GameManager.h"
 void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	//CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
@@ -75,17 +76,26 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 
 		if (dir >= 0) nx = -1;
 		else nx = 1;
-		//CMushroom* mr = new CMushroom(x, y, nx);
-		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+
+		if (typeOfHolder == COIN_ITEM)
 		{
-			// vi khi hit thi brick se chay len xuong, neu cho item cung vi tri voi cuc gach thi se bi lo cuc nam
-			this->item = new CMushroom(x, y - 8, nx);
-			scene->AddObject(item);
+			GameManager::GetInstance()->AddScore(1000);
+			CBouncingCoin* coin = new CBouncingCoin(x, y - 16);
+			scene->AddObject(coin);
 		}
-		else// if (mario->GetLevel() == MARIO_LEVEL_BIG)
-		{
-			this->item = new CLeaf(x, y);
-			scene->AddObject(item);
+		else {
+			//CMushroom* mr = new CMushroom(x, y, nx);
+			if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+			{
+				// vi khi hit thi brick se chay len xuong, neu cho item cung vi tri voi cuc gach thi se bi lo cuc nam
+				this->item = new CMushroom(x, y - 8, nx);
+				scene->AddObject(item);
+			}
+			else// if (mario->GetLevel() == MARIO_LEVEL_BIG)
+			{
+				this->item = new CLeaf(x, y);
+				scene->AddObject(item);
+			}
 		}
 		cdHit = CD_GOT_HIT;
 	}
@@ -122,7 +132,7 @@ void CQuestionBrick::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
-	int type = GetTypeOfHolder();
+	int type = 1;// GetTypeOfHolder();
 
 	switch (type)
 	{

@@ -40,6 +40,7 @@
 #include "GameClock.h"
 #include "Leaf.h"
 #include "Mushroom.h"
+#include "BouncingCoin.h"
 #include "Wall.h"
 using namespace std;
 
@@ -310,6 +311,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int nx = atoi(tokens[3].c_str());
 		obj = new CMushroom(x, y, nx);
+		break;
+	}
+	case OBJECT_TYPE_BOUNCING_COIN:
+	{
+		obj = new CBouncingCoin(x, y);
 		break;
 	}
 	case OBJECT_TYPE_HUD_BORDER:

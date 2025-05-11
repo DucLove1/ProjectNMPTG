@@ -121,7 +121,6 @@
 #define ID_SPRITE_MARIO_SMALL_PICKING_JUMP (ID_SPRITE_MARIO_SMALL_PICKING + 30)
 
 
-//new state
 
 //#define ID_SPRITE_MARIO_HAS_TAIL (ID_SPRITE_MARIO + 4000)
 //#define ID_SPRITE_MARIO_HAS_TAIL_IDLE (ID_SPRITE_MARIO_HAS_TAIL + 100)
@@ -184,6 +183,10 @@
 
 #define ID_SPRITE_MARIO_TAIL_POWERUP (ID_SPRITE_MARIO_BIG + 800) //to tail
 
+//+5000
+#define ID_SRITE_MARIO_SMALL_TO_BIG_LEFT (ID_SPRITE_MARIO + 5000) //++
+#define ID_SRITE_MARIO_SMALL_TO_BIG_RIGHT (ID_SPRITE_MARIO + 5000) //++
+//new state
 
 #pragma endregion 
 
@@ -442,6 +445,7 @@
 #define ID_ANI_MARIO_TAIL_BRACE_LEFT 3000
 
 
+
 //wtf bullshit im doing and gonna do ???
 //lost anim define bruh
 
@@ -485,6 +489,10 @@
 
 #define ID_ANI_MARIO_POWERUP_TO_TAIL_RIGHT 3500
 #define ID_ANI_MARIO_POWERUP_TO_TAIL_LEFT 3501
+
+
+#define ID_ANI_MARIO_SMALL_TO_BIG_LEFT 15001
+#define ID_ANI_MARIO_SMALL_TO_BIG_RIGHT 15000
 
 #pragma endregion
 

@@ -1,6 +1,5 @@
 #pragma once
 #include "GameObject.h"
-
 #include "Animation.h"
 #include "Animations.h"
 #include "AssetIDs.h"
@@ -126,6 +125,7 @@ class CMario : public CGameObject
 	int coin;
 
 	LPGAMEOBJECT item;
+	LPGAMEOBJECT tail;
 	int preNx;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
@@ -187,6 +187,7 @@ public:
 	void SetPickUp(BOOLEAN pick) { isPickUp = pick; }
 	void PickingItem(DWORD dt);
 	void ReleaseItem(CGameObject* item);
+	void UpdateTail();
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
@@ -200,6 +201,7 @@ public:
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
+
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

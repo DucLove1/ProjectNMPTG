@@ -2,6 +2,7 @@
 #include "debug.h"
 
 #include "Mario.h"
+#include "MarioTail.h"
 #include "Game.h"
 
 #include "Koopa.h"
@@ -22,7 +23,7 @@
 #include "Button.h"
 #include "GoldBrickWithButton.h"
 #include "GameManager.h"
-
+#include "PlayScene.h"
 //define for Id map
 int mapAniId[][26] = {
 		{
@@ -79,8 +80,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	UpdateTail();
+
 	if (isPickUp) {
-		DebugOut(L"PreCall");
 		PickingItem(dt);
 	}
 	else {
@@ -348,7 +350,7 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 		//SetSelfPausing(true);
 		e->obj->Delete();
 	}
-	else 
+	else
 	{
 		GameManager::GetInstance()->AddScore(1000);
 		DebugOut(L"Score ++\n");
@@ -546,7 +548,7 @@ void CMario::Render()
 	}
 	animations->Get(aniId)->Render(x, y);
 
-	RenderBoundingBox();
+	//	RenderBoundingBox();
 
 	DebugOutTitle(L"Coins: %d", coin);
 }
@@ -756,4 +758,23 @@ void CMario::ReleaseItem(CGameObject* item) {
 	koopa->SetHolded(false);
 	koopa->SetAccelation(0.f, KOOPA_GRAVITY);
 	koopa->ReleaseByPlayer(this);
+}
+
+void CMario::UpdateTail()
+{
+	if (tail == nullptr)
+	{
+		this->tail = new CMarioTail();
+		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+		scene->AddObject(tail);
+	}
+	CMarioTail* tail = dynamic_cast<CMarioTail*>(this->tail);
+	if (this->level != MARIO_LEVEL_TAIL)
+	{
+		tail->SetActive(false);
+	}
+	else
+	{
+		tail->SetActive(true);
+	}
 }

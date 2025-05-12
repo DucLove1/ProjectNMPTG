@@ -45,7 +45,7 @@
 #define OBJECT_TYPE_BULDER_GOLD_BRICK 36
 #define OBJECT_TYPE_WALL 37
 #define OBJECT_TYPE_PORTAL	50
-
+#define OBJECT_TYPE_WALL_BUILDER 38
 
 #pragma region MARIO 
 
@@ -327,6 +327,9 @@
 #define ID_SPRITE_BUTTON 350000
 #define ID_SPRITE_BUTTON_NORMAL (ID_SPRITE_BUTTON + 1000)
 #define ID_SPRITE_BUTTON_PRESSED (ID_SPRITE_BUTTON + 2000)
+#pragma endregion
+#pragma region BLUE_BRICK
+#define ID_SPRITE_BLUE_BRICK 380000
 #pragma endregion
 //Animations
 #pragma region ANIMATION

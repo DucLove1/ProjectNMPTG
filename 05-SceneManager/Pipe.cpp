@@ -42,7 +42,7 @@ void CPipe::Render() {
 	}
 	if (length > 1)
 		s->Get(this->spriteIdEnd)->Draw(x, yy);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 void CPipe::GetBoundingBox(float& l, float& t, float& r, float& b)
 {

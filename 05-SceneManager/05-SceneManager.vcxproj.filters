@@ -125,6 +125,8 @@
     <ClCompile Include="GameClock.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="BouncingCoin.cpp" />
+    <ClCompile Include="BlueWallBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -184,6 +186,8 @@
     <ClInclude Include="GameClock.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Wall.h" />
+    <ClInclude Include="BouncingCoin.h" />
+    <ClInclude Include="BlueWallBuilder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

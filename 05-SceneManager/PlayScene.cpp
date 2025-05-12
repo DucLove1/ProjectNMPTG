@@ -42,6 +42,7 @@
 #include "Mushroom.h"
 #include "BouncingCoin.h"
 #include "Wall.h"
+#include "BlueWallBuilder.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -359,6 +360,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_WALL:
 	{
 		obj = new Wall(x, y);
+		break;
+	}
+	case OBJECT_TYPE_WALL_BUILDER:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		obj = new BlueWallBuilder(x, y, width, height);
 		break;
 	}
 	case OBJECT_TYPE_PLATFORM:

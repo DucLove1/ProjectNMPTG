@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Animations.cpp" />
+    <ClCompile Include="BackGroundBuilder.cpp" />
     <ClCompile Include="BackgroundObject.cpp" />
     <ClCompile Include="BigTree.cpp" />
     <ClCompile Include="BlueWallBuilder.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="AnimationFrame.h" />
     <ClInclude Include="Animations.h" />
     <ClInclude Include="AssetIDs.h" />
+    <ClInclude Include="BackGroundBuilder.h" />
     <ClInclude Include="BackgroundObject.h" />
     <ClInclude Include="BigTree.h" />
     <ClInclude Include="BlueWallBuilder.h" />

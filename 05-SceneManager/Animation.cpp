@@ -30,9 +30,9 @@ void CAnimation::Render(float x, float y)
 	CGameObject* curObject = ((LPPLAYSCENE(CGame::GetInstance()->GetCurrentScene())->GetCurObject()));
 	bool checkObjectPause = CheckObjectPause(curObject);
 	ULONGLONG now = (checkObjectPause) ? GameClock::GetInstance()->GetTime() : GetTickCount64();
-	/*if (dynamic_cast<CMario*>(curObject))
-		now = GetTickCount64();*/
-	if (currentFrame == -1)
+	if (dynamic_cast<CMario*>(curObject))
+		now = GetTickCount64();
+	 if (currentFrame == -1)
 	{
 		currentFrame = 0;
 		lastFrameTime = now;

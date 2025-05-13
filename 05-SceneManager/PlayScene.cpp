@@ -43,6 +43,7 @@
 #include "BouncingCoin.h"
 #include "Wall.h"
 #include "BlueWallBuilder.h"
+#include "BackGroundBuilder.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -387,7 +388,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		break;
 	}
-
+	case OBJECT_TYPE_BACKGROUND_BUILDER:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		int IdSpriteStart = atoi(tokens[5].c_str());
+		int IdSpriteMiddle = atoi(tokens[6].c_str());
+		int IdSpriteEnd = atoi(tokens[7].c_str());
+		obj = new BackGroundBuilder(x, y, width, height, IdSpriteStart, IdSpriteMiddle, IdSpriteEnd);
+		break;
+	}
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());

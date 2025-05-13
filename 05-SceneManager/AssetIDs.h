@@ -46,6 +46,7 @@
 #define OBJECT_TYPE_WALL 37
 #define OBJECT_TYPE_PORTAL	50
 #define OBJECT_TYPE_WALL_BUILDER 38
+#define OBJECT_TYPE_BACKGROUND_BUILDER 39
 
 #pragma region MARIO 
 
@@ -331,6 +332,7 @@
 #pragma region BLUE_BRICK
 #define ID_SPRITE_BLUE_BRICK 380000
 #pragma endregion
+#define ID_SPRITE_TILE_IN_HIDDEN_MAP_1_1	390000
 //Animations
 #pragma region ANIMATION
 #pragma region MARIO

@@ -1,0 +1,6 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#big vortex
+520000	237	8	268	23	40
+#small vortex
+520001	252	29	267	36	40

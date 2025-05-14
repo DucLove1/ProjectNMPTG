@@ -47,7 +47,8 @@
 #define OBJECT_TYPE_PORTAL	50
 #define OBJECT_TYPE_WALL_BUILDER 38
 #define OBJECT_TYPE_BACKGROUND_BUILDER 39
-
+#define OBJECT_TYPE_RECTANGLE_PLATFORM 51
+#define OBJECT_TYPE_ICON 52
 #pragma region MARIO 
 
 #define ID_SPRITE_MARIO 10000
@@ -333,6 +334,10 @@
 #define ID_SPRITE_BLUE_BRICK 380000
 #pragma endregion
 #define ID_SPRITE_TILE_IN_HIDDEN_MAP_1_1	390000
+#define ID_SPRITE_TILE_GRASS_PLATFORM	500000
+#pragma ICON
+#define ID_SPRITE_ICON_VORTEX	520000
+#pragma endregion
 //Animations
 #pragma region ANIMATION
 #pragma region MARIO

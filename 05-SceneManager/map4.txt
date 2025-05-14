@@ -1,0 +1,33 @@
+[ASSETS]
+mario.txt
+crossTilePlatform.txt
+HUDBorder.txt
+alphabet.txt
+bush.txt
+icons.txt
+gold_brick.txt
+[OBJECTS]
+# type	x	y	extra_settings per object type
+# type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17, big_tree = 18, bushes = 19, cloud = 30, lion_brick = 31, green venus = 32, piranha =33, gold_brick = 34, bulder gold brick = 36, pipe = 9, hud = 25, wall = 37, bCoin = 23, cross platform = 51, icon = 52
+
+# See OBJECT_TYPE constants in AssetIDs.h
+#mario
+0	384	0
+#CrossPlatform
+51	0	119	10	5	500001	500002	500003	500004	500005	500006
+#BUSHES
+19	64	103	5
+#ICONS
+52	30	54	520000
+52	96	74	520001
+52	170	14	520000
+52	233	154	520000
+52	272	55	520001
+52	384	150	520001
+52	500	140	520001
+52	424	74	520000
+#builder gold brick
+36	224	119	0	4	1	1	1	1	1
+36	384	103	0	5	1	1	1	1	1	1
+# hud
+25	0	0

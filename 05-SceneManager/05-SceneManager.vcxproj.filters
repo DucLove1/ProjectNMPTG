@@ -128,6 +128,8 @@
     <ClCompile Include="BouncingCoin.cpp" />
     <ClCompile Include="BlueWallBuilder.cpp" />
     <ClCompile Include="BackGroundBuilder.cpp" />
+    <ClCompile Include="RectanglePlatform.cpp" />
+    <ClCompile Include="Icon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -190,6 +192,8 @@
     <ClInclude Include="BouncingCoin.h" />
     <ClInclude Include="BlueWallBuilder.h" />
     <ClInclude Include="BackGroundBuilder.h" />
+    <ClInclude Include="RectanglePlatform.h" />
+    <ClInclude Include="Icon.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

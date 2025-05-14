@@ -44,6 +44,8 @@
 #include "Wall.h"
 #include "BlueWallBuilder.h"
 #include "BackGroundBuilder.h"
+#include "RectanglePlatform.h"
+#include "Icon.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -397,6 +399,31 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int IdSpriteEnd = atoi(tokens[7].c_str());
 		obj = new BackGroundBuilder(x, y, width, height, IdSpriteStart, IdSpriteMiddle, IdSpriteEnd);
 		break;
+	}
+	case OBJECT_TYPE_RECTANGLE_PLATFORM:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		vector<vector<int>> gridId;
+		int curToken = 5;
+		for (int i = 0; i < 2; i++)
+		{
+			vector<int> row;
+			for (int j = 0; j < 3; j++)
+			{
+				row.push_back(atoi(tokens[curToken++].c_str()));
+			}
+			gridId.push_back(row);
+		}
+		obj = new RectanglePlatform(x, y, width, height, gridId);
+		break;
+	}
+	case OBJECT_TYPE_ICON:
+	{
+		int id = atoi(tokens[3].c_str());
+		obj = new Icon(x, y, id);
+		break;
+	
 	}
 	case OBJECT_TYPE_PORTAL:
 	{

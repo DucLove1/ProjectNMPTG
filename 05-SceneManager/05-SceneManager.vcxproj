@@ -165,6 +165,8 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CQuestionBrick.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Icon.cpp" />
+    <ClCompile Include="RectanglePlatform.cpp" />
     <ClCompile Include="TextMeshPro.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -225,6 +227,8 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CQuestionBrick.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Icon.h" />
+    <ClInclude Include="RectanglePlatform.h" />
     <ClInclude Include="TextMeshPro.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />

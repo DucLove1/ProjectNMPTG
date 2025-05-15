@@ -80,7 +80,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	UpdateTail();
+	UpdateTail(dt);
 
 	if (isPickUp) {
 		PickingItem(dt);
@@ -112,8 +112,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = 0.f;
 		return;
 	}
+
+	CMarioTail* tail = dynamic_cast<CMarioTail*>(this->tail);
+	if (tail->IsWhiping())
+		nx = preNx;
 	preNx = nx;
 
+	
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//int x = mapAniId[0][0];
 }
@@ -760,7 +765,7 @@ void CMario::ReleaseItem(CGameObject* item) {
 	koopa->ReleaseByPlayer(this);
 }
 
-void CMario::UpdateTail()
+void CMario::UpdateTail(DWORD dt)
 {
 	if (tail == nullptr)
 	{
@@ -777,4 +782,13 @@ void CMario::UpdateTail()
 	{
 		tail->SetActive(true);
 	}
+
+}
+
+void CMario::SetAttack(bool value)
+{
+	if (tail == nullptr) return;
+
+	CMarioTail* tail = dynamic_cast<CMarioTail*>(this->tail);
+	tail->SetWhiping(value);
 }

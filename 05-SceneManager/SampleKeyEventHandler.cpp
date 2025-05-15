@@ -40,9 +40,15 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_0:
 		mario->SetState(MARIO_STATE_DIE);
 		break;
-	case DIK_8:
-		mario->SetPickUp(true);
+	case DIK_A:
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
+		{
+			mario->SetAttack(true);
+		}
 		break;
+	//case DIK_8: //was test
+	//	mario->SetPickUp(true);
+	//	break;
 	case DIK_R: // reset
 		//Reload();
 		break;
@@ -71,6 +77,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_A:
 		mario->SetPickUp(false);
+		//mario->SetAttack(false);
 		break;
 	}
 }

@@ -154,9 +154,24 @@ void CQuestionBrick::Render()
 	}
 	if (item != NULL && !item->IsDeleted() &&
 		!GameClock::GetInstance()->IsPaused() &&
-		!GameClock::GetInstance()->IsTempPaused()&&
-		(dynamic_cast<CLeaf*>(item) || dynamic_cast<CMushroom*>(item)))
-		item->Render();
+		!GameClock::GetInstance()->IsTempPaused())
+	{
+		if (dynamic_cast<CLeaf*>(item))
+		{
+			CLeaf* leaf = dynamic_cast<CLeaf*>(item);
+			leaf->Render();
+		} 
+		else if (dynamic_cast<CMushroom*>(item))
+		{
+			CMushroom* mushroom = dynamic_cast<CMushroom*>(item);
+			mushroom->Render();
+		}
+		else//defaultcase
+		{
+			DebugOut(L"Hmmm i dont know");
+		}
+
+	}
 	animations->Get(aniId)->Render(x, y);
 
 	//RenderBoundingBox();

@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+
 #include "Animation.h"
 #include "Animations.h"
 #include "AssetIDs.h"
@@ -150,7 +151,7 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
-		level = MARIO_LEVEL_TAIL;
+		level = MARIO_LEVEL_SMALL;
 
 		untouchable = 0;
 		untouchable_start = -1;
@@ -187,7 +188,7 @@ public:
 	void SetPickUp(BOOLEAN pick) { isPickUp = pick; }
 	void PickingItem(DWORD dt);
 	void ReleaseItem(CGameObject* item);
-	void UpdateTail();
+	void UpdateTail(DWORD dt);
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
@@ -201,8 +202,7 @@ public:
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
-
+	void SetAttack(bool value);
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
-

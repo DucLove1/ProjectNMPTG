@@ -132,6 +132,7 @@
     <ClCompile Include="Icon.cpp" />
     <ClCompile Include="GreenMushroom.cpp" />
     <ClCompile Include="WoddenBlock.cpp" />
+    <ClCompile Include="RedMushroom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Icon.h" />
     <ClInclude Include="GreenMushroom.h" />
     <ClInclude Include="WoddenBlock.h" />
+    <ClInclude Include="RedMushroom.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

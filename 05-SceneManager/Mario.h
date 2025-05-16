@@ -6,6 +6,7 @@
 #include "AssetIDs.h"
 
 #include "debug.h"
+#include "GameManager.h"
 
 #define MARIO_WALKING_SPEED		0.15f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -195,7 +196,9 @@ public:
 	int GetLevel() { return this->level; }
 
 	void DecreaseLevel();
-	void SetPowerUP(bool power) { isPowerUp = power; anchor_start = GetTickCount64(); }
+	void SetPowerUP(bool power) { isPowerUp = power; anchor_start = GetTickCount64(); 
+								  GameManager::GetInstance()->SetPausedToTransform(true); }
+	bool IsPowerUp() { return isPowerUp; }
 	//void SetSelfPausing(bool pause) { isSelfPausing = pause; }
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }

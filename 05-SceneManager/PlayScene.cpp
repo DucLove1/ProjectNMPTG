@@ -52,6 +52,7 @@ using namespace std;
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	curObject = NULL;
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
 }
@@ -312,12 +313,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CLeaf(x, y);
 		break;
 	}
-	case OBJECT_TYPE_MUSHROOM:
-	{
-		int nx = atoi(tokens[3].c_str());
-		obj = new CMushroom(x, y, nx);
-		break;
-	}
+	//case OBJECT_TYPE_MUSHROOM:
+	//{
+	//	int nx = atoi(tokens[3].c_str());
+	//	obj = new CMushroom(x, y, nx);
+	//	break;
+	//}
 	case OBJECT_TYPE_BOUNCING_COIN:
 	{
 		obj = new CBouncingCoin(x, y);
@@ -543,14 +544,17 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-	if(GameClock::GetInstance()->IsPaused())
-		return;
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
 
+	if (GameManager::GetInstance()->IsPausedToTransform())
+	{
+		player->Update(dt, &coObjects);
+		return;
+	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (i != 0 && GameClock::GetInstance()->IsTempPaused())
@@ -589,11 +593,10 @@ void CPlayScene::Render()
 	for (int i = 1; i < objects.size(); i++)
 	{
 		curObject = objects[i];
-		if (GameClock::GetInstance()->IsPaused() && CheckObjectPause(objects[i]))
-			continue;
 		objects[i]->Render();
 	}
-	if(!GameClock::GetInstance()->IsPaused())
+	//if(!GameClock::GetInstance()->IsPaused())
+	curObject = objects[0];
 	objects[0]->Render();
 }
 

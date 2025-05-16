@@ -1,6 +1,8 @@
 #include "CQuestionBrick.h"
 #include "GameClock.h"
 #include "GameManager.h"
+#include "RedMushroom.h"
+
 void CQuestionBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	//CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
@@ -88,7 +90,7 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 			if (mario->GetLevel() == MARIO_LEVEL_SMALL)
 			{
 				// vi khi hit thi brick se chay len xuong, neu cho item cung vi tri voi cuc gach thi se bi lo cuc nam
-				this->item = new CMushroom(x, y - 8, nx);
+				this->item = new RedMushroom(x, y - 8, nx);
 				scene->AddObject(item);
 			}
 			else// if (mario->GetLevel() == MARIO_LEVEL_BIG)
@@ -152,11 +154,11 @@ void CQuestionBrick::Render()
 	if (timeCanHit <= 0) {
 		aniId = ID_ANI_QUESTION_BRICK_EMPTY;
 	}
-	if (item != NULL && !item->IsDeleted() &&
-		!GameClock::GetInstance()->IsPaused() &&
-		!GameClock::GetInstance()->IsTempPaused()&&
-		(dynamic_cast<CLeaf*>(item) || dynamic_cast<CMushroom*>(item)))
-		item->Render();
+	//if (item != NULL && !item->IsDeleted() &&
+	//	!GameClock::GetInstance()->IsPaused() &&
+	//	!GameClock::GetInstance()->IsTempPaused()&&
+	//	(dynamic_cast<CLeaf*>(item) || dynamic_cast<CMushroom*>(item)))
+	//	item->Render();
 	animations->Get(aniId)->Render(x, y);
 
 	//RenderBoundingBox();

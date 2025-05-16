@@ -2,7 +2,7 @@
 #include "Koopa.h"
 #include "AssetIDs.h"
 #define KOOPA_JUMP_FORCE 0.3f
-#define TIME_OUT_OF_SHELL 5000
+//#define TIME_OUT_OF_SHELL 5000
 
 class GreenKoopa : public Koopa
 {

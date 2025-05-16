@@ -168,6 +168,7 @@
     <ClCompile Include="GreenMushroom.cpp" />
     <ClCompile Include="Icon.cpp" />
     <ClCompile Include="RectanglePlatform.cpp" />
+    <ClCompile Include="RedMushroom.cpp" />
     <ClCompile Include="TextMeshPro.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="GreenMushroom.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="RectanglePlatform.h" />
+    <ClInclude Include="RedMushroom.h" />
     <ClInclude Include="TextMeshPro.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />

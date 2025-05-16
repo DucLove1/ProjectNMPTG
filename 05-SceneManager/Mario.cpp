@@ -541,6 +541,7 @@ void CMario::Render()
 		if (animations->Get(aniId)->Done()) {
 			isPowerUp = false;
 			animations->Get(aniId)->Reset();
+			GameManager::GetInstance()->SetPausedToTransform(false);
 		}
 	}
 	animations->Get(aniId)->Render(x, y);

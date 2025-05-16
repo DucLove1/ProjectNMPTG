@@ -336,7 +336,7 @@
 #pragma endregion
 #define ID_SPRITE_TILE_IN_HIDDEN_MAP_1_1	390000
 #define ID_SPRITE_TILE_GRASS_PLATFORM	500000
-#pragma ICON
+#pragma region ICON
 #define ID_SPRITE_ICON_VORTEX	520000
 #pragma endregion
 //Animations

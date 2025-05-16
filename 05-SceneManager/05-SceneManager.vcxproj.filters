@@ -130,6 +130,8 @@
     <ClCompile Include="BackGroundBuilder.cpp" />
     <ClCompile Include="RectanglePlatform.cpp" />
     <ClCompile Include="Icon.cpp" />
+    <ClCompile Include="GreenMushroom.cpp" />
+    <ClCompile Include="WoddenBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -194,6 +196,8 @@
     <ClInclude Include="BackGroundBuilder.h" />
     <ClInclude Include="RectanglePlatform.h" />
     <ClInclude Include="Icon.h" />
+    <ClInclude Include="GreenMushroom.h" />
+    <ClInclude Include="WoddenBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

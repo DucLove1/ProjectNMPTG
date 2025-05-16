@@ -3,6 +3,7 @@
 #include "PlayScene.h"
 #include "GoldBrickWithButton.h"
 #include "ItemGoldBrick.h"
+#include "GoldBrickMulti.h"
 #define BLOCK_SIZE 16
 void BuiderGoldBrick::Build(int type, vector<vector<int>>& grid)
 {
@@ -69,9 +70,24 @@ void BuiderGoldBrick::BuildNormal(vector<vector<int>>& grid)
 				break;
 			}
 			case TYPE_ITEM_GOLD_BRICK:
+			{
+
 				ItemGoldBrick* itemBrick = new ItemGoldBrick(posX, posY);
 				((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(itemBrick);
 				break;
+			}
+			case TYPE_GREEN_MUSHROOM_GOLD_BRICK:
+			{
+				ItemGoldBrick* itemBrick = new ItemGoldBrick(posX, posY, 1);
+				((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(itemBrick);
+				break;
+			}
+			case TYPE_MULTI_GOLD_BRICK:
+			{
+				GoldBrickMulti* itemBrick = new GoldBrickMulti(posX, posY);
+				((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(itemBrick);
+				break;
+			}
 			}
 		}
 	}

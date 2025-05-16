@@ -165,6 +165,7 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CQuestionBrick.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GreenMushroom.cpp" />
     <ClCompile Include="Icon.cpp" />
     <ClCompile Include="RectanglePlatform.cpp" />
     <ClCompile Include="TextMeshPro.cpp" />
@@ -203,6 +204,7 @@
     <ClCompile Include="Venus.cpp" />
     <ClCompile Include="VenusBullet.cpp" />
     <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="WoddenBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -227,6 +229,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CQuestionBrick.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GreenMushroom.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="RectanglePlatform.h" />
     <ClInclude Include="TextMeshPro.h" />
@@ -267,6 +270,7 @@
     <ClInclude Include="Venus.h" />
     <ClInclude Include="VenusBullet.h" />
     <ClInclude Include="Wall.h" />
+    <ClInclude Include="WoddenBlock.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,6 +2,7 @@
 #include "Mario.h"
 #include "Sprites.h"
 #include "GameClock.h"
+#include "EffectBreak.h"
 #define ID_SPRITE_COIN 40001
 #define TIME_COIN_TO_BRICK 10000
 void BreakableGoldBrick::GoUp(DWORD dt)
@@ -43,6 +44,7 @@ void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 		return;
 	}
 	// them effect vo
+	EffectBreak* effect = new EffectBreak(this->x, this->y);
 	// delete this;
 	this->Delete();
 }
@@ -68,7 +70,7 @@ void BreakableGoldBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void BreakableGoldBrick::UpdateStateCoin()
 {
-	if(GameClock::GetInstance()->GetTime() - timerCoinState > TIME_COIN_TO_BRICK)
+	if (GameClock::GetInstance()->GetTime() - timerCoinState > TIME_COIN_TO_BRICK)
 	{
 		//timerCoinState = -1;
 		SetState(STATE_IDLE);

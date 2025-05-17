@@ -133,6 +133,8 @@
     <ClCompile Include="GreenMushroom.cpp" />
     <ClCompile Include="WoddenBlock.cpp" />
     <ClCompile Include="RedMushroom.cpp" />
+    <ClCompile Include="ParticalBreak.cpp" />
+    <ClCompile Include="EffectBreak.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -200,6 +202,8 @@
     <ClInclude Include="GreenMushroom.h" />
     <ClInclude Include="WoddenBlock.h" />
     <ClInclude Include="RedMushroom.h" />
+    <ClInclude Include="ParticalBreak.h" />
+    <ClInclude Include="EffectBreak.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -50,6 +50,8 @@
 #define OBJECT_TYPE_RECTANGLE_PLATFORM 51
 #define OBJECT_TYPE_ICON 52
 #define OBJECT_TYPE_WOODEN_BLOCK 53
+#define OBJECT_TYPE_PARTICLE_BREAK_BRICK 54
+#define OBJECT_TYPE_BREAK_EFFECT 55
 #pragma region MARIO 
 
 #define ID_SPRITE_MARIO 10000
@@ -339,6 +341,7 @@
 #pragma region ICON
 #define ID_SPRITE_ICON_VORTEX	520000
 #pragma endregion
+#define ID_SPRITE_PARTICLE_BREAK_BRICK	540000
 //Animations
 #pragma region ANIMATION
 #pragma region MARIO
@@ -701,4 +704,8 @@
 #pragma endregion
 #pragma region BUTTON
 #define ID_ANI_BUTTON_NORMAL 35000
+#pragma endregion
+
+#pragma region PARTICAL_BREAK_BRICK
+#define ID_ANI_PARTICAL_BREAK_BRICK 54000
 #pragma endregion

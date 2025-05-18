@@ -175,7 +175,7 @@ void Koopa::Render()
 	switch (state)
 	{
 	case HAS_WING:
-		if (vx < 0)
+		if (vx <= 0)
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_WING_LEFT : ID_ANI_GREEN_KOOPA_WING_LEFT;
 		else
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_WING_RIGHT : ID_ANI_GREEN_KOOPA_WING_RIGHT;

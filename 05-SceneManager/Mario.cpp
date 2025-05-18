@@ -25,7 +25,7 @@
 #include "GameManager.h"
 #include "PlayScene.h"
 //define for Id map
-int mapAniId[][26] = {
+int mapAniId[][30] = {
 		{
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT,
 			ID_ANI_MARIO_SMALL_WALKING_RIGHT, ID_ANI_MARIO_SMALL_WALKING_LEFT,
@@ -39,7 +39,9 @@ int mapAniId[][26] = {
 			ID_ANI_MARIO_SMALL_PICKING_JUMP_RIGHT, ID_ANI_MARIO_SMALL_PICKING_JUMP_LEFT,
 			ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_RIGHT, ID_ANI_MARIO_SMALL_PICKING_RUN_JUMP_LEFT,
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is sitting)
-			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT // fill array with idle (this is powerUp)
+			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is powerUp)
+			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is slowfalling)
+			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT // fill array with idle (this is attacking)
 		},
 		{
 			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,
@@ -55,7 +57,9 @@ int mapAniId[][26] = {
 			ID_ANI_MARIO_PICKING_RUN_JUMP_RIGHT, ID_ANI_MARIO_PICKING_RUN_JUMP_LEFT,
 			ID_ANI_MARIO_SIT_RIGHT, ID_ANI_MARIO_SIT_LEFT,
 			//ID_ANI_MARIO_POWERUP_TO_BIG_RIGHT, ID_ANI_MARIO_POWERUP_TO_BIG_LEFT
-			ID_ANI_MARIO_SMALL_TO_BIG_RIGHT,ID_ANI_MARIO_SMALL_TO_BIG_LEFT
+			ID_ANI_MARIO_SMALL_TO_BIG_RIGHT,ID_ANI_MARIO_SMALL_TO_BIG_LEFT,
+			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,// fill array with idle (this is slowfalling)
+			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,// fill array with idle (this is attacking)
 		},
 		{
 			ID_ANI_MARIO_TAIL_IDLE_RIGHT, ID_ANI_MARIO_TAIL_IDLE_LEFT,
@@ -70,8 +74,9 @@ int mapAniId[][26] = {
 			ID_ANI_MARIO_TAIL_PICKING_JUMP_RIGHT, ID_ANI_MARIO_TAIL_PICKING_JUMP_LEFT,
 			ID_ANI_MARIO_TAIL_PICKING_RUN_JUMP_RIGHT, ID_ANI_MARIO_TAIL_PICKING_RUN_JUMP_LEFT,
 			ID_ANI_MARIO_TAIL_SIT_RIGHT, ID_ANI_MARIO_TAIL_SIT_LEFT,
-			ID_ANI_MARIO_POWERUP_TO_TAIL_RIGHT, ID_ANI_MARIO_POWERUP_TO_TAIL_LEFT
-
+			ID_ANI_MARIO_POWERUP_TO_TAIL_RIGHT, ID_ANI_MARIO_POWERUP_TO_TAIL_LEFT,
+			ID_ANI_MARIO_TAIL_SLOWFALLING_RIGHT, ID_ANI_MARIO_TAIL_SLOWFALLING_LEFT,
+			ID_ANI_MARIO_TAIL_ATTACK_RIGHT, ID_ANI_MARIO_TAIL_ATTACK_LEFT,
 		}
 };
 
@@ -107,17 +112,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		recovery_start = 0;
 		isRecovering = 0;
 	}
-	if (isPowerUp
-		|| GetTickCount64() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR) {
-		vy = 0.f;
+	if (isPowerUp)
+	{	
+		nx = preNx;
+		SetState(MARIO_STATE_SIT_RELEASE); // reset state to idle
 		return;
 	}
-
-	CMarioTail* tail = dynamic_cast<CMarioTail*>(this->tail);
-	if (tail->IsWhiping())
+	else if (GetTickCount64() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR)
+	{
+		vy = 0.f;
+	}
+	if (IsAttack())
 		nx = preNx;
-	preNx = nx;
 
+	
+	preNx = nx;
 	
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//int x = mapAniId[0][0];
@@ -427,6 +436,16 @@ int CMario::GetAniId()
 			aniId = ConvertAniTypeToAniId(ANI_MARIO_SIT_LEFT);
 		return aniId;
 	}
+	//render while attacking
+	if (IsAttack())
+	{
+		if (nx >= 0)
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_ATTACK_RIGHT);
+		else
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_ATTACK_LEFT);
+			return aniId;
+	}
+
 
 	if (!isOnPlatform) // this case is Jump/fall out
 	{
@@ -550,10 +569,11 @@ void CMario::Render()
 			isPowerUp = false;
 			animations->Get(aniId)->Reset();
 		}
+
 	}
 	animations->Get(aniId)->Render(x, y);
 
-	//	RenderBoundingBox();
+	RenderBoundingBox();
 
 	DebugOutTitle(L"Coins: %d", coin);
 }
@@ -791,4 +811,11 @@ void CMario::SetAttack(bool value)
 
 	CMarioTail* tail = dynamic_cast<CMarioTail*>(this->tail);
 	tail->SetWhiping(value);
+}
+bool CMario::IsAttack()
+{
+
+	if (tail == nullptr) return false;
+	CMarioTail* tail = dynamic_cast<CMarioTail*>(this->tail);
+	return tail->IsWhiping();
 }

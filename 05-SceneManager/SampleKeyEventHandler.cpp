@@ -43,12 +43,13 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
-			mario->SetAttack(true);
+			if (!mario->IsSitting())
+				mario->SetAttack(true);
 		}
 		break;
-	//case DIK_8: //was test
-	//	mario->SetPickUp(true);
-	//	break;
+		//case DIK_8: //was test
+		//	mario->SetPickUp(true);
+		//	break;
 	case DIK_R: // reset
 		//Reload();
 		break;

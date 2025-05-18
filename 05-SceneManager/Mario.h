@@ -96,6 +96,10 @@
 #define  ANI_MARIO_SIT_LEFT 23
 #define ANI_MARIO_POWER_UP_RIGHT 24
 #define ANI_MARIO_POWER_UP_LEFT 25
+#define ANI_MARIO_SLOWFALLING_RIGHT 26
+#define ANI_MARIO_SLOWFALLING_LEFT 27
+#define ANI_MARIO_ATTACK_RIGHT 28
+#define ANI_MARIO_ATTACK_LEFT 29
 #pragma endregion
 
 class CMario : public CGameObject
@@ -203,6 +207,9 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
 	void SetAttack(bool value);
+	bool IsAttack();
+
+	bool IsSitting() { return isSitting; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

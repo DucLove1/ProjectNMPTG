@@ -30,14 +30,14 @@ void CMarioTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	UpdateMNx(); //just update when not attack
 
-	if (startAttack != 0 && (GetTickCount64() - startAttack <= ATTACK_ROUND_TIME))
-	{
-		//isWhiping = true; // set to true when attack
-	}
-	else
-	{
-		//isWhiping = false;
-	}
+	//if (startAttack != 0 && (GetTickCount64() - startAttack <= ATTACK_ROUND_TIME))
+	//{
+	//	//isWhiping = true; // set to true when attack
+	//}
+	//else
+	//{
+	//	//isWhiping = false;
+	//}
 
 	if (!isWhiping)
 	{

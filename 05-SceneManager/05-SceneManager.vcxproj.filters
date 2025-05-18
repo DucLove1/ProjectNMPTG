@@ -135,6 +135,7 @@
     <ClCompile Include="RedMushroom.cpp" />
     <ClCompile Include="ParticalBreak.cpp" />
     <ClCompile Include="EffectBreak.cpp" />
+    <ClCompile Include="DropLift.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="RedMushroom.h" />
     <ClInclude Include="ParticalBreak.h" />
     <ClInclude Include="EffectBreak.h" />
+    <ClInclude Include="DropLift.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -47,6 +47,7 @@
 #include "RectanglePlatform.h"
 #include "Icon.h"
 #include "WoddenBlock.h"
+#include "DropLift.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -442,6 +443,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			gridId.push_back(row);
 		}
 		obj = new WoddenBlock(x, y, width, height, gridId);
+		break;
+	}
+	case OBJECT_TYPE_DROP_LIFT:
+	{
+		obj = new DropLift(x, y);
 		break;
 	}
 	case OBJECT_TYPE_PORTAL:

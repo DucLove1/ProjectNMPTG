@@ -2,6 +2,7 @@
 #include "Animations.h"
 #include "AssetIDs.h"
 #include "Collision.h"
+#define TIME_DELETE 1000
 int ParticalBreak::IsCollidable()
 {
     return 0;
@@ -22,6 +23,11 @@ void ParticalBreak::Render()
 
 void ParticalBreak::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (GetTickCount64() - timer_delete > TIME_DELETE)
+	{
+		this->Delete();
+		return;
+	}
 	vx += ax * dt;
 	vy += ay * dt;
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -31,8 +37,4 @@ void ParticalBreak::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
 	y += vy * dt;
-	if (GetTickCount64() - timer_delete > 1000)
-	{
-		Delete();
-	}
 }

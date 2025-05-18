@@ -22,7 +22,7 @@
 #include "Button.h"
 #include "GoldBrickWithButton.h"
 #include "GameManager.h"
-
+#include "DropLift.h"
 //define for Id map
 int mapAniId[][26] = {
 		{
@@ -76,6 +76,7 @@ int mapAniId[][26] = {
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	DebugOut(L"dt = %d\n", dt);
 	vy += ay * dt;
 	vx += ax * dt;
 
@@ -176,6 +177,17 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		Button* button = dynamic_cast<Button*>(e->obj);
 		button->GetPress();
+	}
+	else if (dynamic_cast<DropLift*>(e->obj))
+	{
+		DropLift* dropLift = dynamic_cast<DropLift*>(e->obj);
+		if (e->ny < 0)
+			dropLift->Touch();
+		else if (e->nx < 0)
+		{
+			float a;
+			dropLift->GetSpeed(vx, a);
+		}
 	}
 }
 

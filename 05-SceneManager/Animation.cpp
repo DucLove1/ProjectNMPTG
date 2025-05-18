@@ -6,6 +6,7 @@
 #include "PlayScene.h"
 #include "CEnemy.h"
 #include "VenusBullet.h"
+#include "ParticalBreak.h"
 #include "GameManager.h"
 void CAnimation::Add(int spriteId, DWORD time)
 {
@@ -22,7 +23,7 @@ void CAnimation::Add(int spriteId, DWORD time)
 bool CAnimation::CheckObjectPause(CGameObject* object)
 {
 	if (dynamic_cast<CEnemy*>(object) || dynamic_cast<VenusBullet*>(object) || 
-		dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object))
+		dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object) || dynamic_cast<ParticalBreak*>(object))
 		return true;
 	return false;
 }

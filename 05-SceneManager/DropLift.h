@@ -20,6 +20,7 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) override;
 	int IsBlocking() override { return 1; }
 	void Touch() { isTouched = true; }
+	bool IsOnCamera();
 	//void OnNoCollision(DWORD dt) override;
 };
 

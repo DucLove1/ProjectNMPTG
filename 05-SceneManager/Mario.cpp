@@ -183,11 +183,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		DropLift* dropLift = dynamic_cast<DropLift*>(e->obj);
 		if (e->ny < 0)
 			dropLift->Touch();
-		else if (e->nx < 0)
-		{
-			float a;
-			dropLift->GetSpeed(vx, a);
-		}
 	}
 }
 

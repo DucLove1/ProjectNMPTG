@@ -76,7 +76,6 @@ int mapAniId[][26] = {
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	DebugOut(L"dt = %d\n", dt);
 	vy += ay * dt;
 	vx += ax * dt;
 

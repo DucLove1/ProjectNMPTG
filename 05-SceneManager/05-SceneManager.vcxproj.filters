@@ -136,6 +136,7 @@
     <ClCompile Include="ParticalBreak.cpp" />
     <ClCompile Include="EffectBreak.cpp" />
     <ClCompile Include="DropLift.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -206,6 +207,7 @@
     <ClInclude Include="ParticalBreak.h" />
     <ClInclude Include="EffectBreak.h" />
     <ClInclude Include="DropLift.h" />
+    <ClInclude Include="Boomerang.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

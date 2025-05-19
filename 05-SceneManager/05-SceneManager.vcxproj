@@ -152,6 +152,7 @@
     <ClCompile Include="BackgroundObject.cpp" />
     <ClCompile Include="BigTree.cpp" />
     <ClCompile Include="BlueWallBuilder.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
     <ClCompile Include="BouncingCoin.cpp" />
     <ClCompile Include="Breakable.cpp" />
     <ClCompile Include="Block.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="BackgroundObject.h" />
     <ClInclude Include="BigTree.h" />
     <ClInclude Include="BlueWallBuilder.h" />
+    <ClInclude Include="Boomerang.h" />
     <ClInclude Include="BouncingCoin.h" />
     <ClInclude Include="Breakable.h" />
     <ClInclude Include="Block.h" />

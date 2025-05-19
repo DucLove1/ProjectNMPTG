@@ -53,6 +53,7 @@
 #define OBJECT_TYPE_PARTICLE_BREAK_BRICK 54
 #define OBJECT_TYPE_BREAK_EFFECT 55
 #define OBJECT_TYPE_DROP_LIFT 56
+#define OBJECT_TYPE_BOOMERANG 57
 #pragma region MARIO 
 
 #define ID_SPRITE_MARIO 10000
@@ -344,6 +345,7 @@
 #pragma endregion
 #define ID_SPRITE_PARTICLE_BREAK_BRICK	540000
 #define ID_SPRITE_DROP_LIFT	560000
+#define ID_SPRITE_BOOMERANG 570000
 //Animations
 #pragma region ANIMATION
 #pragma region MARIO
@@ -710,4 +712,9 @@
 
 #pragma region PARTICAL_BREAK_BRICK
 #define ID_ANI_PARTICAL_BREAK_BRICK 54000
+#pragma endregion
+
+#pragma region BOOMERANG
+#define ID_ANI_BOOMERANG_HOLD 57000
+#define ID_ANI_BOOMERANG_SPIN 57001
 #pragma endregion

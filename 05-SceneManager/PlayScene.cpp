@@ -49,6 +49,7 @@
 #include "WoddenBlock.h"
 #include "DropLift.h"
 #include "Boomerang.h"
+#include "BoomerangBro.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -454,6 +455,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BOOMERANG:
 	{
 		obj = new Boomerang(x, y);
+		break;
+	}
+	case OBJECT_TYPE_BOOMERANG_BRO:
+	{
+		obj = new BoomerangBro(x, y);
 		break;
 	}
 	case OBJECT_TYPE_PORTAL:

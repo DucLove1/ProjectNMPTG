@@ -137,6 +137,7 @@
     <ClCompile Include="EffectBreak.cpp" />
     <ClCompile Include="DropLift.cpp" />
     <ClCompile Include="Boomerang.cpp" />
+    <ClCompile Include="BoomerangBro.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="EffectBreak.h" />
     <ClInclude Include="DropLift.h" />
     <ClInclude Include="Boomerang.h" />
+    <ClInclude Include="BoomerangBro.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

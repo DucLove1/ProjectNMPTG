@@ -10,6 +10,7 @@ private:
 	float prePosX;
 	float prePosY;
 	ULONGLONG timer;
+	bool isActive;
 	void UpdateStage1(DWORD dt);
 	void UpdateStage2(DWORD dt);
 	void UpdateStage3(DWORD dt);
@@ -31,6 +32,7 @@ public:
 		timer = GameClock::GetInstance()->GetTime();
 		vx = VX;
 		vy = -VY;
+		isActive = true;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) override;
 	void Render() override;
@@ -40,9 +42,9 @@ public:
 		x += vx * dt;
 		y += vy * dt;
 	}
-	void GetBoundingBox(float& l, float& t, float& r, float& b) override
-	{
-		l = t = r = b = 0;
-	}
+	void GetBoundingBox(float& l, float& t, float& r, float& b) override;
+	void Throw();
+	void Hold(float x, float y);
+	void InActivate() { isActive = false; };
 };
 

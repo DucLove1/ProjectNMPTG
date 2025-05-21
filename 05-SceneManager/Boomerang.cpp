@@ -9,6 +9,8 @@
 #define TIME_FOR_STAGE_2 2000
 #define TIME_FOR_STAGE_3 1000
 #define PI 3.14
+#define BBOX_WIDTH 16
+#define BBOX_HEIGHT 16
 void Boomerang::UpdateStage1(DWORD dt)
 {
 	/*float progress = (float)(GameClock::GetInstance()->GetTime() - timer) / TIME_FOR_STAGE_1;
@@ -46,8 +48,9 @@ int Boomerang::GetStage()
 }
 void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (state == IS_HOLDED || !isActive)
+		return;
 	int stage = GetStage();
-	DebugOut(L"stage %d\n", stage);
 	switch (stage)
 	{
 	case 1:
@@ -64,11 +67,40 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void Boomerang::Render()
 {
+	if (!isActive)
+		return;
 	// mac dinh la boomerang dang duoc cam
-	int aniId = ID_ANI_BOOMERANG_SPIN;
+	int aniId = ID_ANI_BOOMERANG_HOLD;
 	if (state == IS_THROWED)
 	{
 		aniId = ID_ANI_BOOMERANG_SPIN;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+}
+
+void Boomerang::GetBoundingBox(float& l, float& t, float& r, float& b)
+{
+	if (!isActive)
+	{
+		l = t = r = b = 0;
+		return;
+	}
+	l = x - BBOX_WIDTH / 2;
+	t = y - BBOX_HEIGHT / 2;
+	r = l + BBOX_WIDTH;
+	b = t + BBOX_HEIGHT;
+}
+
+void Boomerang::Throw()
+{
+	isActive == true;
+	SetState(IS_THROWED);
+}
+
+void Boomerang::Hold(float x, float y)
+{
+	isActive = true;
+	SetState(IS_HOLDED);
+	this->x = x;
+	this->y = y;
 }

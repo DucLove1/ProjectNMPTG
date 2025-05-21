@@ -126,6 +126,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="BouncingCoin.cpp" />
+    <ClCompile Include="MarioTail.cpp" />
     <ClCompile Include="BlueWallBuilder.cpp" />
     <ClCompile Include="BackGroundBuilder.cpp" />
     <ClCompile Include="RectanglePlatform.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="BouncingCoin.h" />
+    <ClInclude Include="MarioTail.h" />
     <ClInclude Include="BlueWallBuilder.h" />
     <ClInclude Include="BackGroundBuilder.h" />
     <ClInclude Include="RectanglePlatform.h" />

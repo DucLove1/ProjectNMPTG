@@ -154,6 +154,28 @@ void CQuestionBrick::Render()
 	if (timeCanHit <= 0) {
 		aniId = ID_ANI_QUESTION_BRICK_EMPTY;
 	}
+
+
+	if (item != nullptr && !item->IsDeleted() &&
+		!GameClock::GetInstance()->IsPaused() &&
+		!GameClock::GetInstance()->IsTempPaused())
+	{
+		if (dynamic_cast<CLeaf*>(item))
+		{
+			CLeaf* leaf = dynamic_cast<CLeaf*>(item);
+			leaf->Render();
+		} 
+		else if (dynamic_cast<CMushroom*>(item))
+		{
+			CMushroom* mushroom = dynamic_cast<CMushroom*>(item);
+			mushroom->Render();
+		}
+		else//defaultcase
+		{
+			DebugOut(L"Hmmm i dont know");
+		}
+
+	}
 	//if (item != NULL && !item->IsDeleted() &&
 	//	!GameClock::GetInstance()->IsPaused() &&
 	//	!GameClock::GetInstance()->IsTempPaused()&&

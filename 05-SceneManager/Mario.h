@@ -18,8 +18,14 @@
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
 
 #define MARIO_GRAVITY			0.0015f
+#define MARIO_ACCEL_JUMP	0.00266666666666666f
+#define MARIO_FRICTION	0.0002f
+#define MARIO_MAX_JUMP_TIME 200
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
+
+#define SLOW_FALLING_TIME 150
+
 
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
@@ -38,9 +44,13 @@
 
 #define MARIO_STATE_ATTACK			650
 
+#define MARIO_STATE_SLOW_FALLING 	660
+#define MARIO_MAX_FALLING_SPEED	0.2f
+
 #define MARIO_STATE_POWERUP		700
 
 #define MARIO_MTIME_ONAIR		450
+
 
 #pragma endregion
 
@@ -97,6 +107,10 @@
 #define  ANI_MARIO_SIT_LEFT 23
 #define ANI_MARIO_POWER_UP_RIGHT 24
 #define ANI_MARIO_POWER_UP_LEFT 25
+#define ANI_MARIO_SLOWFALLING_RIGHT 26
+#define ANI_MARIO_SLOWFALLING_LEFT 27
+#define ANI_MARIO_ATTACK_RIGHT 28
+#define ANI_MARIO_ATTACK_LEFT 29
 #pragma endregion
 
 class CMario : public CGameObject
@@ -108,6 +122,7 @@ class CMario : public CGameObject
 
 	int level;
 
+	float fdt;
 	int untouchable;
 	ULONGLONG untouchable_start;
 
@@ -123,10 +138,14 @@ class CMario : public CGameObject
 	//bool isSelfPausing;
 	ULONGLONG anchor_start; // time to anchor on air 
 
+	int jumpedTime;
+	bool isSlowFalling;
+	int slowFallingTime;
 
 	int coin;
 
 	LPGAMEOBJECT item;
+	LPGAMEOBJECT tail;
 	int preNx;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
@@ -152,6 +171,7 @@ public:
 		ay = MARIO_GRAVITY;
 
 		level = MARIO_LEVEL_SMALL;
+		//level = MARIO_LEVEL_TAIL;
 
 		untouchable = 0;
 		untouchable_start = -1;
@@ -162,6 +182,9 @@ public:
 		isPowerUp = false;
 		//isSelfPausing = false;
 		anchor_start = -1;
+
+		isSlowFalling = false;
+		jumpedTime = 0;
 
 		isOnPlatform = false;
 		//jump_start = -1;
@@ -188,6 +211,7 @@ public:
 	void SetPickUp(BOOLEAN pick) { isPickUp = pick; }
 	void PickingItem(DWORD dt);
 	void ReleaseItem(CGameObject* item);
+	void UpdateTail(DWORD dt);
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
@@ -203,7 +227,14 @@ public:
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
+	void SetAttack(bool value);
+	bool IsAttack();
+
+	void SetSlowFalling(bool value) { isSlowFalling = value; slowFallingTime = SLOW_FALLING_TIME; }
+	bool IsSlowFalling() { return isSlowFalling; }
+
+	bool IsSitting() { return isSitting; }
+	bool IsFalling() { return vy > 0 && !isOnPlatform; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
-

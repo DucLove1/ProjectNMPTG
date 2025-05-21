@@ -1,5 +1,5 @@
 [SETTINGS]
-start	6
+start	9
 width	320
 height	240
 
@@ -12,6 +12,9 @@ height	240
 3	scene03.txt
 5	scene0005.txt
 6	map1.txt
+7	mapAn1_1.txt
+8	map4.txt
+9	mapAn1_4.txt
 # id	file 
 [TEXTURES]
 -100	textures\bbox.png

@@ -148,8 +148,12 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Animations.cpp" />
+    <ClCompile Include="BackGroundBuilder.cpp" />
     <ClCompile Include="BackgroundObject.cpp" />
     <ClCompile Include="BigTree.cpp" />
+    <ClCompile Include="BlueWallBuilder.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
+    <ClCompile Include="BoomerangBro.cpp" />
     <ClCompile Include="BouncingCoin.cpp" />
     <ClCompile Include="Breakable.cpp" />
     <ClCompile Include="Block.cpp" />
@@ -162,7 +166,15 @@
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CQuestionBrick.cpp" />
+    <ClCompile Include="DropLift.cpp" />
+    <ClCompile Include="EffectBreak.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="MarioTail.cpp" />
+    <ClCompile Include="GreenMushroom.cpp" />
+    <ClCompile Include="Icon.cpp" />
+    <ClCompile Include="ParticalBreak.cpp" />
+    <ClCompile Include="RectanglePlatform.cpp" />
+    <ClCompile Include="RedMushroom.cpp" />
     <ClCompile Include="TextMeshPro.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -199,14 +211,19 @@
     <ClCompile Include="Venus.cpp" />
     <ClCompile Include="VenusBullet.cpp" />
     <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="WoddenBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationFrame.h" />
     <ClInclude Include="Animations.h" />
     <ClInclude Include="AssetIDs.h" />
+    <ClInclude Include="BackGroundBuilder.h" />
     <ClInclude Include="BackgroundObject.h" />
     <ClInclude Include="BigTree.h" />
+    <ClInclude Include="BlueWallBuilder.h" />
+    <ClInclude Include="Boomerang.h" />
+    <ClInclude Include="BoomerangBro.h" />
     <ClInclude Include="BouncingCoin.h" />
     <ClInclude Include="Breakable.h" />
     <ClInclude Include="Block.h" />
@@ -220,7 +237,15 @@
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CQuestionBrick.h" />
+    <ClInclude Include="DropLift.h" />
+    <ClInclude Include="EffectBreak.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="MarioTail.h" />
+    <ClInclude Include="GreenMushroom.h" />
+    <ClInclude Include="Icon.h" />
+    <ClInclude Include="ParticalBreak.h" />
+    <ClInclude Include="RectanglePlatform.h" />
+    <ClInclude Include="RedMushroom.h" />
     <ClInclude Include="TextMeshPro.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />
@@ -259,6 +284,7 @@
     <ClInclude Include="Venus.h" />
     <ClInclude Include="VenusBullet.h" />
     <ClInclude Include="Wall.h" />
+    <ClInclude Include="WoddenBlock.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

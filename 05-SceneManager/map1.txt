@@ -24,6 +24,7 @@ gold_brick.txt
 coin.txt
 button.txt
 bouncingCoin.txt
+partical_break.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -32,7 +33,7 @@ bouncingCoin.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 #mario
-0	20	10
+0	2000	10
 #wall
 37	0	40
 #ground

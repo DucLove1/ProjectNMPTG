@@ -18,7 +18,14 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->IsFalling())
+			mario->SetSlowFalling(true);
 		break;
+
+	//case DIK_Q:
+	//	
+	//	break;
+
 	case DIK_Z:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 			mario->SetState(MARIO_STATE_ATTACK);
@@ -40,9 +47,16 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_0:
 		mario->SetState(MARIO_STATE_DIE);
 		break;
-	case DIK_8:
-		mario->SetPickUp(true);
+	case DIK_A:
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
+		{
+			if (!mario->IsSitting())
+				mario->SetAttack(true);
+		}
 		break;
+		//case DIK_8: //was test
+		//	mario->SetPickUp(true);
+		//	break;
 	case DIK_R: // reset
 		//Reload();
 		break;
@@ -52,6 +66,12 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_C:
 		GameManager::GetInstance()->ResumeGame();
 		break;
+	case DIK_Q:
+		GameManager::GetInstance()->PauseToTransform();
+		break;
+		case DIK_E:
+			GameManager::GetInstance()->ResumeWhenDoneTransform();
+			break;
 	}
 }
 
@@ -71,6 +91,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_A:
 		mario->SetPickUp(false);
+		//mario->SetAttack(false);
 		break;
 	}
 }

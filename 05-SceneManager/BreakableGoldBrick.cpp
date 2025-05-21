@@ -2,6 +2,7 @@
 #include "Mario.h"
 #include "Sprites.h"
 #include "GameClock.h"
+#include "EffectBreak.h"
 #define ID_SPRITE_COIN 40001
 #define TIME_COIN_TO_BRICK 10000
 void BreakableGoldBrick::GoUp(DWORD dt)
@@ -36,13 +37,15 @@ void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 		return;
 	}
 	// neu src_obj la mario nho thi khong bi anh huong 
-	bool isMarioSmall = (dynamic_cast<CMario*>(e->src_obj)->GetLevel() == MARIO_LEVEL_SMALL);
+	CMario* mario = dynamic_cast<CMario*>(e->src_obj);
+	bool isMarioSmall = (mario != NULL) ? (mario->GetLevel() == MARIO_LEVEL_SMALL) : false;
 	if (isMarioSmall)
 	{
 		SetState(STATE_GO_UP);
 		return;
 	}
 	// them effect vo
+	EffectBreak* effect = new EffectBreak(this->x, this->y);
 	// delete this;
 	this->Delete();
 }
@@ -68,7 +71,7 @@ void BreakableGoldBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void BreakableGoldBrick::UpdateStateCoin()
 {
-	if(GameClock::GetInstance()->GetTime() - timerCoinState > TIME_COIN_TO_BRICK)
+	if (GameClock::GetInstance()->GetTime() - timerCoinState > TIME_COIN_TO_BRICK)
 	{
 		//timerCoinState = -1;
 		SetState(STATE_IDLE);

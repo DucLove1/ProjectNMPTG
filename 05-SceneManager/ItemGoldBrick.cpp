@@ -3,6 +3,8 @@
 #include "Leaf.h"
 #include "PlayScene.h"
 #include "GameClock.h"
+#include "GreenMushroom.h"
+#include "RedMushroom.h"
 int ItemGoldBrick::ChooseItem()
 {
 	if (this->wayChooseItem == RANDOM_ITEM)
@@ -20,7 +22,15 @@ void ItemGoldBrick::InitializeRedMushroom(LPCOLLISIONEVENT e)
 	float mX, mY;
 	e->src_obj->GetPosition(mX, mY);
 	int direction = (mX < this->x) ? 1 : -1;
-	item = new CMushroom(this->x, this->y, direction);
+	item = new RedMushroom(this->x, this->y, direction);
+	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(item);
+}
+void ItemGoldBrick::InitializeGreenMushroom(LPCOLLISIONEVENT e)
+{
+	float mX, mY;
+	e->src_obj->GetPosition(mX, mY);
+	int direction = (mX < this->x) ? 1 : -1;
+	item = new GreenMushroom(this->x, this->y, direction);
 	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(item);
 }
 void ItemGoldBrick::InitializeLeaf(LPCOLLISIONEVENT e)
@@ -31,7 +41,7 @@ void ItemGoldBrick::InitializeLeaf(LPCOLLISIONEVENT e)
 void ItemGoldBrick::GotHit(LPCOLLISIONEVENT e)
 {
 	// chon item
-	int itemId = RED_MUSHROOM;
+	int itemId = ChooseItem();
 	// tao vat pham
 	if (item == NULL && this->active == true)
 	{
@@ -43,7 +53,7 @@ void ItemGoldBrick::GotHit(LPCOLLISIONEVENT e)
 			InitializeRedMushroom(e);
 			break;
 		case GREEN_MUSHROOM:
-
+			InitializeGreenMushroom(e);
 			break;
 		case LEAF:
 			InitializeLeaf(e);

@@ -15,7 +15,6 @@ class CMushroom : public CGameObject
 	float offSetEnd;
 	float ay;
 	BOOLEAN wasGrowUp;
-	bool canRender;
 
 public:
 	CMushroom(float x, float y, int nx) : CGameObject(x, y) 
@@ -26,10 +25,9 @@ public:
 		this->nx = nx;
 		wasGrowUp = false;
 		this->ay = 0;
-		canRender = true;
 	}
 
-	void Render();
+	void Render() = 0;
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void OnNoCollision(DWORD dt);

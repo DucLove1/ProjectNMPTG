@@ -3,6 +3,7 @@
 #include "AssetIDs.h"
 #include "Mario.h"
 #include "GameClock.h"
+#include "GoldBrick.h"
 void Koopa::SetState(int state)
 {
 	switch (state)
@@ -86,7 +87,14 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		CQuestionBrick* QB = dynamic_cast<CQuestionBrick*>(e->obj);
 		QB->GotHit(e);
 	}
-
+	//collision with gold brick
+	if (dynamic_cast<GoldBrick*>(e->obj) && e->nx != 0 &&
+		(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
+		vx != 0 && !isHolded)
+	{
+		GoldBrick* goldBrick = dynamic_cast<GoldBrick*>(e->obj);
+		goldBrick->GotHit(e);	
+	}
 	// khong bi block boi e->obj thi return
 	if (!e->obj->IsBlocking())
 		return;
@@ -175,7 +183,7 @@ void Koopa::Render()
 	switch (state)
 	{
 	case HAS_WING:
-		if (vx < 0)
+		if (vx <= 0)
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_WING_LEFT : ID_ANI_GREEN_KOOPA_WING_LEFT;
 		else
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_WING_RIGHT : ID_ANI_GREEN_KOOPA_WING_RIGHT;

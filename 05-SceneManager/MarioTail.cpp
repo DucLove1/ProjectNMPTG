@@ -103,7 +103,7 @@ void CMarioTail::TailAttack(DWORD dt)
 	float dx = (Mx + Mvx * fdt);
 	float dy = (My + Mvy * fdt);
 	Modify(dx, dy);
-	DebugOut(L"CAL\n");
+	//DebugOut(L"CAL\n");
 
 
 	if (startAttack == 0) // start
@@ -120,7 +120,7 @@ void CMarioTail::TailAttack(DWORD dt)
 			offSetLeft = dx - MARIO_BBOX_WIDTH * 2;
 			offSetRight = dx;
 		}
-		DebugOut(L"SET VALUE \n");
+		//DebugOut(L"SET VALUE \n");
 	}
 
 
@@ -135,14 +135,14 @@ void CMarioTail::TailAttack(DWORD dt)
 		{
 			SetSpeed((offSetRight - x) / _time, (dy - y) / _time);
 		}
-		DebugOut(L"STATE 2 \n");
+		//DebugOut(L"STATE 2 \n");
 	}
 	else if (GetTickCount64() - startAttack >= ATTACK_ROUND_TIME) // was done, stop everything
 	{
 		isWhiping = false;
 		startAttack = 0;
 		//SetPosition(Mx, My);
-		DebugOut(L"NGƯNG RỒI ĐÓ NHA MÁ");
+		//DebugOut(L"NGƯNG RỒI ĐÓ NHA MÁ");
 	}
 	else// state 1 whiping 
 	{
@@ -155,7 +155,7 @@ void CMarioTail::TailAttack(DWORD dt)
 		{
 			SetSpeed((offSetLeft - x) / _time, (dy - y) / _time);
 		}
-		DebugOut(L"STATE 1 \n");
+		//DebugOut(L"STATE 1 \n");
 	}
 }
 

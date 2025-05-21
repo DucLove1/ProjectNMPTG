@@ -8,7 +8,7 @@
 //#include "Mario.h"
 #include "debug.h"
 
-#define ATTACK_ROUND_TIME 400 // time to attack
+#define ATTACK_ROUND_TIME 500 // time to attack
 
 #define TAIL_BBOX_WIDTH  14
 #define TAIL_BBOX_HEIGHT 6

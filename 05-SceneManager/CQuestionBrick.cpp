@@ -152,7 +152,9 @@ void CQuestionBrick::Render()
 	if (timeCanHit <= 0) {
 		aniId = ID_ANI_QUESTION_BRICK_EMPTY;
 	}
-	if (item != NULL && !item->IsDeleted() &&
+
+
+	if (item != nullptr && !item->IsDeleted() &&
 		!GameClock::GetInstance()->IsPaused() &&
 		!GameClock::GetInstance()->IsTempPaused())
 	{

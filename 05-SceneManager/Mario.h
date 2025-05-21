@@ -17,8 +17,14 @@
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
 
 #define MARIO_GRAVITY			0.0015f
+#define MARIO_ACCEL_JUMP	0.00266666666666666f
+#define MARIO_FRICTION	0.0002f
+#define MARIO_MAX_JUMP_TIME 200
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
+
+#define SLOW_FALLING_TIME 150
+
 
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
@@ -37,9 +43,13 @@
 
 #define MARIO_STATE_ATTACK			650
 
+#define MARIO_STATE_SLOW_FALLING 	660
+#define MARIO_MAX_FALLING_SPEED	0.2f
+
 #define MARIO_STATE_POWERUP		700
 
 #define MARIO_MTIME_ONAIR		450
+
 
 #pragma endregion
 
@@ -111,6 +121,7 @@ class CMario : public CGameObject
 
 	int level;
 
+	float fdt;
 	int untouchable;
 	ULONGLONG untouchable_start;
 
@@ -126,6 +137,9 @@ class CMario : public CGameObject
 	//bool isSelfPausing;
 	ULONGLONG anchor_start; // time to anchor on air 
 
+	int jumpedTime;
+	bool isSlowFalling;
+	int slowFallingTime;
 
 	int coin;
 
@@ -155,7 +169,8 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
-		level = MARIO_LEVEL_SMALL;
+		//level = MARIO_LEVEL_SMALL;
+		level = MARIO_LEVEL_TAIL;
 
 		untouchable = 0;
 		untouchable_start = -1;
@@ -166,6 +181,9 @@ public:
 		isPowerUp = false;
 		//isSelfPausing = false;
 		anchor_start = -1;
+
+		isSlowFalling = false;
+		jumpedTime = 0;
 
 		isOnPlatform = false;
 		//jump_start = -1;
@@ -209,7 +227,11 @@ public:
 	void SetAttack(bool value);
 	bool IsAttack();
 
+	void SetSlowFalling(bool value) { isSlowFalling = value; slowFallingTime = SLOW_FALLING_TIME; }
+	bool IsSlowFalling() { return isSlowFalling; }
+
 	bool IsSitting() { return isSitting; }
+	bool IsFalling() { return vy > 0 && !isOnPlatform; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

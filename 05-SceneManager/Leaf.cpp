@@ -12,7 +12,7 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		canRender = false;
+		//canRender = false;
 		gotFirstForce = true;
 		vy = LEAF_SPEED;
 	}
@@ -44,8 +44,8 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CLeaf::Render()
 {
 	//set animation
-	if (canRender)
-	{
+	//if (canRender)
+	//{
 		if (nx > 0 && x >= offSetRightX)
 		{
 			nx = -1;
@@ -60,8 +60,8 @@ void CLeaf::Render()
 			animations->Get(ID_ANI_LEAF_LEFT)->Render(x, y);
 		else
 			animations->Get(ID_ANI_LEAF_RIGHT)->Render(x, y);
-	}
-	canRender = !canRender;
+	//}
+	//canRender = !canRender;
 	//RenderBoundingBox();
 }
 void CLeaf::GetBoundingBox(float& l, float& t, float& r, float& b)

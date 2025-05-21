@@ -8,6 +8,7 @@
 #define TYPE_ITEM_GOLD_BRICK 2
 #define TYPE_BUTTON_GOLD_BRICK 3
 #define TYPE_GREEN_MUSHROOM_GOLD_BRICK 4
+#define TYPE_MULTI_GOLD_BRICK 5
 class BuiderGoldBrick: public CGameObject
 {
 	int width;

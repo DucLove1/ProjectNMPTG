@@ -66,6 +66,12 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_C:
 		GameManager::GetInstance()->ResumeGame();
 		break;
+	case DIK_Q:
+		GameManager::GetInstance()->PauseToTransform();
+		break;
+		case DIK_E:
+			GameManager::GetInstance()->ResumeWhenDoneTransform();
+			break;
 	}
 }
 

@@ -10,6 +10,8 @@ private:
 	int remainingTime;
 	int score;
 	int lives;
+	bool isPausedToTransform;
+	bool isPausedGame;
 public:
 	static GameManager* GetInstance()
 	{
@@ -30,5 +32,9 @@ public:
 	void ResumeGame();
 	void AddScore(int score) { this->score += score; }
 	int GetScore() { return score; }
+	bool IsPausedToTransform() { return isPausedToTransform; }
+	void SetPausedToTransform(bool isPaused) { isPausedToTransform = isPaused; }
+	bool IsPausedGame() { return isPausedGame; }
+	void SetPausedGame(bool isPaused) { isPausedGame = isPaused; }
 };
 

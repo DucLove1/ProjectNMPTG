@@ -3,6 +3,7 @@
 #include "AssetIDs.h"
 #include "Mario.h"
 #include "GameClock.h"
+#include "GoldBrick.h"
 void Koopa::SetState(int state)
 {
 	switch (state)
@@ -22,7 +23,7 @@ void Koopa::SetState(int state)
 	case KNOCK_OUT:
 		SetStateKnockOut();
 		break;
-	
+
 	}
 	CGameObject::SetState(state);
 }
@@ -81,12 +82,19 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (dynamic_cast<CQuestionBrick*>(e->obj) &&
 		(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
-		vx != 0)
+		vx != 0 && !isHolded)
 	{
 		CQuestionBrick* QB = dynamic_cast<CQuestionBrick*>(e->obj);
 		QB->GotHit(e);
 	}
-
+	//collision with gold brick
+	if (dynamic_cast<GoldBrick*>(e->obj) && e->nx != 0 &&
+		(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
+		vx != 0 && !isHolded)
+	{
+		GoldBrick* goldBrick = dynamic_cast<GoldBrick*>(e->obj);
+		goldBrick->GotHit(e);	
+	}
 	// khong bi block boi e->obj thi return
 	if (!e->obj->IsBlocking())
 		return;
@@ -119,11 +127,18 @@ void Koopa::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
 				{
 					float vx, vy;
 					koopa->GetSpeed(vx, vy);
-					if(vx != 0)
+					if (vx != 0)
+					{
 						this->KnockedOut(koopa);
+					}
 				}
 			}
 			enemy->KnockedOut(this);
+			if (isHolded) {
+				/*isHolded = false;
+				this->KnockedOut(this);*/
+				this->Delete();
+			}
 		}
 	}
 }
@@ -136,7 +151,7 @@ void Koopa::UpdateStateInShell(DWORD dt)
 		SetState(HAS_NO_WING);
 		timerInShell = 0;
 	}
-	if(IsHolded())
+	if (IsHolded())
 	{
 		x += vx * dt;
 		y += vy * dt;
@@ -168,7 +183,7 @@ void Koopa::Render()
 	switch (state)
 	{
 	case HAS_WING:
-		if (vx < 0)
+		if (vx <= 0)
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_WING_LEFT : ID_ANI_GREEN_KOOPA_WING_LEFT;
 		else
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_WING_RIGHT : ID_ANI_GREEN_KOOPA_WING_RIGHT;
@@ -192,7 +207,7 @@ void Koopa::Render()
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN_MOVE : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN_MOVE;
 		break;
 	case KNOCK_OUT:
-		    aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_KNOCK_OUT : ID_ANI_GREEN_KOOPA_KNOCK_OUT;
+		aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_KNOCK_OUT : ID_ANI_GREEN_KOOPA_KNOCK_OUT;
 		break;
 	}
 	if (lastAnimationId != aniId)
@@ -200,6 +215,12 @@ void Koopa::Render()
 		CAnimations::GetInstance()->Get(aniId)->Reset();
 		lastAnimationId = aniId;
 	}
+
+	if (this->isHolded)
+	{
+		aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN;
+	}
+
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	//RenderBoundingBox();
 }
@@ -308,7 +329,7 @@ void Koopa::ReleaseByPlayer(CMario* player)
 	if (player == NULL) return;
 	int nx = player->GetNx();
 	if (this->state == IN_SHELL_DOWN) {
-		if(nx >= 0)
+		if (nx >= 0)
 			MoveInShell(1);
 		else
 			MoveInShell(-1);

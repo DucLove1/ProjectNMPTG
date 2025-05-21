@@ -1,5 +1,5 @@
 #include "RedKoopa.h"
-
+#define MAX_VY 0.1f
 void RedKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vx += ax * dt;
@@ -25,6 +25,8 @@ void RedKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void RedKoopa::UpdateStateHasWing()
 {
+	vx = 0;
+	vy = MAX_VY * sin( 2 * GameClock::GetInstance()->GetTime() / 1000.0f);
 }
 
 void RedKoopa::UpdateStateHasNoWing()

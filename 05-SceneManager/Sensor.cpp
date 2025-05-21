@@ -11,6 +11,10 @@ void Sensor::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void Sensor::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (enemy == NULL || enemy->IsDeleted()) {
+		this->Delete();
+		return;
+	}
 	RedKoopa* koopa = dynamic_cast<RedKoopa*>(enemy);
 	if (koopa->GetState() == Koopa::KNOCK_OUT)
 	{

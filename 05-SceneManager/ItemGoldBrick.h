@@ -18,6 +18,7 @@ public:
 		this->wayChooseItem = wayChooseItem;
 	}
 	void InitializeRedMushroom(LPCOLLISIONEVENT e);
+	void InitializeGreenMushroom(LPCOLLISIONEVENT e);
 	void InitializeLeaf(LPCOLLISIONEVENT e);
 	void GotHit(LPCOLLISIONEVENT e);
 	void Render();

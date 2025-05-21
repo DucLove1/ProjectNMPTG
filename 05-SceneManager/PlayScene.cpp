@@ -42,11 +42,20 @@
 #include "Mushroom.h"
 #include "BouncingCoin.h"
 #include "Wall.h"
+#include "BlueWallBuilder.h"
+#include "BackGroundBuilder.h"
+#include "RectanglePlatform.h"
+#include "Icon.h"
+#include "WoddenBlock.h"
+#include "DropLift.h"
+#include "Boomerang.h"
+#include "BoomerangBro.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	curObject = NULL;
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
 }
@@ -307,12 +316,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CLeaf(x, y);
 		break;
 	}
-	case OBJECT_TYPE_MUSHROOM:
-	{
-		int nx = atoi(tokens[3].c_str());
-		obj = new CMushroom(x, y, nx);
-		break;
-	}
+	//case OBJECT_TYPE_MUSHROOM:
+	//{
+	//	int nx = atoi(tokens[3].c_str());
+	//	obj = new CMushroom(x, y, nx);
+	//	break;
+	//}
 	case OBJECT_TYPE_BOUNCING_COIN:
 	{
 		obj = new CBouncingCoin(x, y);
@@ -361,6 +370,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Wall(x, y);
 		break;
 	}
+	case OBJECT_TYPE_WALL_BUILDER:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		obj = new BlueWallBuilder(x, y, width, height);
+		break;
+	}
 	case OBJECT_TYPE_PLATFORM:
 	{
 
@@ -379,7 +395,73 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		break;
 	}
-
+	case OBJECT_TYPE_BACKGROUND_BUILDER:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		int IdSpriteStart = atoi(tokens[5].c_str());
+		int IdSpriteMiddle = atoi(tokens[6].c_str());
+		int IdSpriteEnd = atoi(tokens[7].c_str());
+		obj = new BackGroundBuilder(x, y, width, height, IdSpriteStart, IdSpriteMiddle, IdSpriteEnd);
+		break;
+	}
+	case OBJECT_TYPE_RECTANGLE_PLATFORM:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		vector<vector<int>> gridId;
+		int curToken = 5;
+		for (int i = 0; i < 2; i++)
+		{
+			vector<int> row;
+			for (int j = 0; j < 3; j++)
+			{
+				row.push_back(atoi(tokens[curToken++].c_str()));
+			}
+			gridId.push_back(row);
+		}
+		obj = new RectanglePlatform(x, y, width, height, gridId);
+		break;
+	}
+	case OBJECT_TYPE_ICON:
+	{
+		int id = atoi(tokens[3].c_str());
+		obj = new Icon(x, y, id);
+		break;
+	}
+	case OBJECT_TYPE_WOODEN_BLOCK:
+	{
+		int width = atoi(tokens[3].c_str());
+		int height = atoi(tokens[4].c_str());
+		vector<vector<int>> gridId;
+		int curToken = 5;
+		for (int i = 0; i < 2; i++)
+		{
+			vector<int> row;
+			for (int j = 0; j < 3; j++)
+			{
+				row.push_back(atoi(tokens[curToken++].c_str()));
+			}
+			gridId.push_back(row);
+		}
+		obj = new WoddenBlock(x, y, width, height, gridId);
+		break;
+	}
+	case OBJECT_TYPE_DROP_LIFT:
+	{
+		obj = new DropLift(x, y);
+		break;
+	}
+	case OBJECT_TYPE_BOOMERANG:
+	{
+		obj = new Boomerang(x, y);
+		break;
+	}
+	case OBJECT_TYPE_BOOMERANG_BRO:
+	{
+		obj = new BoomerangBro(x, y);
+		break;
+	}
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -480,14 +562,17 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-	if(GameClock::GetInstance()->IsPaused())
-		return;
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
 
+	if (GameManager::GetInstance()->IsPausedToTransform())
+	{
+		player->Update(dt, &coObjects);
+		return;
+	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (i != 0 && GameClock::GetInstance()->IsTempPaused())
@@ -526,11 +611,10 @@ void CPlayScene::Render()
 	for (int i = 1; i < objects.size(); i++)
 	{
 		curObject = objects[i];
-		if (GameClock::GetInstance()->IsPaused() && CheckObjectPause(objects[i]))
-			continue;
 		objects[i]->Render();
 	}
-	if(!GameClock::GetInstance()->IsPaused())
+	//if(!GameClock::GetInstance()->IsPaused())
+	curObject = objects[0];
 	objects[0]->Render();
 }
 

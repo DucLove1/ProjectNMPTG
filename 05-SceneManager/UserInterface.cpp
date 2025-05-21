@@ -2,7 +2,6 @@
 #include "Animations.h"
 #include "AssetIDs.h"
 #include "Game.h"
-
 void CUserInterface::Render()
 {
 	if (this->id == 0)

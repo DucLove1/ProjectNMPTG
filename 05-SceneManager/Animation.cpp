@@ -6,6 +6,8 @@
 #include "PlayScene.h"
 #include "CEnemy.h"
 #include "VenusBullet.h"
+#include "ParticalBreak.h"
+#include "GameManager.h"
 void CAnimation::Add(int spriteId, DWORD time)
 {
 	int t = time;
@@ -20,8 +22,8 @@ void CAnimation::Add(int spriteId, DWORD time)
 }
 bool CAnimation::CheckObjectPause(CGameObject* object)
 {
-	if (dynamic_cast<CEnemy*>(object) || dynamic_cast<CQuestionBrick*>(object) ||
-		dynamic_cast<VenusBullet*>(object) || dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object))
+	if (dynamic_cast<CEnemy*>(object) || dynamic_cast<VenusBullet*>(object) || 
+		dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object) || dynamic_cast<ParticalBreak*>(object))
 		return true;
 	return false;
 }
@@ -29,9 +31,9 @@ void CAnimation::Render(float x, float y)
 {
 	CGameObject* curObject = ((LPPLAYSCENE(CGame::GetInstance()->GetCurrentScene())->GetCurObject()));
 	bool checkObjectPause = CheckObjectPause(curObject);
-	ULONGLONG now = (checkObjectPause) ? GameClock::GetInstance()->GetTime() : GetTickCount64();
-	/*if (dynamic_cast<CMario*>(curObject))
-		now = GetTickCount64();*/
+	ULONGLONG now = GetTickCount64();
+	//if (dynamic_cast<CMario*>(curObject))
+	//	now = GetTickCount64();
 	if (currentFrame == -1)
 	{
 		currentFrame = 0;
@@ -39,12 +41,15 @@ void CAnimation::Render(float x, float y)
 	}
 	else
 	{
-		DWORD t = frames[currentFrame]->GetTime();
-		if (now - lastFrameTime > t)
+		if (!GameManager::GetInstance()->IsPausedToTransform() || !checkObjectPause)
 		{
-			currentFrame++;
-			lastFrameTime = now;
-			if (currentFrame == frames.size()) currentFrame = 0;
+			DWORD t = frames[currentFrame]->GetTime();
+			if (now - lastFrameTime > t)
+			{
+				currentFrame++;
+				lastFrameTime = now;
+				if (currentFrame == frames.size()) currentFrame = 0;
+			}
 		}
 
 	}

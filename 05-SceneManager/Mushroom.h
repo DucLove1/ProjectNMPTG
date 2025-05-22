@@ -15,16 +15,19 @@ class CMushroom : public CGameObject
 	float offSetEnd;
 	float ay;
 	BOOLEAN wasGrowUp;
+protected: 
+	bool isActive;
 
 public:
 	CMushroom(float x, float y, int nx) : CGameObject(x, y) 
 	{
 		offSetBegin = this->y;
-		offSetEnd = this->y - MUSHROOM_BBOX_HEIGHT+6;
+		offSetEnd = this->y - MUSHROOM_BBOX_HEIGHT;
 		vx = MUSHROOM_SPEED_X;
 		this->nx = nx;
 		wasGrowUp = false;
 		this->ay = 0;
+		this->isActive = false;
 	}
 
 	void Render() = 0;
@@ -34,5 +37,6 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 	int IsCollidable() { return 1; }
 	int IsBlocking() { return 0; }
+	void GotHit(int nx);
 };
 

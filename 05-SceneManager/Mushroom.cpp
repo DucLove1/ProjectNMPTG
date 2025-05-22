@@ -3,6 +3,8 @@
 
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if(!isActive)
+		return;
 	if (y <= offSetEnd)
 	{
 		wasGrowUp = true;
@@ -28,10 +30,17 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMushroom::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x - MUSHROOM_BBOX_WIDTH / 2;
-	t = y - MUSHROOM_BBOX_HEIGHT / 2;
-	r = l + MUSHROOM_BBOX_WIDTH;
-	b = t + MUSHROOM_BBOX_HEIGHT;
+	if (isActive)
+	{
+		l = x - MUSHROOM_BBOX_WIDTH / 2;
+		t = y - MUSHROOM_BBOX_HEIGHT / 2;
+		r = l + MUSHROOM_BBOX_WIDTH;
+		b = t + MUSHROOM_BBOX_HEIGHT;
+	}
+	else
+	{
+		l = t = r = b = 0;
+	}
 }
 
 void CMushroom::OnNoCollision(DWORD dt)
@@ -61,4 +70,10 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 		vx = -vx;
 		nx = -nx;
 	}
+}
+
+void CMushroom::GotHit(int nx)
+{
+	this->isActive = true;
+	this->nx = nx;
 }

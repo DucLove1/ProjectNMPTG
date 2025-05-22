@@ -84,9 +84,7 @@ void ItemGoldBrick::GotHit(LPCOLLISIONEVENT e)
 		{
 		case RED_MUSHROOM:
 		case GREEN_MUSHROOM:
-		{
 			break;
-		}
 		case LEAF:
 			InitializeLeaf(e);
 			break;

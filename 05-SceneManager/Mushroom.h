@@ -5,7 +5,7 @@
 #include "Animations.h"
 
 #define MUSHROOM_BBOX_HEIGHT 16
-#define MUSHROOM_BBOX_WIDTH 16
+#define MUSHROOM_BBOX_WIDTH 15
 #define MUSHROOM_SPEED_Y 0.02f
 #define MUSHROOM_SPEED_X 0.05f
 #define MUSHROOM_GRAVITY 0.001f

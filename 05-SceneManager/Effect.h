@@ -31,5 +31,6 @@ public:
 	int IsCollidable() { return 0; }
 	int IsBlocking() { return 0; }
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) override;
+	bool IsUpdateWhenMarioTransform() override { return true; }
 };
 

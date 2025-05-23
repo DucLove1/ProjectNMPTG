@@ -85,6 +85,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
+	
+	//DebugOut(L"Vx: %f\n", vx);
 
 	if (state == MARIO_STATE_IDLE || state == MARIO_STATE_SIT)
 	{
@@ -108,11 +110,26 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				ay = MARIO_GRAVITY;
 		}
 	}
-
+	
+	if (flyingTime > 0)
+	{
+		vy = MARIO_JUMP_SPEED_Y * FLYING_SCALE;
+		//vy = MARIO_ACCEL_JUMP * (MARIO_MAX_JUMP_IME / (float)dt) * FLYING_SCALE;
+		flyingTime -= dt;
+		ay = 0;
+	}
+	else if (flyingTime <= 0 && isFlying)
+	{
+		jumpedTime = MARIO_MAX_JUMP_TIME + 1; // reset jumped time
+		//SetState(MARIO_STATE_RELEASE_JUMP); // reset state to idle
+		ay = MARIO_GRAVITY;
+		isFlying = false;
+		DebugOut(L"DONE");
+	}
 
 	if (slowFallingTime > 0)
 	{
-		vy = MARIO_JUMP_SPEED_Y / 10;
+		vy = MARIO_JUMP_SPEED_Y * SLOW_FALLING_SCALE;
 		slowFallingTime -= dt;
 		//tailFlapAnimationCurrentDuration -= dt;
 	}
@@ -124,8 +141,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isSlowFalling = false;
 		DebugOut(L"DONE");
 	}
-	if (slowFallingTime >= -100)
+	if (slowFallingTime > 0)
 		DebugOut(L"SlowFallingTime: %d\n", slowFallingTime);
+	if (flyingTime> 0)
+		DebugOut(L"FlyingTime: %d\n", flyingTime);
+	
 
 
 	UpdateTail(dt);
@@ -194,6 +214,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 			vy = 0;
 			isOnPlatform = true;
 			slowFallingTime = 0;
+			flyingTime = 0;
 		}
 		else {
 			jumpedTime = MARIO_MAX_JUMP_TIME - 1;
@@ -782,6 +803,7 @@ void CMario::SetState(int state)
 
 	switch (state)
 	{
+	case MARIO_STATE_RUNNING_RIGHT:
 		if (isSitting)
 			SetState(MARIO_STATE_SIT_RELEASE);
 		maxVx = MARIO_RUNNING_SPEED;
@@ -851,30 +873,6 @@ void CMario::SetState(int state)
 		ax = (-1) * nx * MARIO_FRICTION;
 		break;
 
-		//case MARIO_STATE_IDLE:
-		//	if (abs(vx) >= MARIO_WALKING_SPEED)
-		//	{
-		//		if (vx >= 0)
-		//		{
-		//			ax = -MARIO_ACCEL_RUN_X;
-		//		}
-		//		else
-		//		{
-		//			ax = MARIO_ACCEL_RUN_X;
-		//		}
-		//	}
-		//	else if (abs(vx) > 0) {
-		//		if (vx >= 0)
-		//			ax = -MARIO_FRICTION;
-		//		else
-		//			ax = MARIO_FRICTION;
-		//	}
-		//	if (vx * (vx + ax * this->fdt) <= 0) {
-		//		vx = 0.0f;
-		//		ax = 0.0f;
-		//	}
-
-		//	break;
 
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -1021,4 +1019,19 @@ bool CMario::IsAttack()
 	if (tail == nullptr) return false;
 	CMarioTail* tail = dynamic_cast<CMarioTail*>(this->tail);
 	return tail->IsWhiping();
+}
+
+bool CMario::IsReachToExpectedSpeed()
+{
+	if (this->GetLevel() == MARIO_LEVEL_TAIL)
+		return abs(this->vx) >= MARIO_EXPECTED_SPEED;
+	return false;
+}
+
+void CMario::SetSmallJump()
+{
+	if (!isOnPlatform)
+		return;
+	SetState(MARIO_STATE_JUMP);
+	jumpedTime = MARIO_MAX_JUMP_TIME / 4;
 }

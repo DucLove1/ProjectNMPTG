@@ -25,6 +25,7 @@ coin.txt
 button.txt
 bouncingCoin.txt
 partical_break.txt
+effect.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type

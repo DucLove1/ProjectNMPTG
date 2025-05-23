@@ -38,5 +38,6 @@ public:
 	int IsCollidable() { return 1; }
 	int IsBlocking() { return 0; }
 	void GotHit(int nx);
+	void Touched();
 };
 

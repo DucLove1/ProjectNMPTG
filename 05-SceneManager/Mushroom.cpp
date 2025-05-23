@@ -1,6 +1,8 @@
 #include "Mushroom.h"
 #include "debug.h"
-
+#include "RedMushroom.h"
+#include "Effect.h"
+#include "PlayScene.h"
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if(!isActive)
@@ -76,4 +78,21 @@ void CMushroom::GotHit(int nx)
 {
 	this->isActive = true;
 	this->nx = nx;
+}
+
+void CMushroom::Touched()
+{
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	Effect* effect = nullptr;
+	if(dynamic_cast<RedMushroom*>(this))
+	{
+		effect = new Effect(x, y - 16, EFFECT_1000);
+		GameManager::GetInstance()->AddScore(1000);
+	}
+	else
+	{
+		effect = new Effect(x, y - 16, EFFECT_1UP);
+	}
+	scene->AddObject(effect);
+	this->Delete();
 }

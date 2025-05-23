@@ -22,9 +22,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 			mario->SetSlowFalling(true);
 		break;
 
-	//case DIK_Q:
-	//	
-	//	break;
+		//case DIK_Q:
+		//	
+		//	break;
 
 	case DIK_Z:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
@@ -69,9 +69,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_Q:
 		GameManager::GetInstance()->PauseToTransform();
 		break;
-		case DIK_E:
-			GameManager::GetInstance()->ResumeWhenDoneTransform();
-			break;
+	case DIK_E:
+		GameManager::GetInstance()->ResumeWhenDoneTransform();
+		break;
 	}
 }
 

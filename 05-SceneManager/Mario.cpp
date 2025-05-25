@@ -185,9 +185,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		vy = 0.f;
 	}
-
-	if (IsAttack())
+	if (GetLevel() != MARIO_LEVEL_TAIL)
+	{
+		SetAttack(false);
+	}
+	else if (IsAttack())
+	{
 		nx = preNx;
+	}
 
 
 

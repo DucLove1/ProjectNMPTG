@@ -169,6 +169,9 @@
     <ClCompile Include="DropLift.cpp" />
     <ClCompile Include="EffectBreak.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="HUDLifeText.cpp" />
+    <ClCompile Include="HUDScoreText.cpp" />
+    <ClCompile Include="HUDTimeText.cpp" />
     <ClCompile Include="MarioTail.cpp" />
     <ClCompile Include="GreenMushroom.cpp" />
     <ClCompile Include="Icon.cpp" />
@@ -240,6 +243,9 @@
     <ClInclude Include="DropLift.h" />
     <ClInclude Include="EffectBreak.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="HUDLifeText.h" />
+    <ClInclude Include="HUDScoreText.h" />
+    <ClInclude Include="HUDTimeText.h" />
     <ClInclude Include="MarioTail.h" />
     <ClInclude Include="GreenMushroom.h" />
     <ClInclude Include="Icon.h" />

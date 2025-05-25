@@ -185,8 +185,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		vy = 0.f;
 	}
+
 	if (IsAttack())
 		nx = preNx;
+
 
 
 	preNx = nx;

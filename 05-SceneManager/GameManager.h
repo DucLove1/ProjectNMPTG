@@ -1,5 +1,10 @@
 #pragma once
 #include <iostream>
+#include "GameClock.h"
+
+//try
+#define LIMIT_GAME_TIME 300 //300 unit in mario ~~ 150 second
+
 class GameManager
 {
 private:
@@ -7,7 +12,7 @@ private:
 	int curLevel;
 	int coins;
 	float speed;
-	int remainingTime;
+	ULONGLONG remainingTime;
 	int score;
 	int lives;
 	bool isPausedToTransform;
@@ -18,23 +23,41 @@ public:
 		if (instance == NULL) instance = new GameManager();
 		return instance;
 	}
+
 	void SetCurLevel(int level) { curLevel = level; }
 	int GetCurLevel() { return curLevel; }
+
 	int GetCoins() { return coins; }
 	void PlusCoins(int coins) { this->coins += coins; }
+
 	void SetSpeed(float speed) { this->speed = speed; }
 	float GetSpeed() { return speed; }
+
 	int GetRemainingTime() { return remainingTime; }
 	void MinusRemainingTime() { this->remainingTime--; }
+
 	void PauseToTransform();
 	void ResumeWhenDoneTransform();
 	void PauseGame();
 	void ResumeGame();
+
 	void AddScore(int score) { this->score += score; }
 	int GetScore() { return score; }
+
+	void SetLives(int modifyValue) { this->lives += modifyValue; }
+	int GetLives() { return lives; }
+
 	bool IsPausedToTransform() { return isPausedToTransform; }
 	void SetPausedToTransform(bool isPaused) { isPausedToTransform = isPaused; }
 	bool IsPausedGame() { return isPausedGame; }
 	void SetPausedGame(bool isPaused) { isPausedGame = isPaused; }
+
+	ULONGLONG CalculateRemainingTime()
+	{
+		GameClock* clock = GameClock::GetInstance();
+		ULONGLONG current = clock->GetTime();
+
+		return LIMIT_GAME_TIME - (current / 700);
+	}
 };
 

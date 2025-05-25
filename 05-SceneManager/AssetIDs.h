@@ -32,9 +32,16 @@
 #define OBJECT_TYPE_MUSHROOM 22
 #define OBJECT_TYPE_BOUNCING_COIN 23
 #define OBJECT_TYPE_HUD_BORDER 25 //Border of HUD
-#define OBJECT_TYPE_HUD_MARKER 26 //the logo M / L on scene when u play one in two character
+
 #define OBJECT_TYPE_HUD_TEXTMESHPRO 27 //i mean... text(meshpro) <(")
 #define OBJECT_TYPE_HUD_CHAR 28 /// number and alp in there
+
+#define OBJECT_TYPE_HUD_MARKER 26 //the logo M / L on scene when u play one in two character
+#define OBJECT_TYPE_HUD_LIFE_TEXT 40 // LIFE
+#define OBEJECT_TYPE_HUD_LEVEL_TEXT 41 // WORLD 1
+#define OBJECT_TYPE_HUD_SCORE_TEXT 42 // SCORE
+#define OBJECT_TYPE_HUD_TIME_TEXT 43 // TIME
+#define OBJECT_TYPE_HUD_COIN 44 // COIN
 
 #define OBJECT_TYPE_CLOUD 30
 #define OBJECT_TYPE_LION_BRICKS 31

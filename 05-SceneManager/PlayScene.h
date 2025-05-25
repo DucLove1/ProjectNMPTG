@@ -39,6 +39,7 @@ public:
 	virtual void Unload();
 
 	LPGAMEOBJECT GetPlayer() { return player; }
+	void CinemachineCamera();
 
 	void Clear();
 	void PurgeDeletedObjects();

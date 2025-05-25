@@ -186,6 +186,11 @@ void CGoomba::KickedFromTop(CGameObject*)
 	}
 }
 
+void CGoomba::KickedFromBottom(CGameObject*)
+{
+	KnockedOut(this);
+}
+
 void CGoomba::KnockedOut(CGameObject* obj)
 {
 	float objX, objY;

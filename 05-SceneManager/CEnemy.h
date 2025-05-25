@@ -21,6 +21,7 @@ public:
 	virtual void KickedFromTop(CGameObject*) {};
 	virtual void KnockedOut(CGameObject*) {};
 	virtual void TouchTwoSide(CGameObject*) {};
+	virtual void KickedFromBottom(CGameObject*) {};
 	virtual bool IsAlive() { return true; };
 	void SetAccelation(float ax, float ay) 
 		{ this->ax = ax; this->ay = ay; }

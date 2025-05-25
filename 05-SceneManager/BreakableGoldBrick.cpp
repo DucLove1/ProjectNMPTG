@@ -29,15 +29,16 @@ void BreakableGoldBrick::GoDown(DWORD dt)
 
 void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 {
+	CMario* mario = dynamic_cast<CMario*>(e->src_obj);
 	if (this->state == STATE_COIN)
 	{
 		// cong tien cho mario
 		// delete this;
-		this->Delete();
+		if(mario !=nullptr)
+			this->Delete();
 		return;
 	}
 	// neu src_obj la mario nho thi khong bi anh huong 
-	CMario* mario = dynamic_cast<CMario*>(e->src_obj);
 	bool isMarioSmall = (mario != NULL) ? (mario->GetLevel() == MARIO_LEVEL_SMALL) : false;
 	if (isMarioSmall)
 	{

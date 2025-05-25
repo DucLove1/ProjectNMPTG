@@ -59,11 +59,17 @@
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
 
+#define WAITING_TIME_BEFORE_SCROLLING 1000 * 5
+#define VX_SCROLLING 0.025f 
+
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	isStartGame = false;
+	timeStart = GameClock::GetInstance()->GetTime();
+
 	curObject = NULL;
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
@@ -635,8 +641,8 @@ void CPlayScene::CinemachineCamera()
 	cameraCenterX = (preCamLeft + preCamRight) / 2;
 	cameraCenterY = (preCamTop + preCamBottom) / 2;
 
-	limitRight = cameraCenterX +  width * 5 / TIMES_TO_DEVIDE_WIDTH;
-	limitLeft =  limitRight - 2 * width / TIMES_TO_DEVIDE_WIDTH;
+	limitRight = cameraCenterX + width * 5 / TIMES_TO_DEVIDE_WIDTH;
+	limitLeft = limitRight - 2 * width / TIMES_TO_DEVIDE_WIDTH;
 	limitTop = cameraCenterY - height / TIMES_TO_DEVIDE_HEIGHT;
 	limitBottom = cameraCenterY + height / TIMES_TO_DEVIDE_HEIGHT;
 
@@ -690,6 +696,29 @@ void CPlayScene::CinemachineCamera()
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 }
 
+
+void CPlayScene::ScrollingCamera(DWORD dt)
+{
+	ULONGLONG curentTime = GameClock::GetInstance()->GetTime();
+
+	CGame* game = CGame::GetInstance();
+	float cx = 0, cy = 0;
+	if (!isStartGame)
+	{
+		if (curentTime - timeStart >= WAITING_TIME_BEFORE_SCROLLING)
+		{
+			isStartGame = true;
+		}
+	}
+	else
+	{
+		game->GetCamPos(cx, cy);
+		cx += VX_SCROLLING * dt;
+	}
+
+	game->SetCamPos(cx, cy);
+}
+
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -709,17 +738,25 @@ void CPlayScene::Update(DWORD dt)
 	{
 		//if (i != 0 && GameClock::GetInstance()->IsTempPaused())
 		//	break;
-		if(!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
-		objects[i]->Update(dt, &coObjects);
+		if (!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
+			objects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
-
-	// Update camera to follow mario
-
-	CinemachineCamera();
+	int currentLevel = GameManager::GetInstance()->GetCurLevel();
+	currentLevel = 1; /// set like this bcuz i don't want to change the code in GameManager, i will change it later
+	if (currentLevel != 4)
+	{
+		// Update camera to follow mario
+		CinemachineCamera();
+	}
+	else
+	{
+		// Update camera to scrolling
+		ScrollingCamera(dt);
+	}
 
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 

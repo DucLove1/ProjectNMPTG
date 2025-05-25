@@ -158,6 +158,8 @@ class CMario : public CGameObject
 	LPGAMEOBJECT tail;
 	int preNx;
 
+	void LimitByCameraBorder();
+
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);

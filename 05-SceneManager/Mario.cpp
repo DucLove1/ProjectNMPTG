@@ -201,7 +201,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//int x = mapAniId[0][0];
-
+	LimitByCameraBorder();
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -209,7 +209,9 @@ void CMario::OnNoCollision(DWORD dt)
 
 	x += vx * dt;
 	y += vy * dt;
+
 	isOnPlatform = false;
+
 }
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
@@ -280,6 +282,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (e->ny < 0)
 			dropLift->Touch();
 	}
+	
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -921,6 +924,35 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		bottom = top + MARIO_SMALL_BBOX_HEIGHT;
 	}
 }
+
+
+void CMario::LimitByCameraBorder()
+{
+	float camLeft, camTop, camRight, camBottom;
+
+	CGame::GetInstance()->GetCamPos(camLeft, camTop);
+	float camWidth = CGame::GetInstance()->GetBackBufferWidth();
+	//float camHeight = CGame::GetInstance()->GetBackBufferHeight();
+
+	camRight = camLeft + camWidth;
+	//camBottom = camTop + camHeight;
+
+	if (level == MARIO_LEVEL_BIG || level == MARIO_LEVEL_TAIL)
+	{
+		camLeft += MARIO_BIG_BBOX_WIDTH / 2;
+		camRight -= MARIO_BIG_BBOX_WIDTH / 2;
+	}
+	else
+	{
+		camLeft += MARIO_SMALL_BBOX_WIDTH / 2;
+		camRight -= MARIO_SMALL_BBOX_WIDTH / 2;
+	}
+	// it's not acctually cameralimit, its border limit
+	if (x < camLeft) x = camLeft;
+	if (x > camRight) x = camRight;
+
+}
+
 
 void CMario::SetLevel(int l)
 {

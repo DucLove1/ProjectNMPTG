@@ -142,6 +142,7 @@
     <ClCompile Include="HUDLifeText.cpp" />
     <ClCompile Include="HUDScoreText.cpp" />
     <ClCompile Include="HUDTimeText.cpp" />
+    <ClCompile Include="Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="HUDLifeText.h" />
     <ClInclude Include="HUDScoreText.h" />
     <ClInclude Include="HUDTimeText.h" />
+    <ClInclude Include="Effect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

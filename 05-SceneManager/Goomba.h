@@ -72,7 +72,8 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) override;
 	void UpdateState();
 	void Render() override;
-	void KickedFromTop(CGameObject*);
+	void KickedFromTop(CGameObject*) override;
+	void KickedFromBottom(CGameObject*) override;
 	void KnockedOut(CGameObject*);
 	void TouchTwoSide(CGameObject*) {};
 	int IsCollidable() override { return state != KNOCK_OUT; }

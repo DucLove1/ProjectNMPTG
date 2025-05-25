@@ -1,7 +1,7 @@
 #pragma once
 #include "Breakable.h"
 #include "PlayScene.h"
-
+#include "RedMushroom.h"
 #define EMPTY_ITEM 0
 #define SPIN_STATE 1
 #define COIN_ITEM 2
@@ -20,7 +20,8 @@ protected:
 	int typeOfHolder; // coin / mushrum / leaf
 	float cdAnim;
 	float cdHit;
-	CGameObject* item;
+	CGameObject* item1;
+	CGameObject* item2;
 	float maxY, minY;
 public:
 	CQuestionBrick(float x, float y, int typeOfHolder, int timeCanHit = 1) : CBreakable(x, y)
@@ -31,7 +32,12 @@ public:
 		cdAnim = 0;
 		cdHit = 0;
 		this->timeCanHit = timeCanHit;
-		this->item = NULL;
+		this->item1 = (typeOfHolder == COIN_ITEM) ? NULL : new RedMushroom(x,y,1);
+		this->item2 = nullptr;
+		if(item1)
+		{
+			dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene())->AddObject(item1);
+		}
 		this->maxY = y;
 		this->minY = y - 8;
 	}

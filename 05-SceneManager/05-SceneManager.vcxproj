@@ -167,6 +167,7 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CQuestionBrick.cpp" />
     <ClCompile Include="DropLift.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EffectBreak.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HUDLifeText.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CQuestionBrick.h" />
     <ClInclude Include="DropLift.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectBreak.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="HUDLifeText.h" />

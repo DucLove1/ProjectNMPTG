@@ -67,6 +67,7 @@ public:
 
 	// Does this object collide with other object at certain direction ( like ColorBox )
 	virtual int IsDirectionColliable(float nx, float ny) { return 1; }
+	virtual bool IsUpdateWhenMarioTransform() { return false; } // check if this object is update when mario transform
 
 	~CGameObject();
 

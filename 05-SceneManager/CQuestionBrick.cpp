@@ -66,18 +66,11 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 		timeCanHit--;
 		SetState(STATE_GO_UP);
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-		float Mx, My, Ox, Oy;
-		this->GetPosition(Mx, My);
+
 		////if (dynamic_cast<CMario*>(e->obj) == NULL) return;
 		//CMario* mario = (CMario*)e;
 		CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 
-		mario->GetPosition(Ox, Oy);
-
-		float dir = Ox - Mx;
-
-		if (dir >= 0) nx = -1;
-		else nx = 1;
 
 		if (typeOfHolder == COIN_ITEM)
 		{
@@ -90,13 +83,16 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 			if (mario->GetLevel() == MARIO_LEVEL_SMALL)
 			{
 				// vi khi hit thi brick se chay len xuong, neu cho item cung vi tri voi cuc gach thi se bi lo cuc nam
-				this->item = new RedMushroom(x, y - 8, nx);
-				scene->AddObject(item);
+				/*this->item = new RedMushroom(x, y - 8, nx);
+				scene->AddObject(item);*/
 			}
 			else// if (mario->GetLevel() == MARIO_LEVEL_BIG)
 			{
-				this->item = new CLeaf(x, y);
-				scene->AddObject(item);
+				this->item2 = new CLeaf(x, y);
+				scene->AddObject(item2);
+				// xoa item1
+				this->item1->Delete();
+				this->item1 = nullptr;
 			}
 		}
 		cdHit = CD_GOT_HIT;
@@ -126,6 +122,14 @@ void CQuestionBrick::GoDown(DWORD dt)
 	{
 		this->y = maxY;
 		this->vy = 0;
+		if (item1 != nullptr && dynamic_cast<CMushroom*>(item1))
+		{
+			CGameObject* mario = ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+			float mX, mY;
+			mario->GetPosition(mX, mY);
+			int nx = (this->x <= mX) ? -1 : 1;
+			dynamic_cast<CMushroom*>(item1)->GotHit(nx);
+		}
 		SetState(STATE_IDLE);
 	}
 }
@@ -155,27 +159,6 @@ void CQuestionBrick::Render()
 		aniId = ID_ANI_QUESTION_BRICK_EMPTY;
 	}
 
-
-	if (item != nullptr && !item->IsDeleted() &&
-		!GameClock::GetInstance()->IsPaused() &&
-		!GameClock::GetInstance()->IsTempPaused())
-	{
-		if (dynamic_cast<CLeaf*>(item))
-		{
-			CLeaf* leaf = dynamic_cast<CLeaf*>(item);
-			leaf->Render();
-		} 
-		else if (dynamic_cast<CMushroom*>(item))
-		{
-			CMushroom* mushroom = dynamic_cast<CMushroom*>(item);
-			mushroom->Render();
-		}
-		else//defaultcase
-		{
-			DebugOut(L"Hmmm i dont know");
-		}
-
-	}
 	//if (item != NULL && !item->IsDeleted() &&
 	//	!GameClock::GetInstance()->IsPaused() &&
 	//	!GameClock::GetInstance()->IsTempPaused()&&

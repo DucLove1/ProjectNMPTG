@@ -6,6 +6,7 @@
 #include "Mario.h"
 #include "PlayScene.h"
 #include "GameManager.h"
+#include "Effect.h"
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -26,6 +27,15 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		{
 			mario->SetSlowFalling(true);
 		}
+		break;
+
+		//case DIK_Q:
+		//	
+		//	break;
+
+	case DIK_Z:
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
+			mario->SetState(MARIO_STATE_ATTACK);
 		break;
 	case DIK_X:
 		mario->SetSmallJump();
@@ -66,9 +76,15 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_Q:
 		GameManager::GetInstance()->PauseToTransform();
 		break;
-		case DIK_E:
-			GameManager::GetInstance()->ResumeWhenDoneTransform();
-			break;
+	case DIK_E:
+		GameManager::GetInstance()->ResumeWhenDoneTransform();
+		break;
+	case DIK_Y:
+		float x, y;
+		mario->GetPosition(x, y);
+		Effect* effect = new Effect(x, y, EFFECT_DISAPPEAR);
+		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(effect); // add effect to scene)
+		break;
 	}
 }
 

@@ -35,5 +35,7 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void SetState(int state);
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	void KnockedOut(CGameObject*)override;
+	void KickedFromBottom(CGameObject*) override;
 };
 

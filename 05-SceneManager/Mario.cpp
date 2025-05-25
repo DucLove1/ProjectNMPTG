@@ -460,18 +460,20 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
+	CMushroom* mushroom = dynamic_cast<CMushroom*>(e->obj);
+	mushroom->Touched();
 	if (level == MARIO_LEVEL_SMALL)
 	{
-		GameManager::GetInstance()->AddScore(1000);
+		//GameManager::GetInstance()->AddScore(1000);
 		SetLevel(MARIO_LEVEL_BIG);
 		SetPowerUP(true);
-		e->obj->Delete();
+		//e->obj->Delete();
 	}
 	else
 	{
-		GameManager::GetInstance()->AddScore(1000);
+		//GameManager::GetInstance()->AddScore(1000);
 		DebugOut(L"Score ++\n");
-		e->obj->Delete();
+		//e->obj->Delete();
 	}
 }
 void CMario::OnCollisionWithFireBall(LPCOLLISIONEVENT e)

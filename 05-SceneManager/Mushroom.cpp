@@ -1,8 +1,13 @@
 #include "Mushroom.h"
 #include "debug.h"
-
+#include "RedMushroom.h"
+#include "GreenMushroom.h"
+#include "Effect.h"
+#include "PlayScene.h"
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if(!isActive)
+		return;
 	if (y <= offSetEnd)
 	{
 		wasGrowUp = true;
@@ -28,10 +33,17 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMushroom::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x - MUSHROOM_BBOX_WIDTH / 2;
-	t = y - MUSHROOM_BBOX_HEIGHT / 2;
-	r = l + MUSHROOM_BBOX_WIDTH;
-	b = t + MUSHROOM_BBOX_HEIGHT;
+	if (isActive)
+	{
+		l = x - MUSHROOM_BBOX_WIDTH / 2;
+		t = y - MUSHROOM_BBOX_HEIGHT / 2;
+		r = l + MUSHROOM_BBOX_WIDTH;
+		b = t + MUSHROOM_BBOX_HEIGHT;
+	}
+	else
+	{
+		l = t = r = b = 0;
+	}
 }
 
 void CMushroom::OnNoCollision(DWORD dt)
@@ -61,4 +73,27 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 		vx = -vx;
 		nx = -nx;
 	}
+}
+
+void CMushroom::GotHit(int nx)
+{
+	this->isActive = true;
+	this->nx = nx;
+}
+
+void CMushroom::Touched()
+{
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	Effect* effect = nullptr;
+	if(dynamic_cast<RedMushroom*>(this))
+	{
+		effect = new Effect(x, y - 16, EFFECT_1000);
+		GameManager::GetInstance()->AddScore(1000);
+	}
+	else if(dynamic_cast<GreenMushroom*>(this))
+	{
+		effect = new Effect(x, y - 16, EFFECT_1UP);
+	}
+	scene->AddObject(effect);
+	this->Delete();
 }

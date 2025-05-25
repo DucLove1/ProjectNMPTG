@@ -8,6 +8,7 @@ class RedMushroom : public CMushroom
 	}
 	void Render()
 	{
+		if(isActive)
 		CAnimations::GetInstance()->Get(ID_ANI_MUSHROOM)->Render(x, y);
 	}
 };

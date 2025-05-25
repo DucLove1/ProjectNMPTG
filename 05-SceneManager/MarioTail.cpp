@@ -16,7 +16,7 @@
 #include "GoldBrickWithButton.h"
 #include "GameManager.h"
 #include "PlayScene.h"
-
+#include "Effect.h"
 #define MARIO_BBOX_WIDTH 14
 
 void CMarioTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -70,7 +70,11 @@ void CMarioTail::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (dynamic_cast<CEnemy*>(e->obj)) // if e->obj is Leaf
 	{
-		dynamic_cast<CEnemy*>(e->obj)->KickedFromTop(this);
+		float x, y;
+		e->obj->GetPosition(x, y); // get position of enemy
+		Effect* effect = new Effect(x, y, EFFECT_TAIL_ATTACK);
+		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(effect); // add effect to scene)
+		dynamic_cast<CEnemy*>(e->obj)->KickedFromBottom(this);
 	}
 	else if (dynamic_cast<CQuestionBrick*>(e->obj)) // if e->obj is QuestionBrick
 	{

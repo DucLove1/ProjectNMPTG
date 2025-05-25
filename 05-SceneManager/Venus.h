@@ -62,7 +62,8 @@ class Venus: public CEnemy
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void SetState(int state);
 	void KickedFromTop(CGameObject* obj) { return; }
-	void KnockedOut(CGameObject* obj) { Delete(); };
+	void KickedFromBottom(CGameObject* obj);
+	void KnockedOut(CGameObject* obj);
 	void TouchTwoSide(CGameObject* obj) { return; }
 	int IsColliable() { return this->y <= maxY - 10; }
 };

@@ -1,6 +1,7 @@
 #include "Mushroom.h"
 #include "debug.h"
 #include "RedMushroom.h"
+#include "GreenMushroom.h"
 #include "Effect.h"
 #include "PlayScene.h"
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -89,7 +90,7 @@ void CMushroom::Touched()
 		effect = new Effect(x, y - 16, EFFECT_1000);
 		GameManager::GetInstance()->AddScore(1000);
 	}
-	else
+	else if(dynamic_cast<GreenMushroom*>(this))
 	{
 		effect = new Effect(x, y - 16, EFFECT_1UP);
 	}

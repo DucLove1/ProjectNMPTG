@@ -11,7 +11,9 @@
 #define EFFECT_4000 40
 #define EFFECT_8000 80
 #define EFFECT_1UP 100
-#define VY -0.03f
+#define EFFECT_TAIL_ATTACK 101
+#define EFFECT_DISAPPEAR 102
+#define VY -0.01f
 class Effect : public CGameObject
 {
 private:
@@ -23,7 +25,7 @@ public:
 		this->x = x;
 		this->y = y;
 		this->type = type;
-		this->vy = VY;
+		this->vy = (type != EFFECT_TAIL_ATTACK && type != EFFECT_DISAPPEAR) ? VY : 0;
 		timer = GameClock::GetInstance()->GetTime();
 	}
 	void Render();

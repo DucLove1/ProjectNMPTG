@@ -1,5 +1,7 @@
 #include "PiranhaPlant.h"
 #include "GameClock.h"
+#include "PlayScene.h"
+#include "Effect.h"
 #define DIFF 5.0f
 void PiranhaPlant::UpdateStateAppear(DWORD dt)
 {
@@ -82,4 +84,17 @@ void PiranhaPlant::GetBoundingBox(float& left, float& top, float& right, float& 
 	top = y - PIRANHA_PLANT_BBOX_HEIGHT / 2;
 	right = left + PIRANHA_PLANT_BBOX_WIDTH;
 	bottom = top + PIRANHA_PLANT_BBOX_HEIGHT;
+}
+
+void PiranhaPlant::KnockedOut(CGameObject*)
+{
+	Delete();
+	Effect* effect = new Effect(x, y - 8, EFFECT_DISAPPEAR);
+	LPPLAYSCENE scene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	scene->AddObject(effect);
+}
+
+void PiranhaPlant::KickedFromBottom(CGameObject* object)
+{
+	KnockedOut(object);
 }

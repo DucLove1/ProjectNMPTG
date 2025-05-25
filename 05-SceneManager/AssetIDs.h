@@ -63,6 +63,7 @@
 #define OBJECT_TYPE_BOOMERANG 57
 #define OBJECT_TYPE_BOOMERANG_BRO 58
 #define OBJECT_TYPE_EFFECT 59
+#define OBJECT_TYPE_TEETH_LINE 70
 #pragma region MARIO 
 
 #define ID_SPRITE_MARIO 10000
@@ -378,6 +379,9 @@
 #define ID_SPRITE_EFFECT_4000 590006
 #define ID_SPRITE_EFFECT_8000 590007
 #define ID_SPRITE_EFFECT_1UP 590008
+#pragma endregion
+#pragma region TEETH
+#define ID_SPRITE_TEETH 700000
 #pragma endregion
 //Animations
 #pragma region ANIMATION

@@ -179,6 +179,7 @@
     <ClCompile Include="ParticalBreak.cpp" />
     <ClCompile Include="RectanglePlatform.cpp" />
     <ClCompile Include="RedMushroom.cpp" />
+    <ClCompile Include="TeethLine.cpp" />
     <ClCompile Include="TextMeshPro.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="ParticalBreak.h" />
     <ClInclude Include="RectanglePlatform.h" />
     <ClInclude Include="RedMushroom.h" />
+    <ClInclude Include="TeethLine.h" />
     <ClInclude Include="TextMeshPro.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />

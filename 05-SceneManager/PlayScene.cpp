@@ -55,6 +55,7 @@
 #include "DropLift.h"
 #include "Boomerang.h"
 #include "BoomerangBro.h"
+#include "TeethLine.h"
 
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
@@ -267,7 +268,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int width = atoi(tokens[3].c_str());
 		int height = atoi(tokens[4].c_str());
 		int color = atoi(tokens[5].c_str());
-		obj = new Block(x, y, width, height, color);
+		bool isShadowBottom = false;
+		if (tokens.size() > 6)
+		{
+			isShadowBottom = atoi(tokens[6].c_str()) == 1 ? true : false;
+		}
+		obj = new Block(x, y, width, height, color, isShadowBottom);
 		break;
 	}
 	case OBJECT_TYPE_BULDER_GOLD_BRICK:
@@ -504,6 +510,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BOOMERANG_BRO:
 	{
 		obj = new BoomerangBro(x, y);
+		break;
+	}
+	case OBJECT_TYPE_TEETH_LINE:
+	{
+		int unitWidth = atoi(tokens[3].c_str());
+		int unitHeight = atoi(tokens[4].c_str());
+		obj = new TeethLine(x, y, unitWidth, unitHeight);
 		break;
 	}
 	case OBJECT_TYPE_PORTAL:

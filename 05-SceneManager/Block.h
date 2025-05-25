@@ -6,12 +6,15 @@
 #define CELL_HEIGHT 8.0f
 #define ID_SPRITE_SHADOW_CORNER 114001
 #define ID_SPRITE_SHADOW_EDGE	115001
+#define ID_SPRITE_SHADOW_CORNER_LEFT 114002
+#define ID_SPRITE_SHADOW_CORNER_RIGHT 114003
 class Block : public CGameObject
 {
 private:
 	int unitHeight;			// Unit: cell
 	int unitWidth;
 	vector<vector<int>> gridBlockId;
+	bool isShadowBottom;
 	void GetGrid(int color)
 	{
 		//gridBlockId.resize(3, vector<int>(3, 0));
@@ -56,12 +59,13 @@ public:
 		GREEN,
 		WHITE
 	};
-	Block(float x, float y, int unitWidth, int unitHeight, int color)
+	Block(float x, float y, int unitWidth, int unitHeight, int color, bool isShadowBottom = false)
 		: CGameObject(x, y)
 	{
 		this->unitWidth = unitWidth;
 		this->unitHeight = unitHeight;
 		GetGrid(color);
+		this->isShadowBottom = isShadowBottom;
 	}
 	void Render() override;
 	void Update(DWORD dt) {};

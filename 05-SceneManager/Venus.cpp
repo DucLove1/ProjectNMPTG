@@ -1,6 +1,8 @@
 #include "Venus.h"
 #include "Animations.h"
 #include "GameClock.h"
+#include "PlayScene.h"
+#include "Effect.h"
 #define DIFF_FROM_HEAD_RED 8.0f
 #define DIFF_FROM_HEAD_GREEN 5.0f
 void Venus::FollowMario()
@@ -236,4 +238,16 @@ void Venus::SetState(int state)
 	default:
 		break;
 	}
+}
+
+void Venus::KickedFromBottom(CGameObject* obj)
+{
+	KnockedOut(obj);
+}
+
+void Venus::KnockedOut(CGameObject* obj)
+{
+	Effect* effect = new Effect(x, y - 10, EFFECT_DISAPPEAR);
+	dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene())->AddObject(effect);
+	Delete();
 }

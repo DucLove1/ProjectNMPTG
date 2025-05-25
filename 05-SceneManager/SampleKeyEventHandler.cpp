@@ -1,4 +1,4 @@
-#include "SampleKeyEventHandler.h"
+#include "SampleKeyEventHandler.h"4
 
 #include "debug.h"
 #include "Game.h"
@@ -6,6 +6,7 @@
 #include "Mario.h"
 #include "PlayScene.h"
 #include "GameManager.h"
+#include "Effect.h"
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -18,20 +19,26 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
-		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->IsFalling())
+		if (mario->IsReachToExpectedSpeed())
+		{
+			mario->SetFlying(true);
+		}
+		else if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->IsFalling())
+		{
 			mario->SetSlowFalling(true);
+		}
 		break;
 
-	//case DIK_Q:
-	//	
-	//	break;
+		//case DIK_Q:
+		//	
+		//	break;
 
 	case DIK_Z:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 			mario->SetState(MARIO_STATE_ATTACK);
 		break;
 	case DIK_X:
-		mario->SetState(MARIO_STATE_SMALL_JUMP);
+		mario->SetSmallJump();
 		break;
 	case DIK_1:
 		mario->SetLevel(MARIO_LEVEL_SMALL);
@@ -69,9 +76,15 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_Q:
 		GameManager::GetInstance()->PauseToTransform();
 		break;
-		case DIK_E:
-			GameManager::GetInstance()->ResumeWhenDoneTransform();
-			break;
+	case DIK_E:
+		GameManager::GetInstance()->ResumeWhenDoneTransform();
+		break;
+	case DIK_Y:
+		float x, y;
+		mario->GetPosition(x, y);
+		Effect* effect = new Effect(x, y, EFFECT_DISAPPEAR);
+		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(effect); // add effect to scene)
+		break;
 	}
 }
 
@@ -112,12 +125,22 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
-		if (game->IsKeyDown(DIK_A)) {
-
+		if (game->IsKeyDown(DIK_A)) 
+		{
 			mario->SetState(MARIO_STATE_RUNNING_LEFT);
 		}
 		else
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
+	}
+	else if (game->IsKeyDown(DIK_Z))
+	{
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
+		{
+			if (!mario->IsSitting()) 
+			{
+				mario->SetAttack(true);
+			}
+		}
 	}
 	else
 	{

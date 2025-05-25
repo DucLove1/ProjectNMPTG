@@ -139,6 +139,10 @@
     <ClCompile Include="DropLift.cpp" />
     <ClCompile Include="Boomerang.cpp" />
     <ClCompile Include="BoomerangBro.cpp" />
+    <ClCompile Include="HUDLifeText.cpp" />
+    <ClCompile Include="HUDScoreText.cpp" />
+    <ClCompile Include="HUDTimeText.cpp" />
+    <ClCompile Include="Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -212,6 +216,10 @@
     <ClInclude Include="DropLift.h" />
     <ClInclude Include="Boomerang.h" />
     <ClInclude Include="BoomerangBro.h" />
+    <ClInclude Include="HUDLifeText.h" />
+    <ClInclude Include="HUDScoreText.h" />
+    <ClInclude Include="HUDTimeText.h" />
+    <ClInclude Include="Effect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

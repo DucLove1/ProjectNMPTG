@@ -1,4 +1,5 @@
-#include <iostream>
+﻿#include <iostream>
+#include <limits>
 #include <fstream>
 #include "AssetIDs.h"
 
@@ -15,6 +16,10 @@
 #include "Mushroom.h"
 #include "HUDBorder.h"
 #include "TextMeshPro.h"
+#include "HUDLifeText.h"
+#include "HUDTimeText.h"
+
+#include "HUDScoreText.h"
 
 #include "GreenKoopa.h"
 
@@ -50,6 +55,10 @@
 #include "DropLift.h"
 #include "Boomerang.h"
 #include "BoomerangBro.h"
+
+#define TIMES_TO_DEVIDE_WIDTH 10
+#define TIMES_TO_DEVIDE_HEIGHT 5
+
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -280,7 +289,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new BuiderGoldBrick(x, y, type, grid);
 		break;
 	}
-	
+
 	case OBJECT_TYPE_PIPE:
 	{
 		float cell_width = (float)atof(tokens[3].c_str());
@@ -327,18 +336,53 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CBouncingCoin(x, y);
 		break;
 	}
+	//for UI
 	case OBJECT_TYPE_HUD_BORDER:
 	{
 		obj = new CHUDBorder(x, y);
 		DebugOut(L"HUDCreated");
 		break;
 	}
+	// this is base class, almost is not render this class, just to Inherit
 	case OBJECT_TYPE_HUD_TEXTMESHPRO:
 	{
-		string str = "TOI DA BI CON meo";
+		string str = "";
 		obj = new CTextMeshPro(x, y, str);
 		break;
 	}
+	case OBJECT_TYPE_HUD_LIFE_TEXT:
+	{
+		string str = "COUTER OF REMAINING LIVES";
+		obj = new CHUDLifeText(x, y, str);
+		break;
+	}
+	case OBEJECT_TYPE_HUD_LEVEL_TEXT:
+	{
+		string str = "LEVEL";
+		//	obj = new CTextMeshPro(x, y, str);
+		break;
+	}
+	case OBJECT_TYPE_HUD_SCORE_TEXT:
+	{
+		string str = "SCORE";
+		obj = new CHUDScoreText(x, y, str);
+		break;
+	}
+	case OBJECT_TYPE_HUD_TIME_TEXT:
+	{
+		string str = "TIME";
+		obj = new CHUDTimeText(x, y, str);
+		break;
+	}
+	case OBJECT_TYPE_HUD_COIN:
+	{
+		string str = "COIN";
+		//	obj = new CTextMeshPro(x, y, str);
+		break;
+	}
+
+	//end UI
+
 	case OBJECT_TYPE_BIG_TREE:
 	{
 		int height = atoi(tokens[3].c_str());
@@ -558,6 +602,94 @@ void CPlayScene::Load()
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
 
+void CPlayScene::CinemachineCamera()
+{
+	CGame* game = CGame::GetInstance();
+
+	// Update camera to follow mario
+	float cx = std::numeric_limits<float>::lowest(),
+		cy = std::numeric_limits<float>::lowest();
+
+	float playerX, playerY;
+	player->GetPosition(playerX, playerY);
+
+	//Get Height and Width of screen
+	float width = game->GetBackBufferWidth() / 2;
+	float height = game->GetBackBufferHeight() * 3 / 5;
+
+	//previrous camera position
+	float preCamLeft, preCamTop, preCamRight, preCamBottom;
+	//previouse camera limit range (if player move out of this range, camera will repositon to follow) 
+	//I comment carefully bcuz i can read it again and if you read this line, bạn đã bị con mèo -BNguyen- =))))
+	float limitLeft, limitTop, limitRight, limitBottom;
+
+	float cameraCenterX, cameraCenterY;
+
+	bool isChangeX = false;
+	bool isChangeY = false;
+
+	CGame::GetInstance()->GetCamPos(preCamLeft, preCamTop);
+	preCamRight = preCamLeft + width;
+	preCamBottom = preCamTop + height;
+
+	cameraCenterX = (preCamLeft + preCamRight) / 2;
+	cameraCenterY = (preCamTop + preCamBottom) / 2;
+
+	limitRight = cameraCenterX +  width * 5 / TIMES_TO_DEVIDE_WIDTH;
+	limitLeft =  limitRight - 2 * width / TIMES_TO_DEVIDE_WIDTH;
+	limitTop = cameraCenterY - height / TIMES_TO_DEVIDE_HEIGHT;
+	limitBottom = cameraCenterY + height / TIMES_TO_DEVIDE_HEIGHT;
+
+	if (playerX < limitLeft)
+	{
+		cx = preCamLeft - (limitLeft - playerX);
+		isChangeX = true;
+	}
+	else if (playerX > limitRight)
+	{
+		cx = preCamLeft + (playerX - limitRight);
+		isChangeX = true;
+	}
+	if (playerY < limitTop)
+	{
+		cy = preCamTop - (limitTop - playerY);
+		isChangeY = true;
+	}
+	else if (playerY > limitBottom)
+	{
+		cy = preCamTop + (playerY - limitBottom);
+		isChangeY = true;
+	}
+
+
+	if (cx < 0) cx = 0;
+	if (cy > -17) cy = -17;
+
+	if (!isChangeX && !isChangeY)
+	{
+		CGame::GetInstance()->SetCamPos(preCamLeft, preCamTop);
+	}
+	else if (!isChangeX)
+	{
+		CGame::GetInstance()->SetCamPos(preCamLeft, cy);
+	}
+	else if (!isChangeY)
+	{
+		CGame::GetInstance()->SetCamPos(cx, preCamTop);
+	}
+	else
+	{
+		CGame::GetInstance()->SetCamPos(cx, cy);
+	}
+
+	//player->GetPosition(cx, cy);
+
+	//cx -= game->GetBackBufferWidth() / 2;
+	//cy -= game->GetBackBufferHeight() * 3/ 5;
+
+	//CGame::GetInstance()->SetCamPos(cx, cy);
+}
+
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -584,18 +716,13 @@ void CPlayScene::Update(DWORD dt)
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
+
 	// Update camera to follow mario
-	float cx, cy;
-	player->GetPosition(cx, cy);
 
-	CGame* game = CGame::GetInstance();
-	cx -= game->GetBackBufferWidth() / 2;
-	cy -= game->GetBackBufferHeight() / 2;
+	CinemachineCamera();
 
-	if (cx < 0) cx = 0;
-
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	//CGame::GetInstance()->SetCamPos(cx, cy);
+
 	PurgeDeletedObjects();
 }
 bool CPlayScene::CheckObjectPause(CGameObject* object)

@@ -6,6 +6,12 @@
 #include "Mario.h"
 #include "GameManager.h"
 
+void CTextMeshPro::SetText(string textString)
+{
+	this->textString = textString;
+	GenerateText();
+}
+
 void CTextMeshPro::Render()
 {
 	//CMario * mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
@@ -13,15 +19,18 @@ void CTextMeshPro::Render()
 	//SetText("CURRENT LEVEL " + to_string(level));
 	//this->id = ID_ANI_TEXT_MESH_PRO;
 	//CUserInterface::Render();
-	SetText(to_string(GameManager::GetInstance()->GetScore()));
-
-	for (auto c : text)
+	
+	//this whill change to each Text
+	//SetText(to_string(GameManager::GetInstance()->GetScore()));
+	//SetText(this->textString);
+	
+	for (auto e : text)
 	{
-		c->Render();
-		//DebugOut(L"%d \n", c->characterId);
+		e->Render();
 	}
 	//DebugOut(L"Was done\n");
 }
+
 int CTextMeshPro::HashIDChar(char c)
 {
 	c = toupper(c);
@@ -32,21 +41,29 @@ int CTextMeshPro::HashIDChar(char c)
 	else
 		return -1;
 }
+float CTextMeshPro::CalAnchorRight()
+{
+	int sz = textString.length();
+	return (sz - 1) * GAP;
+}
+
 void CTextMeshPro::GenerateText()
 {
 	//DebugOut(L"[INFO] Generate text: %s\n", textString.c_str());
-	//for (auto c : text)
-	//{
-	//	c->Delete();
-	//}
-	text.clear();
-	int modifier = 0;
-	CCharacters* character;
-	for (int i = 0; i < textString.length(); i++)
+	for (auto c : text)
 	{
-		character = new CCharacters(x + i * 10 + modifier, y, HashIDChar(textString[i]));
+		c->Delete();
+	}
+	text.clear();
+	CCharacters* character;
+	this->modify = CalAnchorRight();
+	int sz = textString.length() - 1;
+	for(int i = 0; i <= sz; i++)
+	{
+		character = new CCharacters(x + i * GAP - this->modify, y , HashIDChar(textString[i]));
 		text.push_back(character);
 	}
+
 }
 
 
@@ -59,5 +76,5 @@ void CCharacters::Render()
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
 	animations->Get(id)
-		->Render(cx + x + 75, cy + y + 189);
+		->Render(cx + x, cy + y);
 }

@@ -10,6 +10,7 @@
 
 #define MARIO_WALKING_SPEED		0.15f
 #define MARIO_RUNNING_SPEED		0.2f
+#define MARIO_EXPECTED_SPEED	0.175f
 
 #define MARIO_ACCEL_WALK_X	0.00025f
 #define MARIO_ACCEL_RUN_X	0.00035f
@@ -25,6 +26,10 @@
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
 #define SLOW_FALLING_TIME 150
+#define FLYING_TIME 100;
+#define FLYING_SCALE -0.2f
+#define SLOW_FALLING_SCALE 0.1f
+//#define CD_FLYING_TIME 50
 
 
 #define MARIO_STATE_DIE				-10
@@ -77,7 +82,9 @@
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_RECOVERY_TIME 2500
 #define MARIO_HIDDEN_GAP_WHILE_RECOVERY 200
-#define MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR 1000
+
+#define MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR_TAIL 500
+#define MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR 950
 
 #pragma region MARIO_ANI_TYPE
 
@@ -141,6 +148,9 @@ class CMario : public CGameObject
 	int jumpedTime;
 	bool isSlowFalling;
 	int slowFallingTime;
+	bool isFlying;
+	int flyingTime;
+	int cdFlyingTime;
 
 	int coin;
 
@@ -227,14 +237,22 @@ public:
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
+	//for attack
 	void SetAttack(bool value);
 	bool IsAttack();
-
+	//for flying
+	bool IsReachToExpectedSpeed();
+	void SetFlying(bool value) { isFlying = value; flyingTime = FLYING_TIME; }
+	bool canSet() { return jumpedTime >= MARIO_MAX_JUMP_TIME; }
+	
+	//for falling
+	bool IsFalling() { return vy > 0 && !isOnPlatform; }
 	void SetSlowFalling(bool value) { isSlowFalling = value; slowFallingTime = SLOW_FALLING_TIME; }
 	bool IsSlowFalling() { return isSlowFalling; }
 
+	void SetSmallJump();
 	bool IsSitting() { return isSitting; }
-	bool IsFalling() { return vy > 0 && !isOnPlatform; }
+	
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

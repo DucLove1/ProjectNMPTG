@@ -18,7 +18,14 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
-		mario->SetState(MARIO_STATE_SIT);
+		if (mario->CanEntryPipe())
+		{
+			mario->SetForEntryPipe();
+		}
+		else
+		{
+			mario->SetState(MARIO_STATE_SIT);
+		}
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
@@ -110,7 +117,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetPickUp(false);
 		//mario->SetAttack(false);
 		break;
-	//testng
+		//testng
 	case DIK_9:
 		mario->SetForEndGame(false);
 	}
@@ -132,7 +139,7 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
-		if (game->IsKeyDown(DIK_A)) 
+		if (game->IsKeyDown(DIK_A))
 		{
 			mario->SetState(MARIO_STATE_RUNNING_LEFT);
 		}
@@ -143,7 +150,7 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 	{
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
-			if (!mario->IsSitting()) 
+			if (!mario->IsSitting())
 			{
 				mario->SetAttack(true);
 			}

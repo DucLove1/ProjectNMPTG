@@ -25,6 +25,8 @@
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
+#define MARIO_SPEED_ENTRY_PIPE 0.05f
+
 #define SLOW_FALLING_TIME 150
 #define FLYING_TIME 120;
 #define FLYING_SCALE -0.2f
@@ -55,6 +57,9 @@
 #define MARIO_STATE_POWERUP		700
 #define MARIO_STATE_ENDGAME	1000
 
+#define MARIO_STATE_PREPARE_ENTRY_PIPE		1050
+#define MARIO_STATE_ENTRY_PIPE	1100
+
 #define MARIO_MTIME_ONAIR		450
 
 
@@ -79,6 +84,7 @@
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 12
 
+#define MARIO_ENTRY_PIPE_DISTANCE 6
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_RECOVERY_TIME 2500
@@ -113,14 +119,15 @@
 #define  ANI_MARIO_PICKING_RUN_JUMP_LEFT 21
 #define  ANI_MARIO_SIT_RIGHT 22
 #define  ANI_MARIO_SIT_LEFT 23
-#define ANI_MARIO_POWER_UP_RIGHT 24
-#define ANI_MARIO_POWER_UP_LEFT 25
-#define ANI_MARIO_SLOWFALLING_RIGHT 26
-#define ANI_MARIO_SLOWFALLING_LEFT 27
-#define ANI_MARIO_ATTACK_RIGHT 28
-#define ANI_MARIO_ATTACK_LEFT 29
-#define ANI_MARIO_FLYING_RIGHT 30
-#define ANI_MARIO_FLYING_LEFT 31
+#define	 ANI_MARIO_POWER_UP_RIGHT 24
+#define  ANI_MARIO_POWER_UP_LEFT 25
+#define  ANI_MARIO_SLOWFALLING_RIGHT 26
+#define  ANI_MARIO_SLOWFALLING_LEFT 27
+#define  ANI_MARIO_ATTACK_RIGHT 28
+#define  ANI_MARIO_ATTACK_LEFT 29
+#define  ANI_MARIO_FLYING_RIGHT 30
+#define  ANI_MARIO_FLYING_LEFT 31
+#define  ANI_MARIO_ENTRY_PIPE 32
 #pragma endregion
 
 class CMario : public CGameObject
@@ -156,6 +163,11 @@ class CMario : public CGameObject
 	int flyingTime;
 	int cdFlyingTime;
 
+	bool canEntryPipe;
+	bool isEntryPipe;
+	bool isPrepareEntry;
+	pair<float, float> targetPoint;
+
 	bool isEndGame;
 
 	int coin;
@@ -163,6 +175,7 @@ class CMario : public CGameObject
 	LPGAMEOBJECT item;
 	LPGAMEOBJECT tail;
 	int preNx;
+	float preVx;
 
 	void LimitByCameraBorder();
 
@@ -178,7 +191,7 @@ class CMario : public CGameObject
 	void OnCollisionWithSpawnGate(LPCOLLISIONEVENT e);
 
 	int ConvertAniTypeToAniId(int animation_type);
-	int GetAniId();
+	
 
 public:
 	CMario(float x, float y) : CGameObject(x, y)
@@ -204,16 +217,27 @@ public:
 		isSlowFalling = false;
 		jumpedTime = 0;
 
+
+		isEntryPipe = false;
+		isPrepareEntry = false;
+
 		isEndGame = false;
 		isOnPlatform = false;
 		//jump_start = -1;
 		isPickUp = false;
 		coin = 0;
 
+		targetPoint = { 0,0 };
 		this->item = nullptr;
 		preNx = nx;
 	}
+
+	int GetAniId();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateWhenEndScene(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateWhenEntryPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+
 	void Render();
 	void SetState(int state);
 
@@ -262,6 +286,10 @@ public:
 	void SetSmallJump();
 	bool IsSitting() { return isSitting; }
 	
+	void SetForEntryPipe();
+	bool CanEntryPipe() { return canEntryPipe; }
+	bool IsPrepareEntry() { return isPrepareEntry; }
+	bool IsEntryPipe () { return isEntryPipe; }
 	void SetForEndGame(bool value);
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);

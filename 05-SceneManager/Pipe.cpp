@@ -30,6 +30,25 @@ void CPipe::RenderBoundingBox() {
 }
 void CPipe::Render() {
 	if (this->length <= 0) return;
+
+	//for entry pipe
+	if (isEntryPipe && (player->IsEntryPipe() || player->IsPrepareEntry()))
+	{
+		if (player == nullptr)
+		{
+			this->SetPlayer();
+		}
+		CAnimations* animations = CAnimations::GetInstance();
+		int aniId = -1;
+
+		aniId = player->GetAniId();
+
+		float mx, my;
+		player->GetPosition(mx, my);	
+		animations->Get(aniId)->Render(mx, my);
+	}
+
+	//for this
 	float yy = y;
 	CSprites* s = CSprites::GetInstance();
 
@@ -43,6 +62,7 @@ void CPipe::Render() {
 	if (length > 1)
 		s->Get(this->spriteIdEnd)->Draw(x, yy);
 	//RenderBoundingBox();
+
 }
 void CPipe::GetBoundingBox(float& l, float& t, float& r, float& b)
 {

@@ -26,7 +26,7 @@
 #include "PlayScene.h"
 #include "DropLift.h"
 //define for Id map
-int mapAniId[][30] = {
+int mapAniId[][32] = {
 		{
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT,
 			ID_ANI_MARIO_SMALL_WALKING_RIGHT, ID_ANI_MARIO_SMALL_WALKING_LEFT,
@@ -42,7 +42,8 @@ int mapAniId[][30] = {
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is sitting)
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is powerUp)
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is slowfalling)
-			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT // fill array with idle (this is attacking)
+			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is attacking)
+			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT  // fill array with idle (this is flying)
 		},
 		{
 			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,
@@ -61,6 +62,7 @@ int mapAniId[][30] = {
 			ID_ANI_MARIO_SMALL_TO_BIG_RIGHT,ID_ANI_MARIO_SMALL_TO_BIG_LEFT,
 			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,// fill array with idle (this is slowfalling)
 			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,// fill array with idle (this is attacking)
+			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,// fill array with idle (this is flying)
 		},
 		{
 			ID_ANI_MARIO_TAIL_IDLE_RIGHT, ID_ANI_MARIO_TAIL_IDLE_LEFT,
@@ -78,6 +80,7 @@ int mapAniId[][30] = {
 			ID_ANI_MARIO_POWERUP_TO_TAIL_RIGHT, ID_ANI_MARIO_POWERUP_TO_TAIL_LEFT,
 			ID_ANI_MARIO_TAIL_SLOWFALLING_RIGHT, ID_ANI_MARIO_TAIL_SLOWFALLING_LEFT,
 			ID_ANI_MARIO_TAIL_ATTACK_RIGHT, ID_ANI_MARIO_TAIL_ATTACK_LEFT,
+			ID_ANI_MARIO_FLY_RIGHT, ID_ANI_MARIO_FLY_LEFT
 		}
 };
 
@@ -85,7 +88,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-	
+
 	//DebugOut(L"Vx: %f\n", vx);
 
 	if (state == MARIO_STATE_IDLE || state == MARIO_STATE_SIT)
@@ -110,7 +113,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				ay = MARIO_GRAVITY;
 		}
 	}
-	
+
 	if (flyingTime > 0)
 	{
 		vy = MARIO_JUMP_SPEED_Y * FLYING_SCALE;
@@ -124,7 +127,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//SetState(MARIO_STATE_RELEASE_JUMP); // reset state to idle
 		ay = MARIO_GRAVITY;
 		isFlying = false;
-		DebugOut(L"DONE");
+		//DebugOut(L"DONE");
 	}
 
 	if (slowFallingTime > 0)
@@ -139,13 +142,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//vy = MARIO_JUMP_SPEED_Y;
 
 		isSlowFalling = false;
-		DebugOut(L"DONE");
+		
 	}
+	/*
 	if (slowFallingTime > 0)
 		DebugOut(L"SlowFallingTime: %d\n", slowFallingTime);
-	if (flyingTime> 0)
+	if (flyingTime > 0)
 		DebugOut(L"FlyingTime: %d\n", flyingTime);
-	
+	*/
+
 
 
 	UpdateTail(dt);
@@ -159,8 +164,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			item = nullptr;
 		}
 	}
-
-	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 
 	// reset untouchable timer if untouchable time has passed
@@ -202,6 +205,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//int x = mapAniId[0][0];
 	LimitByCameraBorder();
+	if (isEndGame)
+	{
+		x += vx * dt;
+		DebugOut(L"End Game\n");
+	}
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -282,7 +290,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (e->ny < 0)
 			dropLift->Touch();
 	}
-	
+
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -540,6 +548,7 @@ int CMario::GetAniId()
 
 	if (!isOnPlatform) // this case is Jump/fall out
 	{
+		
 		if (isPickUp) // jump and holding item
 		{
 			if (abs(ax) == MARIO_ACCEL_RUN_X)
@@ -555,6 +564,17 @@ int CMario::GetAniId()
 					aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_JUMP_RIGHT);
 				else
 					aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_JUMP_LEFT);
+			}
+		}
+		else if (isFlying)
+		{
+			if (nx >= 0)
+			{
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_FLYING_RIGHT);
+			}
+			else
+			{
+				aniId = ConvertAniTypeToAniId(ANI_MARIO_FLYING_LEFT);
 			}
 		}
 		else if (abs(ax) == MARIO_ACCEL_RUN_X)
@@ -891,6 +911,19 @@ void CMario::SetState(int state)
 		vx = 0;
 		ax = 0;
 		break;
+
+	case MARIO_STATE_ENDGAME:
+		maxVx = MARIO_WALKING_SPEED;
+		vy = 0;
+		ax = MARIO_ACCEL_WALK_X;
+		ay = MARIO_GRAVITY;
+		//isSitting = false;
+		//SetAttack(false);
+		//isRecovering = false;
+		//isPowerUp = false;
+		//isPickUp = false;
+
+		break;
 	}
 
 	CGameObject::SetState(state);
@@ -1000,10 +1033,20 @@ void CMario::PickingItem(DWORD dt) {
 		//DebugOut(L"SEEE temp %f", tempVy);
 		//item->SetSpeed(this->vx, tempVy);
 
-		float targetX = x + 16 * nx + (this->vx * fdt), targetY = y + (this->vy * fdt);
+		float targetX = x + 16 * nx + (this->vx * fdt);
+		float targetY = y + (this->vy * fdt);
+
+		if (this->level == MARIO_LEVEL_SMALL)
+		{
+			targetX -= (16 / 2 - MARIO_SMALL_BBOX_WIDTH / 2) * nx;
+			targetY -= (MARIO_BIG_BBOX_HEIGHT / 2 - MARIO_SMALL_BBOX_HEIGHT / 2);
+		}
+
 		float curX, curY;
 		item->GetPosition(curX, curY);
-		float kVx = (targetX - curX) / (float)fdt, kVy = (targetY - curY) / (float)fdt;
+		float kVx, kVy;
+			kVx = (targetX - curX) / (float)fdt;
+			kVy = (targetY - curY) / (float)fdt;
 		item->SetSpeed(kVx, kVy);
 		koopa->SetAccelation(0, 0);
 
@@ -1024,7 +1067,7 @@ void CMario::ReleaseItem(CGameObject* item) {
 	koopa->SetHolded(false);
 	koopa->SetAccelation(0.f, KOOPA_GRAVITY);
 	koopa->ReleaseByPlayer(this);
-  //this->item = nullptr;
+	//this->item = nullptr;
 }
 
 void CMario::UpdateTail(DWORD dt)
@@ -1050,8 +1093,10 @@ void CMario::UpdateTail(DWORD dt)
 void CMario::SetAttack(bool value)
 {
 	if (tail == nullptr) return;
-
 	CMarioTail* tail = dynamic_cast<CMarioTail*>(this->tail);
+	float setX = this->x * nx - TAIL_BBOX_WIDTH / 2;
+	float setY = this->y + TAIL_BBOX_HEIGHT;
+	tail->SetPosition(setX, setY);
 	tail->SetWhiping(value);
 }
 bool CMario::IsAttack()
@@ -1075,4 +1120,16 @@ void CMario::SetSmallJump()
 		return;
 	SetState(MARIO_STATE_JUMP);
 	jumpedTime = MARIO_MAX_JUMP_TIME / 4;
+}
+
+void CMario::SetForEndGame(bool value)
+{
+	this->isEndGame = value;
+	GameManager* gameManager = GameManager::GetInstance();
+	gameManager->SetEndGame(this->isEndGame);
+	if (this->isEndGame)
+	{
+		this->state = MARIO_STATE_ENDGAME;
+		SetState(state);
+	}
 }

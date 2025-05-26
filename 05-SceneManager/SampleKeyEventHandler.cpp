@@ -11,7 +11,10 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-
+	if (GameManager::GetInstance()->IsEndGame())
+	{
+		return;
+	}
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
@@ -52,7 +55,8 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetPowerUP(true);
 		break;
 	case DIK_0:
-		mario->SetState(MARIO_STATE_DIE);
+		//mario->SetState(MARIO_STATE_DIE);
+		mario->SetForEndGame(true);
 		break;
 	case DIK_A:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
@@ -106,6 +110,9 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetPickUp(false);
 		//mario->SetAttack(false);
 		break;
+	//testng
+	case DIK_9:
+		mario->SetForEndGame(false);
 	}
 }
 

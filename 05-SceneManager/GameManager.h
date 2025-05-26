@@ -17,6 +17,7 @@ private:
 	int lives;
 	bool isPausedToTransform;
 	bool isPausedGame;
+	bool isEndGame;
 public:
 	static GameManager* GetInstance()
 	{
@@ -51,6 +52,9 @@ public:
 	void SetPausedToTransform(bool isPaused) { isPausedToTransform = isPaused; }
 	bool IsPausedGame() { return isPausedGame; }
 	void SetPausedGame(bool isPaused) { isPausedGame = isPaused; }
+
+	void SetEndGame(bool isEnd) { isEndGame = isEnd; }
+	bool IsEndGame() { return isEndGame; }
 
 	ULONGLONG CalculateRemainingTime()
 	{

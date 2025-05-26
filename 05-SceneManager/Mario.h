@@ -26,7 +26,7 @@
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
 #define SLOW_FALLING_TIME 150
-#define FLYING_TIME 100;
+#define FLYING_TIME 120;
 #define FLYING_SCALE -0.2f
 #define SLOW_FALLING_SCALE 0.1f
 //#define CD_FLYING_TIME 50
@@ -53,6 +53,7 @@
 #define MARIO_MAX_FALLING_SPEED	0.2f
 
 #define MARIO_STATE_POWERUP		700
+#define MARIO_STATE_ENDGAME	1000
 
 #define MARIO_MTIME_ONAIR		450
 
@@ -118,6 +119,8 @@
 #define ANI_MARIO_SLOWFALLING_LEFT 27
 #define ANI_MARIO_ATTACK_RIGHT 28
 #define ANI_MARIO_ATTACK_LEFT 29
+#define ANI_MARIO_FLYING_RIGHT 30
+#define ANI_MARIO_FLYING_LEFT 31
 #pragma endregion
 
 class CMario : public CGameObject
@@ -148,9 +151,12 @@ class CMario : public CGameObject
 	int jumpedTime;
 	bool isSlowFalling;
 	int slowFallingTime;
+
 	bool isFlying;
 	int flyingTime;
 	int cdFlyingTime;
+
+	bool isEndGame;
 
 	int coin;
 
@@ -198,6 +204,7 @@ public:
 		isSlowFalling = false;
 		jumpedTime = 0;
 
+		isEndGame = false;
 		isOnPlatform = false;
 		//jump_start = -1;
 		isPickUp = false;
@@ -255,6 +262,7 @@ public:
 	void SetSmallJump();
 	bool IsSitting() { return isSitting; }
 	
+	void SetForEndGame(bool value);
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

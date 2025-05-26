@@ -59,7 +59,7 @@ void Button::GetPress()
 	SetState(BUTTON_STATE_PRESSED);
 	for(BreakableGoldBrick* brick : bricks)
 	{
-		if(brick != NULL && !(brick->IsDeleted()))
+		if(brick != nullptr && !(brick->IsDeleted()))
 			brick->ChangeToCoin();
 	}
 }

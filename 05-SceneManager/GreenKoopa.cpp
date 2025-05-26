@@ -7,8 +7,8 @@ void GreenKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		vy += ay * dt;
 	}
-	else
-		vy = 0;
+	//else
+	//	vy = 0;
 	switch (state)
 	{
 	case HAS_WING:

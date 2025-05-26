@@ -4,6 +4,7 @@
 #include "Mario.h"
 #include "GameClock.h"
 #include "GoldBrick.h"
+#include "Effect.h"
 void Koopa::SetState(int state)
 {
 	switch (state)
@@ -62,6 +63,7 @@ void Koopa::OnNoCollision(DWORD dt)
 	x += vx * dt;
 	y += vy * dt;
 	onGround = false;
+	ay = KOOPA_GRAVITY;
 }
 
 void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
@@ -101,6 +103,8 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	// bi block boi e->obj thi xu ly
 	if (e->ny != 0)
 	{
+		if (nx == 0)
+			vx = 0;
 		vy = 0;
 		if (e->ny < 0)
 			onGround = true;
@@ -133,6 +137,10 @@ void Koopa::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
 					}
 				}
 			}
+			float x, y;
+			enemy->GetPosition(x, y);
+			Effect* effect = new Effect(x, y, EFFECT_TAIL_ATTACK);
+			(dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene()))->AddObject(effect);
 			enemy->KnockedOut(this);
 			if (isHolded) {
 				/*isHolded = false;
@@ -195,7 +203,7 @@ void Koopa::Render()
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_WALKING_RIGHT : ID_ANI_GREEN_KOOPA_WALKING_RIGHT;
 		break;
 	case IN_SHELL_UP:
-		if (vx == 0)
+		if (nx == 0)
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_UP : ID_ANI_GREEN_KOOPA_IN_SHELL_UP;
 		else
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_UP_MOVE : ID_ANI_GREEN_KOOPA_IN_SHELL_UP_MOVE;
@@ -257,6 +265,17 @@ void Koopa::MoveInShell(int direction)
 	this->nx = direction;
 	vx = direction * KOOPA_IN_SHELL_SPEED;
 }
+void Koopa::KickedFromBottom(CGameObject*)
+{
+	this->vy = -0.3f;
+	this->vx = 0.03f;
+	//this->ax = 0.000001f * nx;
+	this->y -= 1.0f;
+	this->preNx = this->nx;
+	this->nx = 0;
+	SetState(IN_SHELL_UP);
+
+}
 void Koopa::KnockedOut(CGameObject* obj)
 {
 	float objX, objY;
@@ -266,7 +285,7 @@ void Koopa::KnockedOut(CGameObject* obj)
 }
 void Koopa::SetStateHasWing()
 {
-
+	
 }
 void Koopa::SetStateHasNoWing()
 {
@@ -276,13 +295,14 @@ void Koopa::SetStateHasNoWing()
 	}
 	else if (this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP)
 	{
+		this->nx = this->preNx;
 		vx = KOOPA_WALKING_SPEED * nx;
 		y -= (KOOPA_SPRITE_HAS_NO_WING_HEIGHT - KOOPA_SPRITE_IN_SHELL_HEIGHT) / 2;
 	}
 }
 void Koopa::SetStateInShellUp()
 {
-	vx = 0;
+	//vx = 0;
 	timerInShell = GameClock::GetInstance()->GetTime();
 	if (this->state == HAS_NO_WING)
 	{

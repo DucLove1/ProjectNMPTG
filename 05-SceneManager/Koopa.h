@@ -25,7 +25,7 @@ private:
 	ULONGLONG timerKnockOut;
 
 	BOOLEAN isHolded;
-
+	int preNx;
 	void SetStateHasWing();
 	void SetStateHasNoWing();
 	void SetStateInShellUp();
@@ -43,12 +43,15 @@ public:
 	Koopa(float x, float y, int type = RED_KOOPA, int state = HAS_WING)
 		: CEnemy(x, y)
 	{
+		this->nx = -1;
+		this->preNx = -1;
 		this->type = type;
 		this->state = -1;
 		SetState(state);
 		this->ay = KOOPA_GRAVITY;
 		this->ax = 0.0f;
 		this->vx = KOOPA_WALKING_SPEED;
+		this->vy = 0;
 		this->onGround = false;
 		timerInShell = 0;
 		this->lastAnimationId = -1;
@@ -65,7 +68,7 @@ public:
 	void Render() override;
 	void KickedFromTop(CGameObject*);
 	void MoveInShell(int direction);
-	void KickedFromBottom(CGameObject*) {};
+	void KickedFromBottom(CGameObject*);
 	void TouchTwoSide(CGameObject*) {};
 	int IsCollidable() override { return state != KNOCK_OUT; }
 	void KnockedOut(CGameObject*);

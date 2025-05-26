@@ -5,6 +5,7 @@
 #include "Effect.h"
 #define DIFF_FROM_HEAD_RED 8.0f
 #define DIFF_FROM_HEAD_GREEN 5.0f
+#define DISTANCE_NOT_FIRE 137.0f
 void Venus::FollowMario()
 {
 	float marioX, marioY;
@@ -66,7 +67,7 @@ void Venus::Render()
 }
 int Venus::FindQuardrant()
 {
-	if(this->state == ATTACK)
+	if (this->state == ATTACK)
 		return cur_quarant;
 	FollowMario();
 	if (ny == -1)
@@ -120,6 +121,8 @@ void Venus::UpdateStateAttack(DWORD dt)
 	if (timer == -1)
 	{
 		timer = GameClock::GetInstance()->GetTime();
+		if (DistanceToMario() >= DISTANCE_NOT_FIRE)
+			return;
 		float angle = ChooseAngle();
 		if (type == RED)
 			bullet->Fire(x, y - DIFF_FROM_HEAD_RED, angle);
@@ -143,7 +146,7 @@ void Venus::UpdateStateHide(DWORD dt)
 		this->y = maxY;
 		if (timer == -1)
 			timer = GameClock::GetInstance()->GetTime();
-		else 
+		else
 		{
 			float marioX, marioY;
 			mario->GetPosition(marioX, marioY);
@@ -184,21 +187,27 @@ float Venus::ChooseAngle()
 	int res = 0;
 	// check the special angles
 	int quadrant = FindQuardrant();
-	if(angle < angles[quadrant - 1][0])
+	if (angle < angles[quadrant - 1][0])
 	{
 		res = angles[quadrant - 1][0];
 	}
-	else if(angle > angles[quadrant - 1][1])
+	else if (angle > angles[quadrant - 1][1])
 	{
 		res = angles[quadrant - 1][1];
 	}
 	else
 	{
-		/*res = (abs(angle - angles[quadrant - 1][0]) <= abs(angle - angles[quadrant - 1][1])) 
+		/*res = (abs(angle - angles[quadrant - 1][0]) <= abs(angle - angles[quadrant - 1][1]))
 			? angles[quadrant - 1][0] : angles[quadrant - 1][1];*/
 		res = angles[quadrant - 1][1];
 	}
 	return res;
+}
+float Venus::DistanceToMario()
+{
+	float marioX, marioY;
+	mario->GetPosition(marioX, marioY);
+	return sqrt(pow(marioX - this->x, 2) + pow(marioY - this->y, 2));
 }
 void Venus::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
@@ -209,7 +218,7 @@ void Venus::GetBoundingBox(float& l, float& t, float& r, float& b)
 		r = l + RED_BBOX_WIDTH;
 		b = t + RED_BBOX_HEIGHT;
 	}
-		else
+	else
 	{
 		l = x - GREEN_BBOX_WIDTH / 2;
 		t = y - GREEN_BBOX_HEIGHT / 2;

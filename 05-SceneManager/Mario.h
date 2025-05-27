@@ -163,6 +163,7 @@ class CMario : public CGameObject
 	int flyingTime;
 	int cdFlyingTime;
 
+	bool upArrowWasHolded;
 	bool canEntryPipe;
 	bool isEntryPipe;
 	bool isPrepareEntry;
@@ -175,10 +176,11 @@ class CMario : public CGameObject
 	LPGAMEOBJECT item;
 	LPGAMEOBJECT tail;
 	int preNx;
-	float preVx;
+	bool isEntryDown; /// for set vy direction
 
 	void LimitByCameraBorder();
 
+	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -217,7 +219,7 @@ public:
 		isSlowFalling = false;
 		jumpedTime = 0;
 
-
+		upArrowWasHolded = false;
 		isEntryPipe = false;
 		isPrepareEntry = false;
 
@@ -286,11 +288,14 @@ public:
 	void SetSmallJump();
 	bool IsSitting() { return isSitting; }
 	
-	void SetForEntryPipe();
+	void SetForEntryPipeDown();
+	void SetForEntryPipeUp();
 	bool CanEntryPipe() { return canEntryPipe; }
 	bool IsPrepareEntry() { return isPrepareEntry; }
 	bool IsEntryPipe () { return isEntryPipe; }
 	void SetForEndGame(bool value);
+	bool UpArrowWasHoled() { return upArrowWasHolded; }
+	void SetUpArrow(bool value) { upArrowWasHolded = value; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

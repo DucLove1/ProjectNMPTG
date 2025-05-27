@@ -76,3 +76,19 @@ void CPipe::GetBoundingBox(float& l, float& t, float& r, float& b)
 int CPipe::IsDirectionColliable(float nx, float ny) {
 	return 1;
 }
+
+void CPipe::SetEntryPipe(bool value)
+{
+	isEntryPipe = value;
+	if (isEntryPipe && player == nullptr)
+	{
+		this->SetPlayer();
+	}
+}
+
+void CPipe::SetPlayer()
+{
+	this->player = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (player == nullptr)
+		DebugOut(L"[ERROR] CPipe::SetPlayer - player is nullptr\n");
+}

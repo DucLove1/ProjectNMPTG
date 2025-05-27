@@ -20,7 +20,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_DOWN:
 		if (mario->CanEntryPipe())
 		{
-			mario->SetForEntryPipe();
+			mario->SetForEntryPipeDown();
 		}
 		else
 		{
@@ -128,6 +128,14 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 	LPGAME game = CGame::GetInstance();
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 
+	if (game->IsKeyDown(DIK_UP))
+	{
+		mario->SetUpArrow(true);
+	}
+	else
+	{
+		mario->SetUpArrow(false);
+	}
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
 

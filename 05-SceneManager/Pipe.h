@@ -39,20 +39,8 @@ public:
 
 	int IsDirectionColliable(float nx, float ny);
 
-	void SetEntryPipe(bool value)
-	{
-		isEntryPipe = value;
-		if (isEntryPipe && player == nullptr)
-		{
-			this->SetPlayer();
-		}
-	}
-	void SetPlayer()
-	{
-		player = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-		if (player == nullptr)
-			DebugOut(L"[ERROR] CPipe::SetPlayer - player is nullptr\n");
-	}
-
+	void SetEntryPipe(bool value);
+	
+	void SetPlayer();
 };
 typedef CPipe* LPPipe;

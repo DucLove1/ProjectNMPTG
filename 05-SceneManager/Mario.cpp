@@ -237,8 +237,22 @@ void CMario::UpdateWhenEntryPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	SetState(MARIO_STATE_ENTRY_PIPE);
 
+	float ny = 0.0f;
+
+	if (isEntryDown == true)
+	{
+		ny = 1.0f;
+	}
+	else
+	{
+		ny = -1.0f;
+	}
+
+	DebugOut(L"this is ny %f \n", ny);
+
+	this->vy = MARIO_SPEED_ENTRY_PIPE * ny;
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	DebugOut(L"Entry Pipe \n");
 }
 void CMario::UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -251,7 +265,7 @@ void CMario::UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	vx = (this->targetPoint.first - this->x) / dt; //moving target point
 	vx /= 25;
-	if (vx >= 0) 
+	if (vx >= 0)
 	{
 		SetSpeed(max(vx, 0.005), 0.0f); // set speed to target point
 	}
@@ -286,17 +300,10 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CPipe*> (e->obj) && e->ny < 0 && !isPrepareEntry && !isEntryPipe)
-	{
-		CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
-		canEntryPipe = true;
-		pipe->GetPosition(targetPoint.first, targetPoint.second); // get target point of pipe
-		pipe->SetEntryPipe(true); // set pipe to entry state
-	}
+	if (dynamic_cast<CPipe*>(e->obj))
+		OnCollisionWithPipe(e);
 	else
-	{
 		canEntryPipe = false;
-	}
 
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
@@ -364,6 +371,26 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 			dropLift->Touch();
 	}
 
+}
+
+void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
+{
+	CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
+	if (pipe != nullptr && e->ny < 0 && !isPrepareEntry && !isEntryPipe)
+	{
+
+		canEntryPipe = true;
+		pipe->GetPosition(targetPoint.first, targetPoint.second); // get target point of pipe
+		pipe->SetEntryPipe(true); // set pipe to entry state
+	}
+	else if (pipe != nullptr && e->ny > 0 && upArrowWasHolded)
+	{
+		canEntryPipe = true;
+		pipe->GetPosition(targetPoint.first, targetPoint.second);
+		pipe->SetEntryPipe(true);
+		if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
+		this->SetForEntryPipeUp();
+	}
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -1036,7 +1063,6 @@ void CMario::SetState(int state)
 
 		maxVx = 0;
 		vx = 0;
-		vy = MARIO_SPEED_ENTRY_PIPE;
 		ax = 0;
 		ay = 0;
 		DebugOut(L"STATE Entry Pipe: %f, %f\n", targetPoint.first, this->x);
@@ -1265,19 +1291,35 @@ void CMario::SetForEndGame(bool value)
 	}
 }
 
-void CMario::SetForEntryPipe()
+void CMario::SetForEntryPipeDown()
 {
 	if (!canEntryPipe) return;
 
 	if (isPrepareEntry || isEntryPipe) return;
 
-	if (GetLevel() == MARIO_LEVEL_TAIL || GetLevel() == MARIO_LEVEL_BIG)
-	{
-		y += 5;
-	}
-	else
-		y += 5;
+	//if (GetLevel() == MARIO_LEVEL_TAIL || GetLevel() == MARIO_LEVEL_BIG)
+	//{
+	//	y += 5;
+	//}
+	//else
+	y += 5;
+	isEntryDown = true;
+
 	SetState(MARIO_STATE_PREPARE_ENTRY_PIPE);
+	return;
+
+}
+\
+void CMario::SetForEntryPipeUp()
+{
+	if (!canEntryPipe) return;
+
+	if (isPrepareEntry || isEntryPipe) return;
+
+	y -= 1;
+	isEntryDown = false;
+
+	SetState(MARIO_STATE_ENTRY_PIPE);
 	return;
 
 }

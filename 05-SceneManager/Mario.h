@@ -169,6 +169,8 @@ class CMario : public CGameObject
 	bool isPrepareEntry;
 	pair<float, float> targetPoint;
 
+	bool isLinked; // link to platform moving
+
 	bool isEndGame;
 
 	int coin;
@@ -229,6 +231,7 @@ public:
 		isPickUp = false;
 		coin = 0;
 
+		isLinked = false;
 		targetPoint = { 0,0 };
 		this->item = nullptr;
 		preNx = nx;
@@ -296,6 +299,9 @@ public:
 	void SetForEndGame(bool value);
 	bool UpArrowWasHoled() { return upArrowWasHolded; }
 	void SetUpArrow(bool value) { upArrowWasHolded = value; }
+
+	void SetLinked(bool value) { isLinked = value; }
+	bool IsLinked() { return isLinked; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

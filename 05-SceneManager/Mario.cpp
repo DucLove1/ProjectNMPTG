@@ -291,6 +291,8 @@ void CMario::UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::OnNoCollision(DWORD dt)
 {
+	isLinked = false; // reset isLinked if not colliding with DropLift
+
 	x += vx * dt;
 	y += vy * dt;
 
@@ -323,6 +325,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = 0;
 	}
+
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<Koopa*>(e->obj))
@@ -367,9 +370,16 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<DropLift*>(e->obj))
 	{
 		DropLift* dropLift = dynamic_cast<DropLift*>(e->obj);
-		if (e->ny < 0)
+		if (e->nx < 0)
+		{
+			dropLift->GotLinked(); // link to Mario
+			isLinked = true;
+		}
+		else if (e->ny < 0)
 			dropLift->Touch();
 	}
+	else
+		isLinked = false; // reset isLinked if not colliding with DropLift
 
 }
 

@@ -5,7 +5,6 @@ void GoldBrickWithButton::GotHit(LPCOLLISIONEVENT e)
 {
 	if (!this->active)
 		return;
-	CGameObject* button = new Button(this->x, this->y - 16, this->bricks);
-	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(button);
+	button->IsAppear();
 	this->active = false;
 }

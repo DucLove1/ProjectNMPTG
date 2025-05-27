@@ -34,7 +34,7 @@ void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 	{
 		// cong tien cho mario
 		// delete this;
-		if(mario !=nullptr)
+		if (mario != nullptr)
 			this->Delete();
 		return;
 	}
@@ -55,6 +55,11 @@ void BreakableGoldBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (this->active == false)
 		return;
+	if (button != nullptr && button->GetState() == BUTTON_STATE_PRESSED)
+	{
+		ChangeToCoin();
+		button = nullptr; // reset button after pressing
+	}
 	switch (state)
 	{
 	case STATE_IDLE:

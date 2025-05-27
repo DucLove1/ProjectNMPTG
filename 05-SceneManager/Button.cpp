@@ -2,8 +2,8 @@
 #include "AssetIDs.h"
 #include "GoldBrickWithButton.h"
 #include "Animations.h"
-#define BUTTON_WIDTH 16
-#define BUTTON_HEIGHT 16
+#define BUTTON_WIDTH 14
+#define BUTTON_HEIGHT 14
 #define BUTTON_HEIGHT_PRESSED 6
 void Button::Render()
 {
@@ -21,7 +21,7 @@ void Button::Render()
 
 void Button::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	if(this->state == BUTTON_STATE_PRESSED)
+	if(this->state == BUTTON_STATE_PRESSED || this->state == BUTTON_STATE_NOT_PRESSED)
 	{
 		l = 0;
 		t = 0;
@@ -57,9 +57,10 @@ void Button::GetPress()
 	if(state == BUTTON_STATE_PRESSED)
 		return;
 	SetState(BUTTON_STATE_PRESSED);
-	for(BreakableGoldBrick* brick : bricks)
-	{
-		if(brick != nullptr && !(brick->IsDeleted()))
-			brick->ChangeToCoin();
-	}
+}
+
+void Button::IsAppear()
+{
+	SetState(BUTTON_STATE_NORMAL);
+	this->y -= 16;
 }

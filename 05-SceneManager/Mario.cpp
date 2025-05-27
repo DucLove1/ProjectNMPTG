@@ -1251,7 +1251,7 @@ void CMario::SetAttack(bool value)
 {
 	if (tail == nullptr) return;
 	CMarioTail* tail = dynamic_cast<CMarioTail*>(this->tail);
-	float setX = this->x * nx - TAIL_BBOX_WIDTH / 2;
+	float setX = this->x - nx * TAIL_BBOX_WIDTH / 2;
 	float setY = this->y + TAIL_BBOX_HEIGHT;
 	tail->SetPosition(setX, setY);
 	tail->SetWhiping(value);

@@ -33,6 +33,9 @@ private:
 		void Render() override;
 		void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) override;
 		void OnNoCollision(DWORD dt) override;
+		virtual bool IsRenderWhenPaused() { return false; }
+		bool IsPauseRenderWhenTransform() { return false; }
+		virtual bool IsUpdateWhenMarioTransform() { return true; }
 	enum TYPE
 	{
 		UP_LEFT,

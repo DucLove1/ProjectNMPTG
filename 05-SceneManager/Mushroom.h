@@ -39,5 +39,7 @@ public:
 	int IsBlocking() { return 0; }
 	void GotHit(int nx);
 	void Touched();
+	bool IsRenderWhenPaused() { return false; }
+	bool IsPauseRenderWhenTransform() { return false; }
 };
 

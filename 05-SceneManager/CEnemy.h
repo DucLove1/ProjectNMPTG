@@ -25,5 +25,7 @@ public:
 	virtual bool IsAlive() { return true; };
 	void SetAccelation(float ax, float ay) 
 		{ this->ax = ax; this->ay = ay; }
+	bool IsRenderWhenPaused() { return false; }
+	bool IsPauseRenderWhenTransform() { return false; }
 };
 

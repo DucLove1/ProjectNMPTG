@@ -37,4 +37,5 @@ public:
 	}
 	int IsCollidable() { return 0; }
 	int IsBlocking() { return 0; }
+	bool IsRenderWhenPaused() { return false; }
 };

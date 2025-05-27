@@ -722,6 +722,8 @@ void CPlayScene::Update(DWORD dt)
 	{
 		//if (i != 0 && GameClock::GetInstance()->IsTempPaused())
 		//	break;
+		if (GameManager::GetInstance()->IsPausedGame())
+			return;
 		if(!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
 		objects[i]->Update(dt, &coObjects);
 	}
@@ -752,10 +754,14 @@ void CPlayScene::Render()
 	for (int i = 1; i < objects.size(); i++)
 	{
 		curObject = objects[i];
+		if(GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+			continue;
 		objects[i]->Render();
 	}
 	//if(!GameClock::GetInstance()->IsPaused())
 	curObject = objects[0];
+	if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+		return;
 	objects[0]->Render();
 }
 

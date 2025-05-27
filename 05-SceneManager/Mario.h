@@ -257,4 +257,6 @@ public:
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	bool IsUpdateWhenMarioTransform() { return true; }
+
+	bool IsRenderWhenPaused() { return false; }
 };

@@ -28,6 +28,7 @@ partical_break.txt
 effect.txt
 teeth.txt
 icons.txt
+blackBackground.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -36,19 +37,21 @@ icons.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 #mario
-0	1356	-147
+0	2000	50
 #wall
 37	0	40
+#black background
+39	2533	-41	21	14	390001	390000	390000
 #ground
 15	0	157	42	1
 15	672	141	29	2
 15	1200	157	22	1
 15	1584	157	5	1
 15	1712	157	36	1
-15	2304	157	30	1
+15	2309	157	35	1
 #pipe with lion brick
-9	2312	125	32	16	2	82000	82000	82000
-31	2304	109	2	1
+9	2317	125	32	16	2	82000	82000	82000
+31	2309	109	2	1
 #pipe
 9	2376	125	32	16	2	81000	82000	82000
 #big tree
@@ -80,7 +83,7 @@ icons.txt
 18	2464	45	7	2
 18	2432	77	5	0
 18	2416	93	4	0
-18	2480	125	2	2
+18	2485	125	2	2
 #bushes
 19	219	141	3
 19	720	125	6

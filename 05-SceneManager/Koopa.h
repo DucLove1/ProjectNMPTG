@@ -50,7 +50,7 @@ public:
 		SetState(state);
 		this->ay = KOOPA_GRAVITY;
 		this->ax = 0.0f;
-		this->vx = KOOPA_WALKING_SPEED;
+		this->vx = -KOOPA_WALKING_SPEED;
 		this->vy = 0;
 		this->onGround = false;
 		timerInShell = 0;

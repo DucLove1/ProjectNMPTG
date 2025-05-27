@@ -2,8 +2,11 @@
 #define MAX_VY 0.1f
 void RedKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vx += ax * dt;
-	vy += ay * dt;
+	/*vy += ay * dt;*/
+	if (!onGround)
+	{
+		vy += ay * dt;
+	}
 	switch (state)
 	{
 	case HAS_WING:

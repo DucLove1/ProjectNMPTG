@@ -247,6 +247,8 @@ void Koopa::KickedFromTop(CGameObject* obj)
 		if (vx != 0)
 		{
 			vx = 0;
+			this->preNx = (this->nx != 0) ? this->nx : this->preNx;
+			this->nx = 0;
 			timerInShell = GameClock::GetInstance()->GetTime();
 			return;
 		}
@@ -265,14 +267,16 @@ void Koopa::MoveInShell(int direction)
 	this->nx = direction;
 	vx = direction * KOOPA_IN_SHELL_SPEED;
 }
-void Koopa::KickedFromBottom(CGameObject*)
+void Koopa::KickedFromBottom(CGameObject* obj)
 {
+	float x, y;
+	obj->GetPosition(x, y);
+	int direction = (this->x > x) ? 1 : -1;
 	this->vy = -0.3f;
-	this->vx = 0.03f;
+	this->vx = direction * 0.03f;
 	//this->ax = 0.000001f * nx;
 	this->y -= 1.0f;
-	this->preNx = this->nx;
-	this->nx = 0;
+	this->preNx = (this->nx != 0) ? this->nx : this->preNx;
 	SetState(IN_SHELL_UP);
 
 }
@@ -303,6 +307,7 @@ void Koopa::SetStateHasNoWing()
 void Koopa::SetStateInShellUp()
 {
 	//vx = 0;
+	this->nx = 0;
 	timerInShell = GameClock::GetInstance()->GetTime();
 	if (this->state == HAS_NO_WING)
 	{
@@ -317,6 +322,7 @@ void Koopa::SetStateInShellUp()
 void Koopa::SetStateInShellDown()
 {
 	vx = 0;
+	this->nx = 0;
 	timerInShell = GameClock::GetInstance()->GetTime();
 	if (this->state == HAS_NO_WING)
 	{

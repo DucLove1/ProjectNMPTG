@@ -90,6 +90,7 @@ int mapAniId[][33] = {
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	if (isEndGame) {
 		UpdateWhenEndScene(dt, coObjects);
 		return;
@@ -291,7 +292,7 @@ void CMario::UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::OnNoCollision(DWORD dt)
 {
-	isLinked = false; // reset isLinked if not colliding with DropLift
+	SetLinked(false, false); // reset linked state
 
 	x += vx * dt;
 	y += vy * dt;
@@ -347,39 +348,16 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<SpawnEnemy*> (e->obj))
 		OnCollisionWithSpawnGate(e);
 	else if (dynamic_cast<GoldBrick*>(e->obj))
-	{
-		if (dynamic_cast<GoldBrickWithButton*>(e->obj))
-		{
-			if (e->nx != 0)
-			{
-				GoldBrickWithButton* brick = dynamic_cast<GoldBrickWithButton*>(e->obj);
-				brick->GotHit(e);
-			}
-		}
-		GoldBrick* brick = dynamic_cast<GoldBrick*>(e->obj);
-		if (e->ny > 0) // collision with top of brick
-		{
-			brick->GotHit(e);
-		}
-	}
+		OnCollisionWithGoldBrick(e);
 	else if (dynamic_cast<Button*>(e->obj))
 	{
 		Button* button = dynamic_cast<Button*>(e->obj);
 		button->GetPress();
 	}
 	else if (dynamic_cast<DropLift*>(e->obj))
-	{
-		DropLift* dropLift = dynamic_cast<DropLift*>(e->obj);
-		if (e->nx < 0)
-		{
-			dropLift->GotLinked(); // link to Mario
-			isLinked = true;
-		}
-		else if (e->ny < 0)
-			dropLift->Touch();
-	}
+		OnColliionWithDropLift(e);
 	else
-		isLinked = false; // reset isLinked if not colliding with DropLift
+		SetLinked(false, false); // reset linked state
 
 }
 
@@ -609,6 +587,38 @@ void CMario::OnCollisionWithSpawnGate(LPCOLLISIONEVENT e)
 {
 	SpawnEnemy* spawnGate = dynamic_cast<SpawnEnemy*>(e->obj);
 	spawnGate->TouchedByMario();
+}
+
+void CMario::OnCollisionWithGoldBrick(LPCOLLISIONEVENT e)
+{
+	if (dynamic_cast<GoldBrickWithButton*>(e->obj))
+	{
+		if (e->nx != 0)
+		{
+			GoldBrickWithButton* brick = dynamic_cast<GoldBrickWithButton*>(e->obj);
+			brick->GotHit(e);
+		}
+	}
+	GoldBrick* brick = dynamic_cast<GoldBrick*>(e->obj);
+	if (e->ny > 0) // collision with top of brick
+	{
+		brick->GotHit(e);
+	}
+}
+
+void CMario::OnColliionWithDropLift(LPCOLLISIONEVENT e)
+{
+	DropLift* dropLift = dynamic_cast<DropLift*>(e->obj);
+	if (e->nx < 0)
+	{
+		SetLinked(true, false); // link to left direction
+		dropLift->GotLinked(); // link to Mario
+	}
+	else if (e->ny < 0) {
+		SetLinked(false, true);
+		dropLift->Touch();
+		dropLift->GotLinked(); // link to Mario
+	}
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
@@ -1332,4 +1342,10 @@ void CMario::SetForEntryPipeUp()
 	SetState(MARIO_STATE_ENTRY_PIPE);
 	return;
 
+}
+
+void CMario::SetLinked(bool value1, bool value2)
+{
+	isLinkedLeft = value1;
+	isLinkedUp = value2;
 }

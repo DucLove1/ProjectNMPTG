@@ -43,9 +43,7 @@ void DropLift::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else
 	{
 		vx = 0;
-		vy += GRAVITY * dt;
-		if (abs(vy) > MAX_VY_FALLING) vy = MAX_VY_FALLING;
-
+		vy = 0.05f;//
 	}
 
 	x += vx * dt;
@@ -55,15 +53,27 @@ void DropLift::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 
-	if (player!=nullptr && !player->IsLinked())
-		this-> player = nullptr;
+	if (player != nullptr && !player->IsLinkedUp() && !player->IsLinkedLeft())
+		this->player = nullptr;
 
 	if (player != nullptr)
 	{
-		float mx, my;
-		float marioBBox = (player->GetLevel() == MARIO_LEVEL_SMALL) ? MARIO_SMALL_BBOX_WIDTH : MARIO_BIG_BBOX_WIDTH;
-		player->GetPosition(mx, my);
-		player->SetPosition(this->x - (DROP_LIFT_BBOX_WIDTH / 2 + marioBBox / 2) - 1, my);
+		if (player->IsLinkedLeft()) {
+			float mx, my;
+			float marioBBox = (player->GetLevel() == MARIO_LEVEL_SMALL) ? MARIO_SMALL_BBOX_WIDTH : MARIO_BIG_BBOX_WIDTH;
+			player->GetPosition(mx, my);
+			player->SetPosition(this->x - (DROP_LIFT_BBOX_WIDTH / 2 + marioBBox / 2) - 1, my);
+		}
+		else if (player->IsLinkedUp())
+		{
+			float mx, my;
+			float marioBBox = (player->GetLevel() == MARIO_LEVEL_SMALL) ? MARIO_SMALL_BBOX_HEIGHT : MARIO_BIG_BBOX_HEIGHT;
+			player->GetPosition(mx, my);
+			player->SetPosition(mx, this->y - (DROP_LIFT_BBOX_HEIGHT / 2 + marioBBox / 2));
+			float mvx, mvy;
+			player->GetSpeed(mvx, mvy);
+			player->SetSpeed(mvx, this->vy + 0.0025f);
+		}
 	}
 }
 

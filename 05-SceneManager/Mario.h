@@ -169,7 +169,8 @@ class CMario : public CGameObject
 	bool isPrepareEntry;
 	pair<float, float> targetPoint;
 
-	bool isLinked; // link to platform moving
+	bool isLinkedLeft; // link to platform moving left direction
+	bool isLinkedUp; // link to platform moving up direction
 
 	bool isEndGame;
 
@@ -193,6 +194,8 @@ class CMario : public CGameObject
 	void OnCollisionWithFireBall(LPCOLLISIONEVENT e);
 	void OnCollisionWithVenus(LPCOLLISIONEVENT e);
 	void OnCollisionWithSpawnGate(LPCOLLISIONEVENT e);
+	void OnCollisionWithGoldBrick(LPCOLLISIONEVENT e);
+	void OnColliionWithDropLift(LPCOLLISIONEVENT e);
 
 	int ConvertAniTypeToAniId(int animation_type);
 	
@@ -231,7 +234,8 @@ public:
 		isPickUp = false;
 		coin = 0;
 
-		isLinked = false;
+		isLinkedLeft = false;
+		isLinkedUp = false;
 		targetPoint = { 0,0 };
 		this->item = nullptr;
 		preNx = nx;
@@ -300,8 +304,9 @@ public:
 	bool UpArrowWasHoled() { return upArrowWasHolded; }
 	void SetUpArrow(bool value) { upArrowWasHolded = value; }
 
-	void SetLinked(bool value) { isLinked = value; }
-	bool IsLinked() { return isLinked; }
+	void SetLinked(bool value1, bool value2);
+	bool IsLinkedLeft() { return isLinkedLeft; }
+	bool IsLinkedUp() { return isLinkedUp; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

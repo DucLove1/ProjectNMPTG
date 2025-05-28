@@ -60,6 +60,7 @@ public:
 	void SetState(int state) override;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom) override;
 	void OnNoCollision(DWORD dt) override;
+	void OnCollisionWithGoldBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWith(LPCOLLISIONEVENT e) override;
 	void OnCollisionWithEnemy(LPCOLLISIONEVENT e);
 	//void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) override;

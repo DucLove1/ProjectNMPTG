@@ -1,10 +1,10 @@
 #include "GoldBrickMulti.h"
 #include "Mario.h"
+#include "Koopa.h"
 void GoldBrickMulti::GoUp(DWORD dt)
 {
-	if (this->y - dt * SPEED_Y > this->minY)
-		this->y -= dt * SPEED_Y;
-	else
+	vy = -SPEED_Y; // di chuyen len tren
+	if (this->y - dt * SPEED_Y <= this->minY)
 	{
 		this->y = this->minY;
 		SetState(STATE_GO_DOWN);
@@ -13,11 +13,11 @@ void GoldBrickMulti::GoUp(DWORD dt)
 
 void GoldBrickMulti::GoDown(DWORD dt)
 {
-	if (this->y + dt * SPEED_Y < this->maxY)
-		this->y += dt * SPEED_Y;
-	else
+	vy = SPEED_Y; // di chuyen xuong duoi
+	if (this->y + dt * SPEED_Y >= this->maxY)
 	{
 		this->y = this->maxY;
+		vy = 0; // dung lai
 		SetState(STATE_IDLE);
 	}
 }
@@ -64,4 +64,19 @@ void GoldBrickMulti::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		GoDown(dt);
 		break;
 	}
+	CCollision::GetInstance()->Process(this, dt, coObjects);
+}
+
+void GoldBrickMulti::OnCollisionWith(LPCOLLISIONEVENT e)
+{
+	if (state == STATE_GO_UP)
+	{
+		Koopa* koopa = dynamic_cast<Koopa*>(e->obj);
+		if (koopa != nullptr)
+			koopa->KickedFromBottom(this); // koopa bi brick hit len tren
+	}
+}
+void GoldBrickMulti::OnNoCollision(DWORD dt)
+{
+	this->y += vy * dt;
 }

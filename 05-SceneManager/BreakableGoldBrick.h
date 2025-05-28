@@ -22,6 +22,7 @@ public:
 		this->maxY = y;
 		this->minY = y - GOLD_BRICK_BBOX_HEIGHT / 2;
 		button = nullptr;
+		this->state = STATE_IDLE; // initial state
 	}
 	void AddButton(Button* button) { this->button = button; }
 	void GotHit(LPCOLLISIONEVENT e);
@@ -29,5 +30,8 @@ public:
 	void ChangeToCoin();
 	void Render() override;
 	int IsBlocking() override { return this->state != STATE_COIN; }
+	int IsCollidable() override { return this->state != STATE_COIN && this->active; }
+	void OnCollisionWith(LPCOLLISIONEVENT e) override;
+	void OnNoCollision(DWORD dt) override;
 };
 

@@ -2,11 +2,15 @@
 #include "AssetIDs.h"
 #include "GoldBrickWithButton.h"
 #include "Animations.h"
+#include "Effect.h"
+#include "PlayScene.h"
 #define BUTTON_WIDTH 14
 #define BUTTON_HEIGHT 14
 #define BUTTON_HEIGHT_PRESSED 6
 void Button::Render()
 {
+	if(!isActive)
+		return;
 	if(state == BUTTON_STATE_PRESSED)
 	{
 		// Render the button in pressed state
@@ -61,6 +65,9 @@ void Button::GetPress()
 
 void Button::IsAppear()
 {
+	Effect* effect = new Effect(x, y-14, EFFECT_DISAPPEAR);
+	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(effect);
+	isActive = true;
 	SetState(BUTTON_STATE_NORMAL);
-	this->y -= 16;
+	this->y -= 14;
 }

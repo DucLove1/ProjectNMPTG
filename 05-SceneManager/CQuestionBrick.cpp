@@ -74,7 +74,7 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 
 		if (typeOfHolder == COIN_ITEM)
 		{
-			GameManager::GetInstance()->AddScore(1000);
+			//GameManager::GetInstance()->AddScore(1000);
 			CBouncingCoin* coin = new CBouncingCoin(x, y - 16);
 			scene->AddObject(coin);
 		}

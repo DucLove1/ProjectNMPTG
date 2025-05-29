@@ -432,30 +432,32 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 }
 void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 {
-	//CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
+	CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
 	if (level == MARIO_LEVEL_SMALL)
 	{
-		GameManager::GetInstance()->AddScore(1000);
+		//GameManager::GetInstance()->AddScore(1000);
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 		SetLevel(MARIO_LEVEL_BIG);
 		SetPowerUP(true);
 		//SetSelfPausing(true);
-		e->obj->Delete();
+		//e->obj->Delete();
 	}
 	else if (level == MARIO_LEVEL_BIG)
 	{
-		GameManager::GetInstance()->AddScore(1000);
+		//GameManager::GetInstance()->AddScore(1000);
 		SetLevel(MARIO_LEVEL_TAIL);
 		SetPowerUP(true);
 		//SetSelfPausing(true);
-		e->obj->Delete();
+		//e->obj->Delete();
 	}
 	else
 	{
-		GameManager::GetInstance()->AddScore(1000);
-		DebugOut(L"Score ++\n");
-		e->obj->Delete();
+		//GameManager::GetInstance()->AddScore(1000);
+		//DebugOut(L"Score ++\n");
+		//e->obj->Delete();
 	}
+	if(leaf)
+		leaf->Touched(); // leaf will be deleted after touched
 }
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)

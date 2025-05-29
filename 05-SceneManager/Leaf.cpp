@@ -1,6 +1,8 @@
 ﻿#include "Leaf.h"
 #include "debug.h"
-
+#include "GameManager.h"
+#include "Effect.h"
+#include "PlayScene.h"
 #define PI 3.14159f
 
 void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -70,6 +72,14 @@ void CLeaf::GetBoundingBox(float& l, float& t, float& r, float& b)
 	t = y - LEAF_BBOX_HEIGHT / 2;
 	r = l + LEAF_BBOX_WIDTH;
 	b = t + LEAF_BBOX_HEIGHT;
+}
+
+void CLeaf::Touched()
+{
+	GameManager::GetInstance()->AddScore(1000);
+	Effect* effect = new Effect(x, y - 16, EFFECT_1000);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->AddObject(effect);
+	this->Delete();
 }
 
 void CLeaf::OnNoCollision(DWORD dt)

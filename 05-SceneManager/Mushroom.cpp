@@ -81,19 +81,3 @@ void CMushroom::GotHit(int nx)
 	this->nx = nx;
 }
 
-void CMushroom::Touched()
-{
-	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-	Effect* effect = nullptr;
-	if(dynamic_cast<RedMushroom*>(this))
-	{
-		effect = new Effect(x, y - 16, EFFECT_1000);
-		GameManager::GetInstance()->AddScore(1000);
-	}
-	else if(dynamic_cast<GreenMushroom*>(this))
-	{
-		effect = new Effect(x, y - 16, EFFECT_1UP);
-	}
-	scene->AddObject(effect);
-	this->Delete();
-}

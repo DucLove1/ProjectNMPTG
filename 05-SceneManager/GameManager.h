@@ -44,7 +44,7 @@ public:
 	void AddScore(int score) { this->score += score; }
 	int GetScore() { return score; }
 
-	void SetLives(int modifyValue) { this->lives += modifyValue; }
+	void AddLives(int lives) { this->lives += lives; }
 	int GetLives() { return lives; }
 
 	bool IsPausedToTransform() { return isPausedToTransform; }

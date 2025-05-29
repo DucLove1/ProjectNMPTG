@@ -11,5 +11,6 @@ class RedMushroom : public CMushroom
 		if(isActive)
 		CAnimations::GetInstance()->Get(ID_ANI_MUSHROOM)->Render(x, y);
 	}
+	void Touched() override;
 };
 

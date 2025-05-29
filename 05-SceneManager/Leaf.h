@@ -38,5 +38,6 @@ public:
 	int IsBlocking() { return 0; }
 	bool IsRenderWhenPaused() { return false; }
 	bool IsPauseRenderWhenTransform() { return false; }
+	void Touched();
 };
 

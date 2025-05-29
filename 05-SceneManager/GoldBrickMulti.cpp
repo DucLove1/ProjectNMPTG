@@ -1,6 +1,7 @@
 #include "GoldBrickMulti.h"
 #include "Mario.h"
 #include "Koopa.h"
+#include "GameClock.h"
 void GoldBrickMulti::GoUp(DWORD dt)
 {
 	vy = -SPEED_Y; // di chuyen len tren
@@ -30,23 +31,24 @@ void GoldBrickMulti::GotHit(LPCOLLISIONEVENT e)
 	if (timer == -1)
 	{
 		// them effect
-		SetState(STATE_GO_UP);
-		timer = GetTickCount64();
+		//SetState(STATE_GO_UP);
+		timer = GameClock::GetInstance()->GetTime();
 	}
 	else
 	{
-		if (GetTickCount64() - timer >= TIME_TO_OFF)
+		if (GameClock::GetInstance()->GetTime() - timer >= TIME_TO_OFF)
 		{
-			SetState(STATE_GO_UP);
+			//SetState(STATE_GO_UP);
 			this->active = false;
 			timer = -1;
 		}
 		else
 		{
-			SetState(STATE_GO_UP);
+			//SetState(STATE_GO_UP);
 			// them effect
 		}
 	}
+	this->isBouncing = true;
 }
 
 void GoldBrickMulti::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -64,7 +66,7 @@ void GoldBrickMulti::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		GoDown(dt);
 		break;
 	}
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	//CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void GoldBrickMulti::OnCollisionWith(LPCOLLISIONEVENT e)

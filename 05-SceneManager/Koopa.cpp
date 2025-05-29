@@ -68,14 +68,20 @@ void Koopa::OnNoCollision(DWORD dt)
 void Koopa::OnCollisionWithGoldBrick(LPCOLLISIONEVENT e)
 {
 	GoldBrick* goldBrick = dynamic_cast<GoldBrick*>(e->obj);
+	// check goldBrick
+	if (!goldBrick)
+		return;
 	// khi koopa cham vao 2 ben cua brick
-	if (goldBrick && e->nx != 0 &&
+	if (e->nx != 0 &&
 		(this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) &&
 		vx != 0 && !isHolded)
 	{
 		//GoldBrick* goldBrick = dynamic_cast<GoldBrick*>(e->obj);
 		goldBrick->GotHit(e);
+		return;
 	}
+	if (e->ny < 0 && goldBrick->IsBoucing())
+		this->KickedFromBottom(goldBrick);
 }
 void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 {
@@ -101,6 +107,7 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		QB->GotHit(e);
 	}
 	//collision with gold brick
+	if(dynamic_cast<GoldBrick*>(e->obj))
 	OnCollisionWithGoldBrick(e);
 	// khong bi block boi e->obj thi return
 	if (!e->obj->IsBlocking())
@@ -108,11 +115,19 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	// bi block boi e->obj thi xu ly
 	if (e->ny != 0)
 	{
+		GoldBrick* brick = dynamic_cast<GoldBrick*>(e->obj);
+		if (brick)
+		{
+			if (brick->IsBoucing())
+				return;
+		}
 		if (nx == 0)
 			vx = 0;
-		vy = 0;
 		if (e->ny < 0)
+		{
 			onGround = true;
+		}
+		vy = 0;
 	}
 	else if (e->nx != 0)
 	{
@@ -283,8 +298,8 @@ void Koopa::KickedFromBottom(CGameObject* obj)
 	this->y -= 1.0f;
 	this->preNx = (this->nx != 0) ? this->nx : this->preNx;
 	SetState(IN_SHELL_UP);
-	if(type == RED_KOOPA)
-	CAnimations::GetInstance()->Get(ID_ANI_RED_KOOPA_IN_SHELL_UP)->Reset();
+	if (type == RED_KOOPA)
+		CAnimations::GetInstance()->Get(ID_ANI_RED_KOOPA_IN_SHELL_UP)->Reset();
 	else if (type == GREEN_KOOPA)
 		CAnimations::GetInstance()->Get(ID_ANI_GREEN_KOOPA_IN_SHELL_UP)->Reset();
 }
@@ -297,7 +312,7 @@ void Koopa::KnockedOut(CGameObject* obj)
 }
 void Koopa::SetStateHasWing()
 {
-	
+
 }
 void Koopa::SetStateHasNoWing()
 {

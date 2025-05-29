@@ -24,6 +24,6 @@ private:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 	void OnNoCollision(DWORD dt);
-	int IsCollidable() override { return this->active; }
+	//int IsCollidable() override { return this->active; }
 };
 

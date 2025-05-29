@@ -77,7 +77,7 @@ void ItemGoldBrick::GotHit(LPCOLLISIONEVENT e)
 	if (this->active == true)
 	{
 		// cho brick chay len
-		SetState(STATE_GO_UP);
+		this->isBouncing = true;
 		// chuyen ve inactive
 		this->active = false;
 		switch (itemId)
@@ -103,31 +103,33 @@ void ItemGoldBrick::Render()
 
 void ItemGoldBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	switch (state)
+	if (this->isBouncing == false && this->active == false && doneHit == false)
 	{
-	case STATE_GO_UP:
-		GoUp(dt);
-		break;
-	case STATE_GO_DOWN:
-		GoDown(dt);
-		break;
-	case STATE_IDLE:
-		vy = 0;
-		break;
+		doneHit = true;
 	}
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	if (!doneHit)
+		return;
+	if (item1)
+	{
+		CGameObject* mario = ((LPPLAYSCENE)(CGame::GetInstance()->GetCurrentScene()))->GetPlayer();
+		float mX, mY;
+		mario->GetPosition(mX, mY);
+		int nx = (this->x <= mX) ? -1 : 1;
+		dynamic_cast<CMushroom*>(item1)->GotHit(nx);
+		item1 = nullptr;
+	}
 }
 
-void ItemGoldBrick::OnCollisionWith(LPCOLLISIONEVENT e)
-{
-	if (state == STATE_GO_UP)
-	{
-		Koopa* koopa = dynamic_cast<Koopa*>(e->obj);
-		if (koopa != nullptr)
-			koopa->KickedFromBottom(this); // koopa bi brick hit len tren
-	}
-}
-void ItemGoldBrick::OnNoCollision(DWORD dt)
-{
-	this->y += vy * dt;
-}
+//void ItemGoldBrick::OnCollisionWith(LPCOLLISIONEVENT e)
+//{
+//	if (state == STATE_GO_UP)
+//	{
+//		Koopa* koopa = dynamic_cast<Koopa*>(e->obj);
+//		if (koopa != nullptr)
+//			koopa->KickedFromBottom(this); // koopa bi brick hit len tren
+//	}
+//}
+//void ItemGoldBrick::OnNoCollision(DWORD dt)
+//{
+//	this->y += vy * dt;
+//}

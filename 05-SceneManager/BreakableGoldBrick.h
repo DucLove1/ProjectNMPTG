@@ -30,8 +30,8 @@ public:
 	void ChangeToCoin();
 	void Render() override;
 	int IsBlocking() override { return this->state != STATE_COIN; }
-	int IsCollidable() override { return this->state != STATE_COIN && this->active; }
-	void OnCollisionWith(LPCOLLISIONEVENT e) override;
-	void OnNoCollision(DWORD dt) override;
+	//int IsCollidable() override { return this->state != STATE_COIN && this->active; }
+	//void OnCollisionWith(LPCOLLISIONEVENT e) override;
+	//void OnNoCollision(DWORD dt) override;
 };
 

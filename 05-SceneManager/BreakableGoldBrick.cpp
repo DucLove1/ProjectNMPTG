@@ -42,7 +42,8 @@ void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 	bool isMarioSmall = (mario != NULL) ? (mario->GetLevel() == MARIO_LEVEL_SMALL) : false;
 	if (isMarioSmall)
 	{
-		SetState(STATE_GO_UP);
+		//SetState(STATE_GO_UP);
+		this->isBouncing = true;
 		return;
 	}
 	// them effect vo
@@ -101,21 +102,22 @@ void BreakableGoldBrick::Render()
 	}
 	// render hinh gold brick
 	GoldBrick::Render();
+	//RenderBoundingBox();
 }
 
-void BreakableGoldBrick::OnCollisionWith(LPCOLLISIONEVENT e)
-{
-	if (state == STATE_GO_UP)
-	{
-		Koopa* koopa = dynamic_cast<Koopa*>(e->obj);
-		if (koopa != nullptr)
-			koopa->KickedFromBottom(this); // koopa bi brick hit len tren
-	}
-}
-void BreakableGoldBrick::OnNoCollision(DWORD dt)
-{
-	this->y += vy * dt;
-}
+//void BreakableGoldBrick::OnCollisionWith(LPCOLLISIONEVENT e)
+//{
+//	if (state == STATE_GO_UP)
+//	{
+//		Koopa* koopa = dynamic_cast<Koopa*>(e->obj);
+//		if (koopa != nullptr)
+//			koopa->KickedFromBottom(this); // koopa bi brick hit len tren
+//	}
+//}
+//void BreakableGoldBrick::OnNoCollision(DWORD dt)
+//{
+//	this->y += vy * dt;
+//}
 //void BreakableGoldBrick::OnCollisionWith(LPCOLLISIONEVENT e)
 //{
 //	if (!(state == STATE_GO_UP))

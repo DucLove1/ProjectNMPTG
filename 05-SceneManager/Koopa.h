@@ -1,6 +1,7 @@
 #pragma once
 #include "CEnemy.h"
 #include "GameClock.h"
+#include "ComboScoreSystem.h"
 #define GREEN_KOOPA 0
 #define RED_KOOPA 1
 #define KOOPA_GRAVITY 0.001f
@@ -31,6 +32,8 @@ private:
 	void SetStateInShellUp();
 	void SetStateInShellDown();
 	void SetStateKnockOut();
+protected:
+	ComboScoreSystem* comboScoreSystem;
 public:
 	enum State
 	{
@@ -56,6 +59,7 @@ public:
 		timerInShell = 0;
 		this->lastAnimationId = -1;
 		isHolded = false;
+		comboScoreSystem = new ComboScoreSystem();
 	}
 	void SetState(int state) override;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom) override;

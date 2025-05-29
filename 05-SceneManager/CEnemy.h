@@ -18,7 +18,7 @@ public:
 	}
 	virtual int IsCollidable() {return 1;}
 	virtual int IsBlocking() { return 0; }
-	virtual void KickedFromTop(CGameObject*) {};
+	virtual void KickedFromTop(CGameObject*);
 	virtual void KnockedOut(CGameObject*) {};
 	virtual void TouchTwoSide(CGameObject*) {};
 	virtual void KickedFromBottom(CGameObject*) {};

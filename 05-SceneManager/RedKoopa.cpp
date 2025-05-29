@@ -2,6 +2,8 @@
 #define MAX_VY 0.1f
 void RedKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (vx == 0)
+		this->comboScoreSystem->Reset();
 	/*vy += ay * dt;*/
 	if (!onGround)
 	{

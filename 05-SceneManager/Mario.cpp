@@ -25,6 +25,7 @@
 #include "GameManager.h"
 #include "PlayScene.h"
 #include "DropLift.h"
+#include "ComboScoreSystemMario.h"
 //define for Id map
 int mapAniId[][30] = {
 		{
@@ -222,6 +223,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 			isOnPlatform = true;
 			slowFallingTime = 0;
 			flyingTime = 0;
+			// reset streak score when Mario lands on the ground
+			ComboScoreSystemMario::GetInstance()->Reset();
 		}
 		else {
 			jumpedTime = MARIO_MAX_JUMP_TIME - 1;
@@ -299,7 +302,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	{
 		if (untouchable == 0)
 		{
-			if (goomba->GetState() != CGoomba::DIE)
+			if (goomba->IsAlive())
 			{
 				DecreaseLevel();
 			}

@@ -143,6 +143,10 @@
     <ClCompile Include="HUDScoreText.cpp" />
     <ClCompile Include="HUDTimeText.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="TeethLine.cpp" />
+    <ClCompile Include="ComboScoreSystem.cpp" />
+    <ClCompile Include="ComboScoreSystemMario.cpp" />
+    <ClCompile Include="CEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -220,6 +224,9 @@
     <ClInclude Include="HUDScoreText.h" />
     <ClInclude Include="HUDTimeText.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="TeethLine.h" />
+    <ClInclude Include="ComboScoreSystem.h" />
+    <ClInclude Include="ComboScoreSystemMario.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

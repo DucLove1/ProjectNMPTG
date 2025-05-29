@@ -162,9 +162,12 @@
     <ClCompile Include="BuiderGoldBrick.cpp" />
     <ClCompile Include="Bushes.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="CEnemy.cpp" />
     <ClCompile Include="Cloud.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="ComboScoreSystem.cpp" />
+    <ClCompile Include="ComboScoreSystemMario.cpp" />
     <ClCompile Include="CQuestionBrick.cpp" />
     <ClCompile Include="DropLift.cpp" />
     <ClCompile Include="Effect.cpp" />
@@ -241,6 +244,8 @@
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="ComboScoreSystem.h" />
+    <ClInclude Include="ComboScoreSystemMario.h" />
     <ClInclude Include="CQuestionBrick.h" />
     <ClInclude Include="DropLift.h" />
     <ClInclude Include="Effect.h" />

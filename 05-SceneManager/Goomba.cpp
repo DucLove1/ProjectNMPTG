@@ -173,7 +173,7 @@ void CGoomba::Render()
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 }
 
-void CGoomba::KickedFromTop(CGameObject*)
+void CGoomba::KickedFromTop(CGameObject* obj)
 {
 	switch (state)
 	{
@@ -184,6 +184,7 @@ void CGoomba::KickedFromTop(CGameObject*)
 		SetState(DIE);
 		break;
 	}
+	CEnemy::KickedFromTop(obj);
 }
 
 void CGoomba::KickedFromBottom(CGameObject*)

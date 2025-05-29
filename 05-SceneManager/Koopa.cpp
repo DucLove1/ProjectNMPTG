@@ -5,6 +5,7 @@
 #include "GameClock.h"
 #include "GoldBrick.h"
 #include "Effect.h"
+#include "ComboScoreSystem.h"
 void Koopa::SetState(int state)
 {
 	switch (state)
@@ -107,8 +108,8 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		QB->GotHit(e);
 	}
 	//collision with gold brick
-	if(dynamic_cast<GoldBrick*>(e->obj))
-	OnCollisionWithGoldBrick(e);
+	if (dynamic_cast<GoldBrick*>(e->obj))
+		OnCollisionWithGoldBrick(e);
 	// khong bi block boi e->obj thi return
 	if (!e->obj->IsBlocking())
 		return;
@@ -162,6 +163,11 @@ void Koopa::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
 			Effect* effect = new Effect(x, y, EFFECT_TAIL_ATTACK);
 			(dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene()))->AddObject(effect);
 			enemy->KnockedOut(this);
+			int score = comboScoreSystem->GetScore();
+			comboScoreSystem->Increase();
+			Effect* scoreEffect = new Effect(x, y, score);
+			(dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene()))->AddObject(scoreEffect);
+			GameManager::GetInstance()->AddScore(score);
 			if (isHolded) {
 				/*isHolded = false;
 				this->KnockedOut(this);*/
@@ -270,17 +276,21 @@ void Koopa::KickedFromTop(CGameObject* obj)
 			this->preNx = (this->nx != 0) ? this->nx : this->preNx;
 			this->nx = 0;
 			timerInShell = GameClock::GetInstance()->GetTime();
-			return;
-		}
-		float objX, objY;
-		obj->GetPosition(objX, objY);
-		if (objX < this->x)
-		{
-			MoveInShell(1);
 		}
 		else
-			MoveInShell(-1);
+		{
+
+			float objX, objY;
+			obj->GetPosition(objX, objY);
+			if (objX < this->x)
+			{
+				MoveInShell(1);
+			}
+			else
+				MoveInShell(-1);
+		}
 	}
+	CEnemy::KickedFromTop(obj);
 }
 void Koopa::MoveInShell(int direction)
 {

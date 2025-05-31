@@ -37,7 +37,8 @@ void Sensor::FollowEnemy()
 	RedKoopa* koopa = dynamic_cast<RedKoopa*>(enemy);
 	int direction = koopa->GetDirection();
 	float tempt;
-	koopa->GetPosition(this->x, tempt);
+	//koopa->GetPosition(this->x, tempt);
+	koopa->GetPosition(this->x, this->y);
 	if (direction == 1)
 	{
 		//this->x += ENEMY_BBOX_WIDTH / 2 + SENSOR_BBOX_WIDTH / 2 + 1;

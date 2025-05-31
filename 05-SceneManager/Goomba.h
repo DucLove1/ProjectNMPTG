@@ -76,6 +76,6 @@ public:
 	void KickedFromBottom(CGameObject*) override;
 	void KnockedOut(CGameObject*);
 	void TouchTwoSide(CGameObject*) {};
-	int IsCollidable() override { return state != KNOCK_OUT; }
+	int IsCollidable() override { return IsAlive(); }
 	bool IsAlive() override { return state != DIE && state != KNOCK_OUT; };
 };

@@ -1,9 +1,11 @@
+class DropLift;
 #pragma once
 #include "GameObject.h"
 
 #include "Animation.h"
 #include "Animations.h"
 #include "AssetIDs.h"
+#include "DropLift.h"
 
 #include "debug.h"
 #include "GameManager.h"
@@ -169,13 +171,15 @@ class CMario : public CGameObject
 	bool isPrepareEntry;
 	pair<float, float> targetPoint;
 
-	bool isLinkedLeft; // link to platform moving left direction
-	bool isLinkedUp; // link to platform moving up direction
+	//bool isLinkedLeft; // link to platform moving left direction
+	//bool isLinkedUp; // link to platform moving up direction
+	bool isLinked; //Both r has the same logic, so just 1 var to check it
 
 	bool isEndGame;
 
 	int coin;
 
+	DropLift* movingPlatform;
 	LPGAMEOBJECT item;
 	LPGAMEOBJECT tail;
 	int preNx;
@@ -234,10 +238,13 @@ public:
 		isPickUp = false;
 		coin = 0;
 
-		isLinkedLeft = false;
-		isLinkedUp = false;
+		//isLinkedLeft = false;
+		//isLinkedUp = false;
+		isLinked = false;
+
 		targetPoint = { 0,0 };
 		this->item = nullptr;
+		this->movingPlatform = nullptr;
 		preNx = nx;
 	}
 
@@ -304,9 +311,12 @@ public:
 	bool UpArrowWasHoled() { return upArrowWasHolded; }
 	void SetUpArrow(bool value) { upArrowWasHolded = value; }
 
-	void SetLinked(bool value1, bool value2);
-	bool IsLinkedLeft() { return isLinkedLeft; }
-	bool IsLinkedUp() { return isLinkedUp; }
+	void SetLinked(bool value1, bool value2, DropLift* dropLift);
+	//bool IsLinkedLeft() { return isLinkedLeft; }
+	//bool IsLinkedUp() { return isLinkedUp; }
+	bool IsLinked() { return isLinked; }
+
+	void SetIsStickToPlatform(DropLift* dropLift);
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

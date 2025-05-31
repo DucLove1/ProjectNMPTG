@@ -11,14 +11,17 @@ class DropLift : public CGameObject
 private:
 	bool isActive;
 	bool isTouched;
+	bool hasPlayer;
 
 	CMario* player;
+
 
 public:
 	DropLift(float x, float y) : CGameObject(x, y)
 	{
 		this->isActive = false;
 		this->isTouched = false;
+		this->hasPlayer = false;
 		this->vx = -0.02f;
 		this->vy = 0;
 	}
@@ -33,6 +36,8 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e) override;
 
 	void GotLinked();
-	void BreakLink() { player = nullptr; }
+	//void BreakLink() { player = nullptr; }
+
+	void OnCollidedWithMario(LPCOLLISIONEVENT e);
 };
 

@@ -56,6 +56,9 @@ public:
 	//
 	virtual int IsCollidable() { return 0; };
 
+	// Is this object consider overlap as collided?
+	virtual int IsOverlappable() { return 0; }
+
 	// When no collision has been detected (triggered by CCollision::Process)
 	virtual void OnNoCollision(DWORD dt) {};
 
@@ -64,6 +67,9 @@ public:
 	
 	// Is this object blocking other object? If YES, collision framework will automatically push the other object
 	virtual int IsBlocking() { return 1; }
+
+	// Is this object blocking other object? If YES, collision framework will automatically push the other object
+	virtual int IsBlocking(LPGAMEOBJECT objSrc) { return 0; }
 
 	// Does this object collide with other object at certain direction ( like ColorBox )
 	virtual int IsDirectionColliable(float nx, float ny) { return 1; }

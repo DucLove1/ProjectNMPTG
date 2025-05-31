@@ -107,7 +107,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	//DebugOut(L"ax: %f\n", vx);
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	if (state == MARIO_STATE_IDLE || state == MARIO_STATE_SIT)
@@ -160,14 +159,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isSlowFalling = false;
 
 	}
-	/*
-	if (slowFallingTime > 0)
-		DebugOut(L"SlowFallingTime: %d\n", slowFallingTime);
-	if (flyingTime > 0)
-		DebugOut(L"FlyingTime: %d\n", flyingTime);
-	*/
-
-
 
 	UpdateTail(dt);
 
@@ -204,6 +195,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		vy = 0.f;
 	}
+
 	if (GetLevel() != MARIO_LEVEL_TAIL)
 	{
 		SetAttack(false);
@@ -214,6 +206,32 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 
+
+	if (movingPlatform != nullptr) {
+		float dl_vx, dl_vy;
+		movingPlatform->GetSpeed(dl_vx, dl_vy);
+		float dl_left, dl_top, dl_right, dl_bottom;
+		movingPlatform->GetBoundingBox(dl_left, dl_top, dl_right, dl_bottom);
+
+		if (dl_vx < 0 && vx > dl_vx) 
+		{
+			vx = dl_vx;
+		}
+		else if (dl_vx > 0 && vx < dl_vx) 
+		{
+			vx = dl_vx;
+		}
+
+		if (dl_vy > 0 && vy > 0) {
+			float halfHeight = (this->GetLevel() == MARIO_LEVEL_SMALL) ? (MARIO_SMALL_BBOX_HEIGHT/2.0f) : (MARIO_BIG_BBOX_HEIGHT/2.0f);
+			float target_y = dl_top - halfHeight;
+			vy = (target_y - y) / dt;
+		}
+	}
+
+
+	//DebugOut(L"ax: %f\n", vx);
+	//if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	preNx = nx;
 	this->fdt = (float)dt;
@@ -292,12 +310,13 @@ void CMario::UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::OnNoCollision(DWORD dt)
 {
-	SetLinked(false, false); // reset linked state
+	//SetLinked(false, false); // reset linked state
 
 	x += vx * dt;
 	y += vy * dt;
 
-	isOnPlatform = false;
+	if (!isLinked)
+		isOnPlatform = false;
 
 }
 
@@ -356,8 +375,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (dynamic_cast<DropLift*>(e->obj))
 		OnColliionWithDropLift(e);
-	else
-		SetLinked(false, false); // reset linked state
+	//else
+	//	SetLinked(false, false); // reset linked state
 
 }
 
@@ -609,16 +628,7 @@ void CMario::OnCollisionWithGoldBrick(LPCOLLISIONEVENT e)
 void CMario::OnColliionWithDropLift(LPCOLLISIONEVENT e)
 {
 	DropLift* dropLift = dynamic_cast<DropLift*>(e->obj);
-	if (e->nx < 0)
-	{
-		SetLinked(true, false); // link to left direction
-		dropLift->GotLinked(); // link to Mario
-	}
-	else if (e->ny < 0) {
-		SetLinked(false, true);
-		dropLift->Touch();
-		dropLift->GotLinked(); // link to Mario
-	}
+	dropLift->OnCollidedWithMario(e);
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
@@ -1344,8 +1354,15 @@ void CMario::SetForEntryPipeUp()
 
 }
 
-void CMario::SetLinked(bool value1, bool value2)
+void CMario::SetLinked(bool value1, bool value2, DropLift* dropLift)
 {
-	isLinkedLeft = value1;
-	isLinkedUp = value2;
+	//isLinkedLeft = value1;
+	//isLinkedUp = value2;
+}
+
+void CMario::SetIsStickToPlatform(DropLift* dropLift)
+{
+	this->movingPlatform= dropLift;
+	if (movingPlatform) isLinked = true;
+	else isLinked = false;
 }

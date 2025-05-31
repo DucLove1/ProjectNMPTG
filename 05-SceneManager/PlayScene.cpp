@@ -59,8 +59,8 @@
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
 
-#define WAITING_TIME_BEFORE_SCROLLING 1000 * 5
-#define VX_SCROLLING 0.025f 
+#define WAITING_TIME_BEFORE_SCROLLING 1000 * 3
+#define VX_SCROLLING 0.035f 
 
 using namespace std;
 
@@ -746,7 +746,7 @@ void CPlayScene::Update(DWORD dt)
 	if (player == NULL) return;
 
 	int currentLevel = GameManager::GetInstance()->GetCurLevel();
-	currentLevel = 1; /// set like this bcuz i don't want to change the code in GameManager, i will change it later
+	currentLevel = 4; /// set like this bcuz i don't want to change the code in GameManager, i will change it later
 	if (currentLevel != 4)
 	{
 		// Update camera to follow mario

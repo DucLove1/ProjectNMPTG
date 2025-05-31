@@ -147,6 +147,7 @@
     <ClCompile Include="ComboScoreSystem.cpp" />
     <ClCompile Include="ComboScoreSystemMario.cpp" />
     <ClCompile Include="CEnemy.cpp" />
+    <ClCompile Include="FadeTransition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="TeethLine.h" />
     <ClInclude Include="ComboScoreSystem.h" />
     <ClInclude Include="ComboScoreSystemMario.h" />
+    <ClInclude Include="FadeTransition.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

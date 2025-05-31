@@ -172,6 +172,7 @@
     <ClCompile Include="DropLift.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EffectBreak.cpp" />
+    <ClCompile Include="FadeTransition.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HUDLifeText.cpp" />
     <ClCompile Include="HUDScoreText.cpp" />
@@ -250,6 +251,7 @@
     <ClInclude Include="DropLift.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectBreak.h" />
+    <ClInclude Include="FadeTransition.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="HUDLifeText.h" />
     <ClInclude Include="HUDScoreText.h" />

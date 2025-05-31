@@ -7,6 +7,7 @@
 #include "PlayScene.h"
 #include "GameManager.h"
 #include "Effect.h"
+#include "FadeTransition.h"
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -78,6 +79,12 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_E:
 		GameManager::GetInstance()->ResumeWhenDoneTransform();
+		break;
+	case DIK_T:
+		float x, y;
+		CGame::GetInstance()->GetCamPos(x, y);
+		FadeTransition* fade = new FadeTransition(x, y, 2000);
+		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(fade);
 		break;
 	}
 }

@@ -26,6 +26,7 @@
 #include "PlayScene.h"
 #include "DropLift.h"
 #include "ComboScoreSystemMario.h"
+#include "RandomCard.h"
 //define for Id map
 int mapAniId[][30] = {
 		{
@@ -282,6 +283,11 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		DropLift* dropLift = dynamic_cast<DropLift*>(e->obj);
 		if (e->ny < 0)
 			dropLift->Touch();
+	}
+	else if (dynamic_cast<RandomCard*>(e->obj))
+	{
+		RandomCard* randomCard = dynamic_cast<RandomCard*>(e->obj);
+		randomCard->Touched();
 	}
 }
 

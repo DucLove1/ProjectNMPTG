@@ -148,6 +148,9 @@
     <ClCompile Include="ComboScoreSystemMario.cpp" />
     <ClCompile Include="CEnemy.cpp" />
     <ClCompile Include="FadeTransition.cpp" />
+    <ClCompile Include="RandomCard.cpp" />
+    <ClCompile Include="RandomCardEffect.cpp" />
+    <ClCompile Include="RandomCardSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -229,6 +232,9 @@
     <ClInclude Include="ComboScoreSystem.h" />
     <ClInclude Include="ComboScoreSystemMario.h" />
     <ClInclude Include="FadeTransition.h" />
+    <ClInclude Include="RandomCard.h" />
+    <ClInclude Include="RandomCardEffect.h" />
+    <ClInclude Include="RandomCardSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

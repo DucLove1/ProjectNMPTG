@@ -29,6 +29,7 @@ effect.txt
 teeth.txt
 icons.txt
 blackBackground.txt
+randomCard.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -40,6 +41,8 @@ blackBackground.txt
 0	100	50
 #test portal
 50	50	100	60	110	0	7
+#random card system
+73	60	100
 #wall
 37	0	40
 #black background

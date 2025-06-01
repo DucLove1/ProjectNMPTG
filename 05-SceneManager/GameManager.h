@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include "GameClock.h"
+#include <vector>
+using namespace std;
 //#include "Mario.h"
 //try
 #define LIMIT_GAME_TIME 300 //300 unit in mario ~~ 150 second
@@ -17,6 +19,8 @@ private:
 	int lives;
 	bool isPausedToTransform;
 	bool isPausedGame;
+	vector<int> cards={ 0, 0, 0 }; // this game has 3 cards
+
 	GameManager() {
 		curLevel = 1;
 		coins = 0;

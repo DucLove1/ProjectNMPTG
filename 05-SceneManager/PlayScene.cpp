@@ -56,7 +56,7 @@
 #include "Boomerang.h"
 #include "BoomerangBro.h"
 #include "TeethLine.h"
-
+#include "RandomCardSystem.h"
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
 
@@ -527,8 +527,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		bool isPortalIn = atoi(tokens[5].c_str()) == 1 ? true : false; // 1 for in, 0 for out
 		int scene_id = atoi(tokens[6].c_str());
 		obj = new CPortal(x, y, r, b, isPortalIn,scene_id);
+		break;
 	}
-	break;
+	case OBJECT_TYPE_RANDOM_CARD_SYSTEM:
+	{
+		obj = new RandomCardSystem(x, y);
+		break;
+	}
 
 
 	default:

@@ -181,6 +181,7 @@ public:
 		ay = MARIO_GRAVITY;
 
 		//level = MARIO_LEVEL_SMALL;
+		//this line is get level from GameManager because of saving level
 		level = GameManager::GetInstance()->GetCurLevel();
 
 		untouchable = 0;

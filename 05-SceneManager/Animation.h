@@ -23,6 +23,7 @@ public:
 	bool Done() { return currentFrame == frames.size() - 1; }
 	void Reset() { currentFrame = -1; lastFrameTime = -1; }
 	void SetAllFrameTime(DWORD time);
+	int GetCurrentFrame() { return currentFrame; }
 };
 
 typedef CAnimation* LPANIMATION;

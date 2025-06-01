@@ -162,7 +162,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario(x, y);
 		player = (CMario*)obj;
-
+		//set level to mario 
+		player->SetState(GameManager::GetInstance()->GetCurLevel());
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_BROWN_GOOMBA:

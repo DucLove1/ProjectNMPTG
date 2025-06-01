@@ -180,8 +180,8 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
-		level = MARIO_LEVEL_SMALL;
-		//level = MARIO_LEVEL_TAIL;
+		//level = MARIO_LEVEL_SMALL;
+		level = GameManager::GetInstance()->GetCurLevel();
 
 		untouchable = 0;
 		untouchable_start = -1;

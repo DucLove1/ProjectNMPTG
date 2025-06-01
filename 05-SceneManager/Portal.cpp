@@ -52,6 +52,10 @@ void CPortal::SwitchScene()
 			fade_transition = new FadeTransition(x,y,this->isPortalIn);
 			((CPlayScene*)(CGame::GetInstance()->GetCurrentScene()))->AddObject(fade_transition);
 			isTransited = true; // mark that the scene has started to transition
+			// get cur level of mario to gameManager
+			CMario* player = dynamic_cast<CMario*>(((CPlayScene*)(CGame::GetInstance()->GetCurrentScene()))->GetPlayer());
+			int curLevel = player->GetLevel();
+			GameManager::GetInstance()->SetCurLevel(curLevel);
 		}
 	}
 	if(GetTickCount64() - this->time_start < TIME_TRANSITION)

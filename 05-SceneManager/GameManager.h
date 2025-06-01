@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "GameClock.h"
-
+//#include "Mario.h"
 //try
 #define LIMIT_GAME_TIME 300 //300 unit in mario ~~ 150 second
 
@@ -17,6 +17,16 @@ private:
 	int lives;
 	bool isPausedToTransform;
 	bool isPausedGame;
+	GameManager() {
+		curLevel = 1;
+		coins = 0;
+		speed = 0.0f;
+		remainingTime = LIMIT_GAME_TIME; // in unit of 700ms
+		score = 0;
+		lives = 3; // default lives
+		isPausedToTransform = false;
+		isPausedGame = false;
+	};
 public:
 	static GameManager* GetInstance()
 	{

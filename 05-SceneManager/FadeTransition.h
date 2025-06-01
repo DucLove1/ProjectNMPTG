@@ -6,13 +6,11 @@
 class FadeTransition: public CGameObject
 {
 	float alpha;	// Alpha value for fade transition
-	float duration; // Duration of the fade effect in milliseconds
 	bool isFadingIn; // True if fading in, false if fading out
-	DWORD startTime; // Start time of the fade effect
 	public:
-		FadeTransition(float x, float y, float duration, bool fadeIn = false)
-		: CGameObject(x,y),duration(duration), isFadingIn(fadeIn), startTime(GetTickCount()) {
-			alpha = fadeIn ? 0.0f : 1.0f; // Start with 0 for fade in, 1 for fade out
+		FadeTransition(float x, float y, bool fadeIn = true)
+		: CGameObject(x,y), isFadingIn(fadeIn) {
+			alpha = !fadeIn ? 0.0f : 1.0f; // Start with 0 for fade in, 1 for fade out
 		}
 		void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = nullptr) override;
 		void Render() override;

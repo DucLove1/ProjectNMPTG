@@ -39,7 +39,7 @@ blackBackground.txt
 #mario
 0	100	50
 #test portal
-50	50	100	60	110	8
+50	50	100	60	110	0	7
 #wall
 37	0	40
 #black background

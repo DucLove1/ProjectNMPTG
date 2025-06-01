@@ -4,7 +4,7 @@
 #define ID_SPRITE_FADE_TRANSITION 200
 void FadeTransition::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (isFadingIn)
+	if (!isFadingIn)
 	{
 		alpha += VFADE_TRANSITION * dt;
 		if (alpha >= 1.0f) // Finished fading in

@@ -498,7 +498,8 @@ void CMario::OnCollisionWithSpawnGate(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
-	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	//CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	p->SwitchScene();
 }
 
 int CMario::ConvertAniTypeToAniId(int animation_type)

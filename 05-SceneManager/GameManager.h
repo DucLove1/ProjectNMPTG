@@ -19,6 +19,7 @@ private:
 	int lives;
 	bool isPausedToTransform;
 	bool isPausedGame;
+	bool isEndGame;
 	vector<int> cards={ 0, 0, 0 }; // this game has 3 cards
 
 	GameManager() {
@@ -65,6 +66,9 @@ public:
 	void SetPausedToTransform(bool isPaused) { isPausedToTransform = isPaused; }
 	bool IsPausedGame() { return isPausedGame; }
 	void SetPausedGame(bool isPaused) { isPausedGame = isPaused; }
+
+	void SetEndGame(bool isEnd) { isEndGame = isEnd; }
+	bool IsEndGame() { return isEndGame; }
 
 	ULONGLONG CalculateRemainingTime()
 	{

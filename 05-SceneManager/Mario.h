@@ -1,9 +1,11 @@
+class DropLift;
 #pragma once
 #include "GameObject.h"
 
 #include "Animation.h"
 #include "Animations.h"
 #include "AssetIDs.h"
+#include "DropLift.h"
 
 #include "debug.h"
 #include "GameManager.h"
@@ -25,9 +27,13 @@
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
-#define SLOW_FALLING_TIME 150
-#define FLYING_TIME 100;
+#define MARIO_SPEED_ENTRY_PIPE 0.05f
+
+#define FLYING_TIME 120;
 #define FLYING_SCALE -0.2f
+#define TIME_TO_CHARGE 2000.0f //~2 seconds
+
+#define SLOW_FALLING_TIME 150
 #define SLOW_FALLING_SCALE 0.1f
 //#define CD_FLYING_TIME 50
 
@@ -53,6 +59,10 @@
 #define MARIO_MAX_FALLING_SPEED	0.2f
 
 #define MARIO_STATE_POWERUP		700
+#define MARIO_STATE_ENDGAME	1000
+
+#define MARIO_STATE_PREPARE_ENTRY_PIPE		1050
+#define MARIO_STATE_ENTRY_PIPE	1100
 
 #define MARIO_MTIME_ONAIR		450
 
@@ -78,6 +88,7 @@
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 12
 
+#define MARIO_ENTRY_PIPE_DISTANCE 6
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_RECOVERY_TIME 2500
@@ -112,12 +123,15 @@
 #define  ANI_MARIO_PICKING_RUN_JUMP_LEFT 21
 #define  ANI_MARIO_SIT_RIGHT 22
 #define  ANI_MARIO_SIT_LEFT 23
-#define ANI_MARIO_POWER_UP_RIGHT 24
-#define ANI_MARIO_POWER_UP_LEFT 25
-#define ANI_MARIO_SLOWFALLING_RIGHT 26
-#define ANI_MARIO_SLOWFALLING_LEFT 27
-#define ANI_MARIO_ATTACK_RIGHT 28
-#define ANI_MARIO_ATTACK_LEFT 29
+#define	 ANI_MARIO_POWER_UP_RIGHT 24
+#define  ANI_MARIO_POWER_UP_LEFT 25
+#define  ANI_MARIO_SLOWFALLING_RIGHT 26
+#define  ANI_MARIO_SLOWFALLING_LEFT 27
+#define  ANI_MARIO_ATTACK_RIGHT 28
+#define  ANI_MARIO_ATTACK_LEFT 29
+#define  ANI_MARIO_FLYING_RIGHT 30
+#define  ANI_MARIO_FLYING_LEFT 31
+#define  ANI_MARIO_ENTRY_PIPE 32
 #pragma endregion
 
 class CMario : public CGameObject
@@ -148,16 +162,36 @@ class CMario : public CGameObject
 	int jumpedTime;
 	bool isSlowFalling;
 	int slowFallingTime;
+
 	bool isFlying;
 	int flyingTime;
-	int cdFlyingTime;
+	int startFlying;
+	float powerUnit;
+	float maxPowerUnit;
+
+	bool upArrowWasHolded;
+	bool canEntryPipe;
+	bool isEntryPipe;
+	bool isPrepareEntry;
+	pair<float, float> targetPoint;
+
+	//bool isLinkedLeft; // link to platform moving left direction
+	//bool isLinkedUp; // link to platform moving up direction
+	bool isLinked; //Both r has the same logic, so just 1 var to check it
+
+	bool isEndGame;
 
 	int coin;
 
+	DropLift* movingPlatform;
 	LPGAMEOBJECT item;
 	LPGAMEOBJECT tail;
 	int preNx;
+	bool isEntryDown; /// for set vy direction
 
+	void LimitByCameraBorder();
+
+	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -168,9 +202,11 @@ class CMario : public CGameObject
 	void OnCollisionWithFireBall(LPCOLLISIONEVENT e);
 	void OnCollisionWithVenus(LPCOLLISIONEVENT e);
 	void OnCollisionWithSpawnGate(LPCOLLISIONEVENT e);
+	void OnCollisionWithGoldBrick(LPCOLLISIONEVENT e);
+	void OnColliionWithDropLift(LPCOLLISIONEVENT e);
 
 	int ConvertAniTypeToAniId(int animation_type);
-	int GetAniId();
+	
 
 public:
 	CMario(float x, float y) : CGameObject(x, y)
@@ -196,16 +232,37 @@ public:
 
 		isSlowFalling = false;
 		jumpedTime = 0;
+		isFlying = false;
+		powerUnit = 0.0f; 
+		maxPowerUnit = TIME_TO_CHARGE;
+		startFlying = 0;
 
+		upArrowWasHolded = false;
+		isEntryPipe = false;
+		isPrepareEntry = false;
+
+		isEndGame = false;
 		isOnPlatform = false;
 		//jump_start = -1;
 		isPickUp = false;
 		coin = 0;
 
+		//isLinkedLeft = false;
+		//isLinkedUp = false;
+		isLinked = false;
+
+		targetPoint = { 0,0 };
 		this->item = nullptr;
+		this->movingPlatform = nullptr;
 		preNx = nx;
 	}
+
+	int GetAniId();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateWhenEndScene(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateWhenEntryPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+
 	void Render();
 	void SetState(int state);
 
@@ -243,6 +300,7 @@ public:
 	bool IsAttack();
 	//for flying
 	bool IsReachToExpectedSpeed();
+	bool IsReadyToFly();
 	void SetFlying(bool value) { isFlying = value; flyingTime = FLYING_TIME; }
 	bool canSet() { return jumpedTime >= MARIO_MAX_JUMP_TIME; }
 	
@@ -254,6 +312,21 @@ public:
 	void SetSmallJump();
 	bool IsSitting() { return isSitting; }
 	
+	void SetForEntryPipeDown();
+	void SetForEntryPipeUp();
+	bool CanEntryPipe() { return canEntryPipe; }
+	bool IsPrepareEntry() { return isPrepareEntry; }
+	bool IsEntryPipe () { return isEntryPipe; }
+	void SetForEndGame(bool value);
+	bool UpArrowWasHoled() { return upArrowWasHolded; }
+	void SetUpArrow(bool value) { upArrowWasHolded = value; }
+
+	void SetLinked(bool value1, bool value2, DropLift* dropLift);
+	//bool IsLinkedLeft() { return isLinkedLeft; }
+	//bool IsLinkedUp() { return isLinkedUp; }
+	bool IsLinked() { return isLinked; }
+
+	void SetIsStickToPlatform(DropLift* dropLift);
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

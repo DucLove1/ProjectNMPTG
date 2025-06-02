@@ -18,12 +18,14 @@ public:
 	}
 	virtual int IsCollidable() {return 1;}
 	virtual int IsBlocking() { return 0; }
-	virtual void KickedFromTop(CGameObject*) {};
+	virtual void KickedFromTop(CGameObject*);
 	virtual void KnockedOut(CGameObject*) {};
 	virtual void TouchTwoSide(CGameObject*) {};
 	virtual void KickedFromBottom(CGameObject*) {};
 	virtual bool IsAlive() { return true; };
 	void SetAccelation(float ax, float ay) 
 		{ this->ax = ax; this->ay = ay; }
+	bool IsRenderWhenPaused() { return false; }
+	bool IsPauseRenderWhenTransform() { return false; }
 };
 

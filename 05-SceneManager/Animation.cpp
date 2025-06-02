@@ -26,11 +26,15 @@ bool CAnimation::CheckObjectPause(CGameObject* object)
 		dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object) || dynamic_cast<ParticalBreak*>(object))
 		return true;
 	return false;
+	//return object->IsRenderWhenPaused();
 }
 void CAnimation::Render(float x, float y)
 {
 	CGameObject* curObject = ((LPPLAYSCENE(CGame::GetInstance()->GetCurrentScene())->GetCurObject()));
-	bool checkObjectPause = CheckObjectPause(curObject);
+	if (curObject == nullptr)
+		return;
+	bool checkObjectNotPause = curObject->IsPauseRenderWhenTransform();
+	//bool checkObjectPause = CheckObjectPause(curObject);
 	ULONGLONG now = GetTickCount64();
 	//if (dynamic_cast<CMario*>(curObject))
 	//	now = GetTickCount64();
@@ -41,7 +45,7 @@ void CAnimation::Render(float x, float y)
 	}
 	else
 	{
-		if (!GameManager::GetInstance()->IsPausedToTransform() || !checkObjectPause)
+		if (!GameManager::GetInstance()->IsPausedToTransform() || checkObjectNotPause)
 		{
 			DWORD t = frames[currentFrame]->GetTime();
 			if (now - lastFrameTime > t)

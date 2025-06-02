@@ -1,5 +1,7 @@
 #include "BouncingCoin.h"
-
+#include "Effect.h"
+#include "PlayScene.h"
+#include "GameManager.h"
 void CBouncingCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (wasReachToHeightBrace)
@@ -14,11 +16,14 @@ void CBouncingCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	if (y > begin)
 	{
+		Effect* effect = new Effect(x, y, EFFECT_100);
+		((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->AddObject(effect);
+		GameManager::GetInstance()->AddScore(100);
 		this->Delete();
 	}
 
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	//CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CBouncingCoin::Render()

@@ -20,6 +20,7 @@ private:
 	CGameObject* item1;
 	CGameObject* item2;
 	bool wayChooseItem;
+	bool doneHit;
 	int ChooseItem();
 	void GoUp(DWORD dt);
 	void GoDown(DWORD dt);
@@ -35,18 +36,17 @@ public:
 		maxY = y;
 		minY = y - GOLD_BRICK_BBOX_HEIGHT / 2;
 		vy = 0;
-		SetState(STATE_IDLE);
+		doneHit = false;
 	}
 	//void InitializeRedMushroom(LPCOLLISIONEVENT e);
 	//void InitializeGreenMushroom(LPCOLLISIONEVENT e);
 	void InitializeLeaf(LPCOLLISIONEVENT e);
 	void GotHit(LPCOLLISIONEVENT e);
 	void Render();
-	int IsCollidable() override { return 1; }
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) override;
-	void OnCollisionWith(LPCOLLISIONEVENT e) override;
+	//void OnCollisionWith(LPCOLLISIONEVENT e) override;
 
-	void OnNoCollision(DWORD dt) override;
+	//void OnNoCollision(DWORD dt) override;
 
 };
 

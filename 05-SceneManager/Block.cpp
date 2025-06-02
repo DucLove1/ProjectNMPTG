@@ -45,6 +45,15 @@ void Block::Render()
 	{
 		s->Get(ID_SPRITE_SHADOW_EDGE)->Draw(xx + unitWidth * DISTANCE_BETWEEN_BLOCKS, yy + i * DISTANCE_BETWEEN_BLOCKS);
 	}
+	if (isShadowBottom)
+	{
+		s->Get(ID_SPRITE_SHADOW_CORNER_LEFT)->Draw(xx + DISTANCE_BETWEEN_BLOCKS, yy + unitHeight * DISTANCE_BETWEEN_BLOCKS);
+		s->Get(ID_SPRITE_SHADOW_CORNER_RIGHT)->Draw(xx + unitWidth * DISTANCE_BETWEEN_BLOCKS, yy + unitHeight * DISTANCE_BETWEEN_BLOCKS);
+		for (int i = 2; i < unitWidth ; i++)
+		{
+			s->Get(ID_SPRITE_SHADOW_EDGE)->Draw(xx + i * DISTANCE_BETWEEN_BLOCKS, yy + unitHeight * DISTANCE_BETWEEN_BLOCKS);
+		}
+	}
 }
 
 void Block::GetBoundingBox(float& l, float& t, float& r, float& b)

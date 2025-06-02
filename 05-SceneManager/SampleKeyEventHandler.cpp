@@ -7,6 +7,7 @@
 #include "PlayScene.h"
 #include "GameManager.h"
 #include "Effect.h"
+#include "FadeTransition.h"
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -79,11 +80,11 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_E:
 		GameManager::GetInstance()->ResumeWhenDoneTransform();
 		break;
-	case DIK_Y:
+	case DIK_T:
 		float x, y;
-		mario->GetPosition(x, y);
-		Effect* effect = new Effect(x, y, EFFECT_DISAPPEAR);
-		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(effect); // add effect to scene)
+		CGame::GetInstance()->GetCamPos(x, y);
+		FadeTransition* fade = new FadeTransition(x, y, 2000);
+		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(fade);
 		break;
 	}
 }

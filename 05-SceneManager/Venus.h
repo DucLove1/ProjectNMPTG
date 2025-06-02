@@ -33,6 +33,7 @@ class Venus: public CEnemy
 		void UpdateStateAttack(DWORD dt);
 		void UpdateStateHide(DWORD dt);
 		float ChooseAngle();
+		float DistanceToMario();
 	public:
 	Venus(float x, float y, int type) : CEnemy(x, y)
 	{

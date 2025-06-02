@@ -55,7 +55,8 @@
 #include "DropLift.h"
 #include "Boomerang.h"
 #include "BoomerangBro.h"
-
+#include "TeethLine.h"
+#include "RandomCardSystem.h"
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
 
@@ -161,7 +162,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario(x, y);
 		player = (CMario*)obj;
-
+		//set level to mario 
+		player->SetState(GameManager::GetInstance()->GetCurLevel());
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_BROWN_GOOMBA:
@@ -267,7 +269,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int width = atoi(tokens[3].c_str());
 		int height = atoi(tokens[4].c_str());
 		int color = atoi(tokens[5].c_str());
-		obj = new Block(x, y, width, height, color);
+		bool isShadowBottom = false;
+		if (tokens.size() > 6)
+		{
+			isShadowBottom = atoi(tokens[6].c_str()) == 1 ? true : false;
+		}
+		obj = new Block(x, y, width, height, color, isShadowBottom);
 		break;
 	}
 	case OBJECT_TYPE_BULDER_GOLD_BRICK:
@@ -506,14 +513,27 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new BoomerangBro(x, y);
 		break;
 	}
+	case OBJECT_TYPE_TEETH_LINE:
+	{
+		int unitWidth = atoi(tokens[3].c_str());
+		int unitHeight = atoi(tokens[4].c_str());
+		obj = new TeethLine(x, y, unitWidth, unitHeight);
+		break;
+	}
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
 		float b = (float)atof(tokens[4].c_str());
-		int scene_id = atoi(tokens[5].c_str());
-		obj = new CPortal(x, y, r, b, scene_id);
+		bool isPortalIn = atoi(tokens[5].c_str()) == 1 ? true : false; // 1 for in, 0 for out
+		int scene_id = atoi(tokens[6].c_str());
+		obj = new CPortal(x, y, r, b, isPortalIn,scene_id);
+		break;
 	}
-	break;
+	case OBJECT_TYPE_RANDOM_CARD_SYSTEM:
+	{
+		obj = new RandomCardSystem(x, y);
+		break;
+	}
 
 
 	default:
@@ -709,6 +729,8 @@ void CPlayScene::Update(DWORD dt)
 	{
 		//if (i != 0 && GameClock::GetInstance()->IsTempPaused())
 		//	break;
+		if (GameManager::GetInstance()->IsPausedGame())
+			return;
 		if(!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
 		objects[i]->Update(dt, &coObjects);
 	}
@@ -739,10 +761,14 @@ void CPlayScene::Render()
 	for (int i = 1; i < objects.size(); i++)
 	{
 		curObject = objects[i];
+		if(GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+			continue;
 		objects[i]->Render();
 	}
 	//if(!GameClock::GetInstance()->IsPaused())
 	curObject = objects[0];
+	if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+		return;
 	objects[0]->Render();
 }
 

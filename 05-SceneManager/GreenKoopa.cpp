@@ -1,14 +1,15 @@
 #include "GreenKoopa.h"
-
 void GreenKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (vx == 0)
+		this->comboScoreSystem->Reset();
 	vx += ax * dt;
 	if (!onGround)
 	{
 		vy += ay * dt;
 	}
-	else
-		vy = 0;
+	//else
+	//	vy = 0;
 	switch (state)
 	{
 	case HAS_WING:

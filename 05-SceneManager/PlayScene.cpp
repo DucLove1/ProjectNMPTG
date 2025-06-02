@@ -55,15 +55,22 @@
 #include "DropLift.h"
 #include "Boomerang.h"
 #include "BoomerangBro.h"
-
+#include "TeethLine.h"
+#include "RandomCardSystem.h"
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
+
+#define WAITING_TIME_BEFORE_SCROLLING 1000 * 3
+#define VX_SCROLLING 0.035f 
 
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	isStartGame = false;
+	timeStart = GameClock::GetInstance()->GetTime();
+
 	curObject = NULL;
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
@@ -161,7 +168,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario(x, y);
 		player = (CMario*)obj;
-
+		//set level to mario 
+		player->SetState(GameManager::GetInstance()->GetCurLevel());
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_BROWN_GOOMBA:
@@ -267,7 +275,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int width = atoi(tokens[3].c_str());
 		int height = atoi(tokens[4].c_str());
 		int color = atoi(tokens[5].c_str());
-		obj = new Block(x, y, width, height, color);
+		bool isShadowBottom = false;
+		if (tokens.size() > 6)
+		{
+			isShadowBottom = atoi(tokens[6].c_str()) == 1 ? true : false;
+		}
+		obj = new Block(x, y, width, height, color, isShadowBottom);
 		break;
 	}
 	case OBJECT_TYPE_BULDER_GOLD_BRICK:
@@ -506,14 +519,27 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new BoomerangBro(x, y);
 		break;
 	}
+	case OBJECT_TYPE_TEETH_LINE:
+	{
+		int unitWidth = atoi(tokens[3].c_str());
+		int unitHeight = atoi(tokens[4].c_str());
+		obj = new TeethLine(x, y, unitWidth, unitHeight);
+		break;
+	}
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
 		float b = (float)atof(tokens[4].c_str());
-		int scene_id = atoi(tokens[5].c_str());
-		obj = new CPortal(x, y, r, b, scene_id);
+		bool isPortalIn = atoi(tokens[5].c_str()) == 1 ? true : false; // 1 for in, 0 for out
+		int scene_id = atoi(tokens[6].c_str());
+		obj = new CPortal(x, y, r, b, isPortalIn,scene_id);
+		break;
 	}
-	break;
+	case OBJECT_TYPE_RANDOM_CARD_SYSTEM:
+	{
+		obj = new RandomCardSystem(x, y);
+		break;
+	}
 
 
 	default:
@@ -635,8 +661,8 @@ void CPlayScene::CinemachineCamera()
 	cameraCenterX = (preCamLeft + preCamRight) / 2;
 	cameraCenterY = (preCamTop + preCamBottom) / 2;
 
-	limitRight = cameraCenterX +  width * 5 / TIMES_TO_DEVIDE_WIDTH;
-	limitLeft =  limitRight - 2 * width / TIMES_TO_DEVIDE_WIDTH;
+	limitRight = cameraCenterX + width * 5 / TIMES_TO_DEVIDE_WIDTH;
+	limitLeft = limitRight - 2 * width / TIMES_TO_DEVIDE_WIDTH;
 	limitTop = cameraCenterY - height / TIMES_TO_DEVIDE_HEIGHT;
 	limitBottom = cameraCenterY + height / TIMES_TO_DEVIDE_HEIGHT;
 
@@ -690,6 +716,29 @@ void CPlayScene::CinemachineCamera()
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 }
 
+
+void CPlayScene::ScrollingCamera(DWORD dt)
+{
+	ULONGLONG curentTime = GameClock::GetInstance()->GetTime();
+
+	CGame* game = CGame::GetInstance();
+	float cx = 0, cy = 0;
+	if (!isStartGame)
+	{
+		if (curentTime - timeStart >= WAITING_TIME_BEFORE_SCROLLING)
+		{
+			isStartGame = true;
+		}
+	}
+	else
+	{
+		game->GetCamPos(cx, cy);
+		cx += VX_SCROLLING * dt;
+	}
+
+	game->SetCamPos(cx, cy);
+}
+
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -709,17 +758,29 @@ void CPlayScene::Update(DWORD dt)
 	{
 		//if (i != 0 && GameClock::GetInstance()->IsTempPaused())
 		//	break;
+
+		if (GameManager::GetInstance()->IsPausedGame())
+			return;
 		if(!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
 		objects[i]->Update(dt, &coObjects);
+
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
-
-	// Update camera to follow mario
-
-	CinemachineCamera();
+	int currentLevel = GameManager::GetInstance()->GetCurLevel();
+	currentLevel = 1; /// set like this bcuz i don't want to change the code in GameManager, i will change it later
+	if (currentLevel != 4)
+	{
+		// Update camera to follow mario
+		CinemachineCamera();
+	}
+	else
+	{
+		// Update camera to scrolling
+		ScrollingCamera(dt);
+	}
 
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 
@@ -739,10 +800,14 @@ void CPlayScene::Render()
 	for (int i = 1; i < objects.size(); i++)
 	{
 		curObject = objects[i];
+		if(GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+			continue;
 		objects[i]->Render();
 	}
 	//if(!GameClock::GetInstance()->IsPaused())
 	curObject = objects[0];
+	if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+		return;
 	objects[0]->Render();
 }
 

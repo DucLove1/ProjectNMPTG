@@ -7,15 +7,26 @@
 #include "PlayScene.h"
 #include "GameManager.h"
 #include "Effect.h"
+#include "FadeTransition.h"
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-
+	if (GameManager::GetInstance()->IsEndGame())
+	{
+		return;
+	}
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
-		mario->SetState(MARIO_STATE_SIT);
+		if (mario->CanEntryPipe())
+		{
+			mario->SetForEntryPipeDown();
+		}
+		else
+		{
+			mario->SetState(MARIO_STATE_SIT);
+		}
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
@@ -52,12 +63,13 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetPowerUP(true);
 		break;
 	case DIK_0:
-		mario->SetState(MARIO_STATE_DIE);
+		//mario->SetState(MARIO_STATE_DIE);
+		mario->SetForEndGame(true);
 		break;
 	case DIK_A:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
-			if (!mario->IsSitting())
+			if (!mario->IsSitting() && !mario->IsAttack())
 				mario->SetAttack(true);
 		}
 		break;
@@ -79,11 +91,11 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_E:
 		GameManager::GetInstance()->ResumeWhenDoneTransform();
 		break;
-	case DIK_Y:
+	case DIK_T:
 		float x, y;
-		mario->GetPosition(x, y);
-		Effect* effect = new Effect(x, y, EFFECT_DISAPPEAR);
-		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(effect); // add effect to scene)
+		CGame::GetInstance()->GetCamPos(x, y);
+		FadeTransition* fade = new FadeTransition(x, y, 2000);
+		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(fade);
 		break;
 	}
 }
@@ -106,6 +118,9 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetPickUp(false);
 		//mario->SetAttack(false);
 		break;
+		//testng
+	case DIK_9:
+		mario->SetForEndGame(false);
 	}
 }
 
@@ -114,6 +129,14 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 	LPGAME game = CGame::GetInstance();
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 
+	if (game->IsKeyDown(DIK_UP))
+	{
+		mario->SetUpArrow(true);
+	}
+	else
+	{
+		mario->SetUpArrow(false);
+	}
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
 
@@ -125,25 +148,38 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
-		if (game->IsKeyDown(DIK_A)) 
+		if (game->IsKeyDown(DIK_A))
 		{
 			mario->SetState(MARIO_STATE_RUNNING_LEFT);
 		}
 		else
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
 	}
-	else if (game->IsKeyDown(DIK_Z))
-	{
-		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
-		{
-			if (!mario->IsSitting()) 
-			{
-				mario->SetAttack(true);
-			}
-		}
-	}
 	else
 	{
 		mario->SetState(MARIO_STATE_IDLE);
+	}
+
+	if (game->IsKeyDown(DIK_Z))
+	{
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
+		{
+			if (!mario->IsSitting())
+			{
+				if (!mario->IsAttack())
+					mario->SetAttack(true);
+			}
+		}
+	}
+	if (game->IsKeyDown(DIK_X))
+	{
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->IsFalling())
+		{
+			mario->SetSlowFalling(true);
+		}
+		else if(!mario->IsSlowFalling())
+		{
+			mario->SetSmallJump();
+		}
 	}
 }

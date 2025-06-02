@@ -2,11 +2,15 @@
 #include "AssetIDs.h"
 #include "GoldBrickWithButton.h"
 #include "Animations.h"
-#define BUTTON_WIDTH 16
-#define BUTTON_HEIGHT 16
+#include "Effect.h"
+#include "PlayScene.h"
+#define BUTTON_WIDTH 14
+#define BUTTON_HEIGHT 14
 #define BUTTON_HEIGHT_PRESSED 6
 void Button::Render()
 {
+	if(!isActive)
+		return;
 	if(state == BUTTON_STATE_PRESSED)
 	{
 		// Render the button in pressed state
@@ -21,7 +25,7 @@ void Button::Render()
 
 void Button::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	if(this->state == BUTTON_STATE_PRESSED)
+	if(this->state == BUTTON_STATE_PRESSED || this->state == BUTTON_STATE_NOT_PRESSED)
 	{
 		l = 0;
 		t = 0;
@@ -57,9 +61,13 @@ void Button::GetPress()
 	if(state == BUTTON_STATE_PRESSED)
 		return;
 	SetState(BUTTON_STATE_PRESSED);
-	for(BreakableGoldBrick* brick : bricks)
-	{
-		if(brick != NULL && !(brick->IsDeleted()))
-			brick->ChangeToCoin();
-	}
+}
+
+void Button::IsAppear()
+{
+	Effect* effect = new Effect(x, y-14, EFFECT_DISAPPEAR);
+	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(effect);
+	isActive = true;
+	SetState(BUTTON_STATE_NORMAL);
+	this->y -= 14;
 }

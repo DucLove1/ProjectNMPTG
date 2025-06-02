@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
 #include "GameClock.h"
-
+#include <vector>
+using namespace std;
+//#include "Mario.h"
 //try
 #define LIMIT_GAME_TIME 300 //300 unit in mario ~~ 150 second
 
@@ -17,6 +19,19 @@ private:
 	int lives;
 	bool isPausedToTransform;
 	bool isPausedGame;
+	bool isEndGame;
+	vector<int> cards={ 0, 0, 0 }; // this game has 3 cards
+
+	GameManager() {
+		curLevel = 1;
+		coins = 0;
+		speed = 0.0f;
+		remainingTime = LIMIT_GAME_TIME; // in unit of 700ms
+		score = 0;
+		lives = 3; // default lives
+		isPausedToTransform = false;
+		isPausedGame = false;
+	};
 public:
 	static GameManager* GetInstance()
 	{
@@ -44,13 +59,16 @@ public:
 	void AddScore(int score) { this->score += score; }
 	int GetScore() { return score; }
 
-	void SetLives(int modifyValue) { this->lives += modifyValue; }
+	void AddLives(int lives) { this->lives += lives; }
 	int GetLives() { return lives; }
 
 	bool IsPausedToTransform() { return isPausedToTransform; }
 	void SetPausedToTransform(bool isPaused) { isPausedToTransform = isPaused; }
 	bool IsPausedGame() { return isPausedGame; }
 	void SetPausedGame(bool isPaused) { isPausedGame = isPaused; }
+
+	void SetEndGame(bool isEnd) { isEndGame = isEnd; }
+	bool IsEndGame() { return isEndGame; }
 
 	ULONGLONG CalculateRemainingTime()
 	{

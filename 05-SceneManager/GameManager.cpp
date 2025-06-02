@@ -14,9 +14,11 @@ void GameManager::ResumeWhenDoneTransform()
 void GameManager::PauseGame()
 {
 	GameClock::GetInstance()->Pause();
+	isPausedGame = true;
 }
 
 void GameManager::ResumeGame()
 {
 	GameClock::GetInstance()->Resume();
+	isPausedGame = false;
 }

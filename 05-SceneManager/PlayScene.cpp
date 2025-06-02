@@ -746,7 +746,7 @@ void CPlayScene::Update(DWORD dt)
 	if (player == NULL) return;
 
 	int currentLevel = GameManager::GetInstance()->GetCurLevel();
-	currentLevel = 4; /// set like this bcuz i don't want to change the code in GameManager, i will change it later
+	currentLevel = 1; /// set like this bcuz i don't want to change the code in GameManager, i will change it later
 	if (currentLevel != 4)
 	{
 		// Update camera to follow mario

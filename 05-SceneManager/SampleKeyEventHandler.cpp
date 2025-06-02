@@ -68,7 +68,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
-			if (!mario->IsSitting())
+			if (!mario->IsSitting() && !mario->IsAttack())
 				mario->SetAttack(true);
 		}
 		break;
@@ -154,18 +154,31 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 		else
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
 	}
-	else if (game->IsKeyDown(DIK_Z))
+	else
+	{
+		mario->SetState(MARIO_STATE_IDLE);
+	}
+
+	if (game->IsKeyDown(DIK_Z))
 	{
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
 			if (!mario->IsSitting())
 			{
-				mario->SetAttack(true);
+				if (!mario->IsAttack())
+					mario->SetAttack(true);
 			}
 		}
 	}
-	else
+	if (game->IsKeyDown(DIK_X))
 	{
-		mario->SetState(MARIO_STATE_IDLE);
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->IsFalling())
+		{
+			mario->SetSlowFalling(true);
+		}
+		else if(!mario->IsSlowFalling())
+		{
+			mario->SetSmallJump();
+		}
 	}
 }

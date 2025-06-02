@@ -29,9 +29,11 @@ class DropLift;
 
 #define MARIO_SPEED_ENTRY_PIPE 0.05f
 
-#define SLOW_FALLING_TIME 150
 #define FLYING_TIME 120;
 #define FLYING_SCALE -0.2f
+#define TIME_TO_CHARGE 2000.0f //~2 seconds
+
+#define SLOW_FALLING_TIME 150
 #define SLOW_FALLING_SCALE 0.1f
 //#define CD_FLYING_TIME 50
 
@@ -163,7 +165,9 @@ class CMario : public CGameObject
 
 	bool isFlying;
 	int flyingTime;
-	int cdFlyingTime;
+	int startFlying;
+	float powerUnit;
+	float maxPowerUnit;
 
 	bool upArrowWasHolded;
 	bool canEntryPipe;
@@ -227,6 +231,10 @@ public:
 
 		isSlowFalling = false;
 		jumpedTime = 0;
+		isFlying = false;
+		powerUnit = 0.0f; 
+		maxPowerUnit = TIME_TO_CHARGE;
+		startFlying = 0;
 
 		upArrowWasHolded = false;
 		isEntryPipe = false;
@@ -291,6 +299,7 @@ public:
 	bool IsAttack();
 	//for flying
 	bool IsReachToExpectedSpeed();
+	bool IsReadyToFly();
 	void SetFlying(bool value) { isFlying = value; flyingTime = FLYING_TIME; }
 	bool canSet() { return jumpedTime >= MARIO_MAX_JUMP_TIME; }
 	

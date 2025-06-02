@@ -117,7 +117,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (ay != 0) ay = 0;
 		}
 	}
-
 	// Jumping logic
 	if (vy < 0) {
 		if (jumpedTime < MARIO_MAX_JUMP_TIME) {
@@ -128,6 +127,38 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				ay = MARIO_GRAVITY;
 		}
 	}
+
+	if (GetState() == MARIO_STATE_RUNNING_LEFT
+		|| GetState() == MARIO_STATE_RUNNING_RIGHT)
+	{
+		if (!isFlying)
+		{
+			powerUnit += dt;
+			if (powerUnit >= maxPowerUnit)
+			{
+				powerUnit = maxPowerUnit;
+			}
+		}
+		else
+		{
+			float scale = 1.0f;
+			if (powerUnit <= 1800)
+			{
+				scale = 10.0f;
+			}
+			powerUnit -= dt * scale / 5000.0f;
+			if (powerUnit <= 0)
+			{
+				powerUnit = 0;
+			}
+		}
+	}
+	else
+	{
+		if (flyingTime + 1000 < 0)
+			powerUnit = 0;
+	}
+	DebugOut(L"Power Unit : %f \n", powerUnit);
 
 	if (flyingTime > 0)
 	{
@@ -213,22 +244,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float dl_left, dl_top, dl_right, dl_bottom;
 		movingPlatform->GetBoundingBox(dl_left, dl_top, dl_right, dl_bottom);
 
-		if (dl_vx < 0 && vx > dl_vx) 
+		if (dl_vx < 0 && vx > dl_vx)
 		{
 			vx = dl_vx;
 		}
-		else if (dl_vx > 0 && vx < dl_vx) 
+		else if (dl_vx > 0 && vx < dl_vx)
 		{
 			vx = dl_vx;
 		}
 
 		if (dl_vy > 0 && vy > 0) {
-			float halfHeight = (this->GetLevel() == MARIO_LEVEL_SMALL) ? (MARIO_SMALL_BBOX_HEIGHT/2.0f) : (MARIO_BIG_BBOX_HEIGHT/2.0f);
+			float halfHeight = (this->GetLevel() == MARIO_LEVEL_SMALL) ? (MARIO_SMALL_BBOX_HEIGHT / 2.0f) : (MARIO_BIG_BBOX_HEIGHT / 2.0f);
 			float target_y = dl_top - halfHeight;
 			vy = (target_y - y) / dt;
 		}
 	}
-
 
 	//DebugOut(L"ax: %f\n", vx);
 	//if (abs(vx) > abs(maxVx)) vx = maxVx;
@@ -267,9 +297,9 @@ void CMario::UpdateWhenEntryPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		ny = -1.0f;
 	}
 
-	DebugOut(L"this is ny %f \n", ny);
 
 	this->vy = MARIO_SPEED_ENTRY_PIPE * ny;
+	DebugOut(L"this is ny %f %f \n", ny, vy);
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -407,7 +437,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (goomba->GetState() != CGoomba::DIE)
+		if (goomba->GetState() != CGoomba::DIE && goomba->GetState() != CGoomba::KNOCK_OUT)
 		{
 			goomba->KickedFromTop(this);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -417,7 +447,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	{
 		if (untouchable == 0)
 		{
-			if (goomba->GetState() != CGoomba::DIE)
+			if (goomba->GetState() != CGoomba::DIE && goomba->GetState() != CGoomba::KNOCK_OUT)
 			{
 				DecreaseLevel();
 			}
@@ -1301,6 +1331,13 @@ bool CMario::IsReachToExpectedSpeed()
 	return false;
 }
 
+bool CMario::IsReadyToFly()
+{
+	bool b1 = IsReachToExpectedSpeed();
+	bool b2 = (powerUnit >= 1800);
+	return b1 && b2;
+}
+
 void CMario::SetSmallJump()
 {
 	if (!isOnPlatform)
@@ -1339,13 +1376,14 @@ void CMario::SetForEntryPipeDown()
 	return;
 
 }
-\
+
 void CMario::SetForEntryPipeUp()
 {
 	if (!canEntryPipe) return;
 
 	if (isPrepareEntry || isEntryPipe) return;
 
+	vy = -0.02f;
 	y -= 1;
 	isEntryDown = false;
 
@@ -1362,7 +1400,7 @@ void CMario::SetLinked(bool value1, bool value2, DropLift* dropLift)
 
 void CMario::SetIsStickToPlatform(DropLift* dropLift)
 {
-	this->movingPlatform= dropLift;
+	this->movingPlatform = dropLift;
 	if (movingPlatform) isLinked = true;
 	else isLinked = false;
 }

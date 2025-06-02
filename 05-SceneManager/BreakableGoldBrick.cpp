@@ -35,7 +35,10 @@ void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 		// cong tien cho mario
 		// delete this;
 		if (mario != nullptr)
+		{
+			GameManager::GetInstance()->PlusCoins(1);
 			this->Delete();
+		}
 		return;
 	}
 	// neu src_obj la mario nho thi khong bi anh huong 

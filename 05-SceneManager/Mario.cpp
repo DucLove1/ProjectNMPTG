@@ -298,7 +298,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (goomba->GetState() != CGoomba::DIE)
+		if (goomba->IsAlive())
 		{
 			goomba->KickedFromTop(this);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -428,7 +428,7 @@ void CMario::OnCollisionWithVenus(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
-	coin++;
+	GameManager::GetInstance()->PlusCoins(1);
 }
 
 void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)

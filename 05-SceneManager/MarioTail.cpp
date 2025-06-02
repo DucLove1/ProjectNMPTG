@@ -78,7 +78,6 @@ void CMarioTail::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (dynamic_cast<CQuestionBrick*>(e->obj)) // if e->obj is QuestionBrick
 	{
-		DebugOut(L"ĐỤNG KO NGỜ \n");\
 		dynamic_cast<CQuestionBrick*>(e->obj)->GotHit(e);
 	}
 	else if (dynamic_cast<GoldBrick*>(e->obj))

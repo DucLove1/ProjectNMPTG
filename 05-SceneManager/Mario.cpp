@@ -26,6 +26,8 @@
 #include "GameManager.h"
 #include "PlayScene.h"
 #include "DropLift.h"
+#include "ComboScoreSystemMario.h"
+#include "RandomCard.h"
 //define for Id map
 int mapAniId[][33] = {
 		{
@@ -365,6 +367,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 			isOnPlatform = true;
 			slowFallingTime = 0;
 			flyingTime = 0;
+			// reset streak score when Mario lands on the ground
+			ComboScoreSystemMario::GetInstance()->Reset();
 		}
 		else {
 			jumpedTime = MARIO_MAX_JUMP_TIME - 1;
@@ -428,6 +432,11 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 		if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
 		this->SetForEntryPipeUp();
 	}
+	else if (dynamic_cast<RandomCard*>(e->obj))
+	{
+		RandomCard* randomCard = dynamic_cast<RandomCard*>(e->obj);
+		randomCard->Touched();
+	}
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -447,7 +456,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	{
 		if (untouchable == 0)
 		{
-			if (goomba->GetState() != CGoomba::DIE && goomba->GetState() != CGoomba::KNOCK_OUT)
+			if (goomba->IsAlive())
 			{
 				DecreaseLevel();
 			}
@@ -580,30 +589,32 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 }
 void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 {
-	//CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
+	CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
 	if (level == MARIO_LEVEL_SMALL)
 	{
-		GameManager::GetInstance()->AddScore(1000);
+		//GameManager::GetInstance()->AddScore(1000);
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 		SetLevel(MARIO_LEVEL_BIG);
 		SetPowerUP(true);
 		//SetSelfPausing(true);
-		e->obj->Delete();
+		//e->obj->Delete();
 	}
 	else if (level == MARIO_LEVEL_BIG)
 	{
-		GameManager::GetInstance()->AddScore(1000);
+		//GameManager::GetInstance()->AddScore(1000);
 		SetLevel(MARIO_LEVEL_TAIL);
 		SetPowerUP(true);
 		//SetSelfPausing(true);
-		e->obj->Delete();
+		//e->obj->Delete();
 	}
 	else
 	{
-		GameManager::GetInstance()->AddScore(1000);
-		DebugOut(L"Score ++\n");
-		e->obj->Delete();
+		//GameManager::GetInstance()->AddScore(1000);
+		//DebugOut(L"Score ++\n");
+		//e->obj->Delete();
 	}
+	if(leaf)
+		leaf->Touched(); // leaf will be deleted after touched
 }
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
@@ -664,7 +675,8 @@ void CMario::OnColliionWithDropLift(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
-	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	//CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	p->SwitchScene();
 }
 
 int CMario::ConvertAniTypeToAniId(int animation_type)

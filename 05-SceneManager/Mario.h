@@ -216,8 +216,9 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
-		level = MARIO_LEVEL_SMALL;
-		//level = MARIO_LEVEL_TAIL;
+		//level = MARIO_LEVEL_SMALL;
+		//this line is get level from GameManager because of saving level
+		level = GameManager::GetInstance()->GetCurLevel();
 
 		untouchable = 0;
 		untouchable_start = -1;
@@ -330,4 +331,6 @@ public:
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	bool IsUpdateWhenMarioTransform() { return true; }
+
+	bool IsRenderWhenPaused() { return false; }
 };

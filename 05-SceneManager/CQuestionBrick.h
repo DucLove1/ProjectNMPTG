@@ -52,6 +52,5 @@ public:
 	int GetTypeOfHolder() { return this->typeOfHolder; }
 	void GoUp(DWORD dt);
 	void GoDown(DWORD dt);
-
 };
 

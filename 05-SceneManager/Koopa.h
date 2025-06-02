@@ -1,9 +1,10 @@
 #pragma once
 #include "CEnemy.h"
 #include "GameClock.h"
+#include "ComboScoreSystem.h"
 #define GREEN_KOOPA 0
 #define RED_KOOPA 1
-#define KOOPA_GRAVITY 0.003f
+#define KOOPA_GRAVITY 0.001f
 #define KOOPA_WALKING_SPEED 0.03f
 #define KOOPA_JUMPING_FORCE 0.08f
 #define KOOPA_IN_SHELL_SPEED 0.15f
@@ -25,12 +26,14 @@ private:
 	ULONGLONG timerKnockOut;
 
 	BOOLEAN isHolded;
-
+	int preNx;
 	void SetStateHasWing();
 	void SetStateHasNoWing();
 	void SetStateInShellUp();
 	void SetStateInShellDown();
 	void SetStateKnockOut();
+protected:
+	ComboScoreSystem* comboScoreSystem;
 public:
 	enum State
 	{
@@ -43,20 +46,25 @@ public:
 	Koopa(float x, float y, int type = RED_KOOPA, int state = HAS_WING)
 		: CEnemy(x, y)
 	{
+		this->nx = -1;
+		this->preNx = -1;
 		this->type = type;
 		this->state = -1;
 		SetState(state);
 		this->ay = KOOPA_GRAVITY;
 		this->ax = 0.0f;
-		this->vx = KOOPA_WALKING_SPEED;
+		this->vx = -KOOPA_WALKING_SPEED;
+		this->vy = 0;
 		this->onGround = false;
 		timerInShell = 0;
 		this->lastAnimationId = -1;
 		isHolded = false;
+		comboScoreSystem = new ComboScoreSystem();
 	}
 	void SetState(int state) override;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom) override;
 	void OnNoCollision(DWORD dt) override;
+	void OnCollisionWithGoldBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWith(LPCOLLISIONEVENT e) override;
 	void OnCollisionWithEnemy(LPCOLLISIONEVENT e);
 	//void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) override;
@@ -65,7 +73,7 @@ public:
 	void Render() override;
 	void KickedFromTop(CGameObject*);
 	void MoveInShell(int direction);
-	void KickedFromBottom(CGameObject*) {};
+	void KickedFromBottom(CGameObject*);
 	void TouchTwoSide(CGameObject*) {};
 	int IsCollidable() override { return state != KNOCK_OUT; }
 	void KnockedOut(CGameObject*);

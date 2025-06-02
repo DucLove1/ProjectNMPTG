@@ -38,6 +38,8 @@ public:
 	int IsCollidable() { return 1; }
 	int IsBlocking() { return 0; }
 	void GotHit(int nx);
-	void Touched();
+	virtual void Touched() = 0;
+	bool IsRenderWhenPaused() { return false; }
+	bool IsPauseRenderWhenTransform() { return false; }
 };
 

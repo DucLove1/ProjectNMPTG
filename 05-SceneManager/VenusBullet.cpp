@@ -1,6 +1,9 @@
 #include "VenusBullet.h"
 #include "AssetIDs.h"
 #include "Animations.h"
+#include "Game.h"
+#define SCREEN_HEIGHT 268
+#define SCREEN_WIDTH 274
 void VenusBullet::Fire(float x, float y, float angle)
 {
 	this->x = x;

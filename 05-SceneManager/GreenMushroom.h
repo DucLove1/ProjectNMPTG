@@ -7,5 +7,6 @@ class GreenMushroom: public CMushroom
 	{
 	}
 	void Render() override;
+	void Touched() override;
 };
 

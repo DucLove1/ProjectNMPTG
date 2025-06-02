@@ -3,13 +3,13 @@
 #include "Sprites.h"
 #include "GameClock.h"
 #include "EffectBreak.h"
+#include "Koopa.h"
 #define ID_SPRITE_COIN 40001
 #define TIME_COIN_TO_BRICK 10000
 void BreakableGoldBrick::GoUp(DWORD dt)
 {
-	if (this->y - dt * SPEED_Y > this->minY)
-		this->y -= dt * SPEED_Y;
-	else
+	vy = -SPEED_Y; // di chuyen len tren
+	if( this->y - dt * SPEED_Y <= this->minY)
 	{
 		this->y = this->minY;
 		SetState(STATE_GO_DOWN);
@@ -18,11 +18,11 @@ void BreakableGoldBrick::GoUp(DWORD dt)
 
 void BreakableGoldBrick::GoDown(DWORD dt)
 {
-	if (this->y + dt * SPEED_Y < this->maxY)
-		this->y += dt * SPEED_Y;
-	else
+	vy = SPEED_Y; // di chuyen xuong duoi
+	if(this->y + dt * SPEED_Y >= this->maxY)
 	{
 		this->y = this->maxY;
+		vy = 0; // dung lai
 		SetState(STATE_IDLE);
 	}
 }
@@ -34,7 +34,7 @@ void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 	{
 		// cong tien cho mario
 		// delete this;
-		if(mario !=nullptr)
+		if (mario != nullptr)
 			this->Delete();
 		return;
 	}
@@ -42,7 +42,8 @@ void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 	bool isMarioSmall = (mario != NULL) ? (mario->GetLevel() == MARIO_LEVEL_SMALL) : false;
 	if (isMarioSmall)
 	{
-		SetState(STATE_GO_UP);
+		//SetState(STATE_GO_UP);
+		this->isBouncing = true;
 		return;
 	}
 	// them effect vo
@@ -55,6 +56,11 @@ void BreakableGoldBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (this->active == false)
 		return;
+	if (button != nullptr && button->GetState() == BUTTON_STATE_PRESSED)
+	{
+		ChangeToCoin();
+		button = nullptr; // reset button after pressing
+	}
 	switch (state)
 	{
 	case STATE_IDLE:
@@ -69,6 +75,7 @@ void BreakableGoldBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		UpdateStateCoin();
 		break;
 	}
+	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 void BreakableGoldBrick::UpdateStateCoin()
 {
@@ -95,4 +102,28 @@ void BreakableGoldBrick::Render()
 	}
 	// render hinh gold brick
 	GoldBrick::Render();
+	//RenderBoundingBox();
 }
+
+//void BreakableGoldBrick::OnCollisionWith(LPCOLLISIONEVENT e)
+//{
+//	if (state == STATE_GO_UP)
+//	{
+//		Koopa* koopa = dynamic_cast<Koopa*>(e->obj);
+//		if (koopa != nullptr)
+//			koopa->KickedFromBottom(this); // koopa bi brick hit len tren
+//	}
+//}
+//void BreakableGoldBrick::OnNoCollision(DWORD dt)
+//{
+//	this->y += vy * dt;
+//}
+//void BreakableGoldBrick::OnCollisionWith(LPCOLLISIONEVENT e)
+//{
+//	if (!(state == STATE_GO_UP))
+//		return;
+//	if (dynamic_cast<Koopa*>(e->obj))
+//	{
+//		dynamic_cast<Koopa*>(e->obj)->KickedFromBottom(this);
+//	}
+//}

@@ -2,15 +2,15 @@
 #include "GameObject.h"
 #include "GameClock.h"
 #define TIME_DISAPPEAR 2000
-#define EFFECT_100 1
-#define EFFECT_200 2
-#define EFFECT_400 4
-#define EFFECT_800 8
-#define EFFECT_1000 10
-#define EFFECT_2000 20
-#define EFFECT_4000 40
-#define EFFECT_8000 80
-#define EFFECT_1UP 100
+#define EFFECT_100 100
+#define EFFECT_200 200
+#define EFFECT_400 400
+#define EFFECT_800 800
+#define EFFECT_1000 1000
+#define EFFECT_2000 2000
+#define EFFECT_4000 4000
+#define EFFECT_8000 8000
+#define EFFECT_1UP 10000
 #define EFFECT_TAIL_ATTACK 101
 #define EFFECT_DISAPPEAR 102
 #define VY -0.01f

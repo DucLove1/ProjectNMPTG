@@ -1,16 +1,27 @@
+class CMario;
 #pragma once
 #include "GameObject.h"
+#include "Mario.h"
+#include "Game.h"
+#include "PlayScene.h"
+
 #define GRAVITY 0.0002f
 class DropLift : public CGameObject
 {
 private:
 	bool isActive;
 	bool isTouched;
+	bool hasPlayer;
+
+	CMario* player;
+
+
 public:
 	DropLift(float x, float y) : CGameObject(x, y)
 	{
 		this->isActive = false;
 		this->isTouched = false;
+		this->hasPlayer = false;
 		this->vx = -0.02f;
 		this->vy = 0;
 	}
@@ -21,6 +32,12 @@ public:
 	int IsBlocking() override { return 1; }
 	void Touch() { isTouched = true; }
 	bool IsOnCamera();
-	//void OnNoCollision(DWORD dt) override;
+	void OnNoCollision(DWORD dt) override;
+	void OnCollisionWith(LPCOLLISIONEVENT e) override;
+
+	void GotLinked();
+	//void BreakLink() { player = nullptr; }
+
+	void OnCollidedWithMario(LPCOLLISIONEVENT e);
 };
 

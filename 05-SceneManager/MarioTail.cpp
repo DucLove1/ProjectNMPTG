@@ -119,13 +119,13 @@ void CMarioTail::TailAttack(DWORD dt)
 
 		if (Mnx >= 0)
 		{
-			offSetLeft = dx;
+			offSetLeft = dx - MARIO_BBOX_WIDTH;
 			offSetRight = dx + MARIO_BBOX_WIDTH * 2;
 		}
 		else
 		{
 			offSetLeft = dx - MARIO_BBOX_WIDTH * 2;
-			offSetRight = dx;
+			offSetRight = dx + MARIO_BBOX_WIDTH;
 		}
 		//DebugOut(L"SET VALUE \n");
 	}
@@ -136,11 +136,13 @@ void CMarioTail::TailAttack(DWORD dt)
 		float _time = (ATTACK_ROUND_TIME / 2 );
 		if (Mnx >= 0)
 		{
-			SetSpeed((offSetLeft - x) / _time, (dy - y) / _time);
+			//SetSpeed((offSetLeft - x) / _time, (dy - y) / _time);
+			SetSpeed((offSetLeft - x) / _time, 0);
 		}
 		else
 		{
-			SetSpeed((offSetRight - x) / _time, (dy - y) / _time);
+			//SetSpeed((offSetRight - x) / _time, (dy - y) / _time);
+			SetSpeed((offSetRight - x) / _time, 0);
 		}
 		//DebugOut(L"STATE 2 \n");
 	}
@@ -156,11 +158,13 @@ void CMarioTail::TailAttack(DWORD dt)
 		float _time = (ATTACK_ROUND_TIME / 2);
 		if (Mnx >= 0)
 		{
-			SetSpeed((offSetRight - x) / _time, (dy - y) / _time);
+			//SetSpeed((offSetRight - x) / _time, (dy - y) / _time);
+			SetSpeed((offSetRight - x) / _time, 0);
 		}
 		else
 		{
-			SetSpeed((offSetLeft - x) / _time, (dy - y) / _time);
+			//SetSpeed((offSetLeft - x) / _time, (dy - y) / _time);
+			SetSpeed((offSetLeft - x) / _time, 0);
 		}
 		//DebugOut(L"STATE 1 \n");
 	}

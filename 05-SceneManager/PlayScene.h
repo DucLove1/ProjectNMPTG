@@ -15,11 +15,15 @@ class CPlayScene: public CScene
 {
 private:
 	CGameObject* curObject; // current object being edited
+
 protected: 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
 
 	vector<LPGAMEOBJECT> objects;
+
+	ULONGLONG timeStart;
+	BOOLEAN isStartGame; //for scrollingCamera
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
@@ -39,7 +43,9 @@ public:
 	virtual void Unload();
 
 	LPGAMEOBJECT GetPlayer() { return player; }
+
 	void CinemachineCamera();
+	void ScrollingCamera(DWORD dt);
 
 	void Clear();
 	void PurgeDeletedObjects();

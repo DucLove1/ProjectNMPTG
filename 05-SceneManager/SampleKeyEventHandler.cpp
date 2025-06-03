@@ -30,7 +30,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
-		if (mario->IsReachToExpectedSpeed())
+		if (mario->IsReadyToFly())
 		{
 			mario->SetFlying(true);
 		}
@@ -173,11 +173,15 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 	}
 	if (game->IsKeyDown(DIK_X))
 	{
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->IsReadyToFly())
+		{
+			mario->SetFlying(true);
+		}
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->IsFalling())
 		{
 			mario->SetSlowFalling(true);
 		}
-		else if(!mario->IsSlowFalling())
+		else if (!mario->IsSlowFalling())
 		{
 			mario->SetSmallJump();
 		}

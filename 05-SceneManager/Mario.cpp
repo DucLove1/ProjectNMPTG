@@ -28,6 +28,8 @@
 #include "DropLift.h"
 #include "ComboScoreSystemMario.h"
 #include "RandomCard.h"
+#include "GameClock.h"
+
 //define for Id map
 int mapAniId[][33] = {
 		{
@@ -133,34 +135,37 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (GetState() == MARIO_STATE_RUNNING_LEFT
 		|| GetState() == MARIO_STATE_RUNNING_RIGHT)
 	{
-		if (!isFlying)
+		if (!isFlying && !isSlowFalling)
 		{
-			powerUnit += dt;
-			if (powerUnit >= maxPowerUnit)
+			powerUnit += dt * 2.5f;
+			if (powerUnit >= MAX_POWER_UNIT)
 			{
-				powerUnit = maxPowerUnit;
-			}
-		}
-		else
-		{
-			float scale = 1.0f;
-			if (powerUnit <= 1800)
-			{
-				scale = 10.0f;
-			}
-			powerUnit -= dt * scale / 5000.0f;
-			if (powerUnit <= 0)
-			{
-				powerUnit = 0;
+				powerUnit = MAX_POWER_UNIT;
 			}
 		}
 	}
-	else
+	else if (!(state == MARIO_STATE_RELEASE_JUMP) && !isFlying)
 	{
-		if (flyingTime + 1000 < 0)
-			powerUnit = 0;
+		powerUnit -= dt * 10.0f;
+		if (powerUnit < 0.0f)
+		{
+			powerUnit = 0.0f;
+		}
 	}
-	DebugOut(L"Power Unit : %f \n", powerUnit);
+	if (isFlying)
+	{
+		if (GameClock::GetInstance()->GetTime() - startFlying > 5000.0f)
+		{
+			startFlying = 0;
+			powerUnit = 0;
+		}
+	}
+	/*if (GetTickCount64() % 10 % 2 == 1) 
+	{
+		DebugOut(L"%d	", IsReadyToFly());
+		DebugOut(L"Power Unit : %f \n", powerUnit);
+		DebugOut(L"startFlying : %f \n", startFlying);
+	}*/
 
 	if (flyingTime > 0)
 	{
@@ -613,7 +618,7 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 		//DebugOut(L"Score ++\n");
 		//e->obj->Delete();
 	}
-	if(leaf)
+	if (leaf)
 		leaf->Touched(); // leaf will be deleted after touched
 }
 
@@ -1346,8 +1351,15 @@ bool CMario::IsReachToExpectedSpeed()
 bool CMario::IsReadyToFly()
 {
 	bool b1 = IsReachToExpectedSpeed();
-	bool b2 = (powerUnit >= 1800);
+	bool b2 = (powerUnit >= MAX_POWER_UNIT);
 	return b1 && b2;
+}
+void CMario::SetFlying(bool value)
+{
+	isFlying = value;
+	flyingTime = FLYING_TIME;
+	if (startFlying == 0)
+		startFlying = GameClock::GetInstance()->GetTime();
 }
 
 void CMario::SetSmallJump()

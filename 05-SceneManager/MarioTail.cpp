@@ -75,6 +75,14 @@ void CMarioTail::OnCollisionWith(LPCOLLISIONEVENT e)
 		Effect* effect = new Effect(x, y, EFFECT_TAIL_ATTACK);
 		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(effect); // add effect to scene)
 		dynamic_cast<CEnemy*>(e->obj)->KickedFromBottom(this);
+		bool isKoopa = dynamic_cast<Koopa*>(e->obj) != nullptr; // check if it is a Koopa
+		if (!isKoopa)
+		{
+			// cong 100đ va effect 100 khi knock out goomba
+			Effect* scoreEffect = new Effect(x, y, 100);
+			((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(scoreEffect);
+			GameManager::GetInstance()->AddScore(100); // add score to game manager
+		}
 	}
 	else if (dynamic_cast<CQuestionBrick*>(e->obj)) // if e->obj is QuestionBrick
 	{

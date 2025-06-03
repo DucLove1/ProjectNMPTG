@@ -92,7 +92,6 @@ int mapAniId[][33] = {
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
 	if (isEndGame) {
 		UpdateWhenEndScene(dt, coObjects);
 		return;
@@ -270,7 +269,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//int x = mapAniId[0][0];
-	LimitByCameraBorder();
+	//LimitByCameraBorder();
 
 }
 
@@ -653,14 +652,15 @@ void CMario::OnCollisionWithGoldBrick(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<GoldBrickWithButton*>(e->obj))
 	{
-		if (e->nx != 0)
+		if (e->ny > 0)
 		{
 			GoldBrickWithButton* brick = dynamic_cast<GoldBrickWithButton*>(e->obj);
 			brick->GotHit(e);
 		}
+		else return;
 	}
 	GoldBrick* brick = dynamic_cast<GoldBrick*>(e->obj);
-	if (e->ny > 0) // collision with top of brick
+	if (brick) // collision with top of brick
 	{
 		brick->GotHit(e);
 	}

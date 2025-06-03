@@ -333,4 +333,7 @@ public:
 	bool IsUpdateWhenMarioTransform() { return true; }
 
 	bool IsRenderWhenPaused() { return false; }
+
+	int GetDirection() { return this->nx; }
+	void SetDirection(int direction) { this->nx = direction; }
 };

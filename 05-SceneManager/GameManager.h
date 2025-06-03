@@ -20,6 +20,7 @@ private:
 	bool isPausedToTransform;
 	bool isPausedGame;
 	bool isEndGame;
+	int marioDirection;
 	vector<int> cards={ 0, 0, 0 }; // this game has 3 cards
 
 	GameManager() {
@@ -31,6 +32,8 @@ private:
 		lives = 3; // default lives
 		isPausedToTransform = false;
 		isPausedGame = false;
+		marioDirection = 1; // default direction is right
+		isEndGame = false;
 	};
 public:
 	static GameManager* GetInstance()
@@ -77,5 +80,9 @@ public:
 
 		return LIMIT_GAME_TIME - (current / 700);
 	}
+
+	void SaveMarioState();
+	void SetMarioDirection(int direction) { marioDirection = direction; }
+	int GetMarioDirection() { return marioDirection; }
 };
 

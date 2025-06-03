@@ -409,6 +409,11 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (dynamic_cast<DropLift*>(e->obj))
 		OnColliionWithDropLift(e);
+	else if (dynamic_cast<RandomCard*>(e->obj))
+	{
+		RandomCard* randomCard = dynamic_cast<RandomCard*>(e->obj);
+		randomCard->Touched();
+	}
 	//else
 	//	SetLinked(false, false); // reset linked state
 
@@ -431,11 +436,6 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 		pipe->SetEntryPipe(true);
 		if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
 		this->SetForEntryPipeUp();
-	}
-	else if (dynamic_cast<RandomCard*>(e->obj))
-	{
-		RandomCard* randomCard = dynamic_cast<RandomCard*>(e->obj);
-		randomCard->Touched();
 	}
 }
 
@@ -676,6 +676,10 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
 	//CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	// write the out pos
+	float x, y;
+	p->GetPosOut(x, y);
+	CGame::GetInstance()->GetCurrentScene()->SetPosOut(x, y);
 	p->SwitchScene();
 }
 

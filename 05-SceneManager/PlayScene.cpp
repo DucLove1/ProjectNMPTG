@@ -65,8 +65,8 @@
 
 using namespace std;
 
-CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
-	CScene(id, filePath)
+CPlayScene::CPlayScene(int id, LPCWSTR filePath, int worldIndex) :
+	CScene(id, filePath, worldIndex)
 {
 	isStartGame = false;
 	timeStart = GameClock::GetInstance()->GetTime();
@@ -532,7 +532,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float b = (float)atof(tokens[4].c_str());
 		bool isPortalIn = atoi(tokens[5].c_str()) == 1 ? true : false; // 1 for in, 0 for out
 		int scene_id = atoi(tokens[6].c_str());
-		obj = new CPortal(x, y, r, b, isPortalIn,scene_id);
+		float posOutX = NON_POS, posOutY = NON_POS;
+		posOutX = (float)atof(tokens[7].c_str());
+		posOutY = (float)atof(tokens[8].c_str());
+		obj = new CPortal(x, y, r, b, isPortalIn,scene_id,posOutX,posOutY);
 		break;
 	}
 	case OBJECT_TYPE_RANDOM_CARD_SYSTEM:
@@ -540,7 +543,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new RandomCardSystem(x, y);
 		break;
 	}
-
+	case OBJECT_TYPE_FADE_TRANSITION:
+	{
+		bool isFadeIn = atoi(tokens[3].c_str()) == 1 ? true : false; // 1 for fade in, 0 for fade out
+		obj = new FadeTransition(x, y, isFadeIn);
+		break;
+	}
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
@@ -595,6 +603,48 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 
 void CPlayScene::Load()
 {
+	// scene da duoc load roi
+	if (!this->objects.empty())
+	{
+		// vi da xoa asset khi chuyen scene nen phai add vao lai
+		// khong can them object vi da co san object
+		ifstream f;
+		f.open(sceneFilePath);
+
+		// current resource section flag
+		int section = SCENE_SECTION_UNKNOWN;
+
+		char str[MAX_SCENE_LINE];
+		while (f.getline(str, MAX_SCENE_LINE))
+		{
+			string line(str);
+
+			if (line[0] == '#') continue;	// skip comment lines	
+			if (line == "[ASSETS]") { section = SCENE_SECTION_ASSETS; continue; };
+			if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
+
+			//
+			// data section
+			//
+			switch (section)
+			{
+			case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
+			}
+		}
+
+		// neu quay lai map da duoc load thi gan lai trang thai cua mario
+		if (player != NULL)
+		{
+			CMario* mario = dynamic_cast<CMario*>(player);
+			mario->SetLevel(GameManager::GetInstance()->GetCurLevel());
+			mario->SetPosition(this->posOutX, this->posOutY);
+			mario->SetDirection(GameManager::GetInstance()->GetMarioDirection());
+		}
+		f.close();
+		// ADD FADE TRANSITION
+		this->objects.push_back(new FadeTransition(0, 0, true));
+		return;
+	}
 	DebugOut(L"[INFO] Start loading scene from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -624,7 +674,10 @@ void CPlayScene::Load()
 	}
 
 	f.close();
-
+	// ADD FADE TRANSITION
+	this->objects.push_back(new FadeTransition(0, 0, true));
+	// set direction for mario
+	((CMario*)player)->SetDirection(GameManager::GetInstance()->GetMarioDirection());
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
 
@@ -786,15 +839,6 @@ void CPlayScene::Update(DWORD dt)
 
 	PurgeDeletedObjects();
 }
-bool CPlayScene::CheckObjectPause(CGameObject* object)
-{
-	if (dynamic_cast<CEnemy*>(object) || dynamic_cast<VenusBullet*>(object)
-		|| dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object))
-	{
-		return true;
-	}
-	return false;
-}
 void CPlayScene::Render()
 {
 	for (int i = 1; i < objects.size(); i++)
@@ -842,6 +886,16 @@ void CPlayScene::Unload()
 }
 
 bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; }
+
+void CPlayScene::DeleteFadeTransition()
+{
+	int sizeOfObjects = objects.size();
+	CGameObject* fadeTransition = nullptr;
+	fadeTransition = dynamic_cast<CGameObject*>(objects[sizeOfObjects - 1]);
+	if (fadeTransition)
+		fadeTransition->Delete();
+}
+
 
 void CPlayScene::PurgeDeletedObjects()
 {

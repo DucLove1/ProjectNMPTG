@@ -27,7 +27,14 @@ void GoldBrickMulti::GotHit(LPCOLLISIONEVENT e)
 {
 	if (this->active == false)
 		return;
+	if (e->ny < 0)
+		return;
+	if (e->ny <= 0 && dynamic_cast<CMario*>(e->src_obj))
+		return;
 	// them effect
+	CBouncingCoin* coin = new CBouncingCoin(this->x, this->y - 16);
+	GameManager::GetInstance()->PlusCoins(1);
+	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(coin);
 	if (timer == -1)
 	{
 		// them effect

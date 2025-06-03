@@ -16,13 +16,14 @@ lion_brick.txt
 partical_break.txt
 dropLift.txt
 effect.txt
+bouncingCoin.txt
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17, big_tree = 18, bushes = 19, cloud = 30, lion_brick = 31, green venus = 32, piranha =33, gold_brick = 34, bulder gold brick = 36, pipe = 9, hud = 25, wall = 37, bCoin = 23, cross platform = 51, icon = 52, woodenBlock = 53, dropLift = 56
 
 # See OBJECT_TYPE constants in AssetIDs.h
 #mario
-0	640	100
+0	750	50
 #CrossPlatform
 51	0	119	10	5	500001	500002	500003	500004	500005	500006
 51	1968	135	3	2	500001	500002	500003	500004	500005	500006

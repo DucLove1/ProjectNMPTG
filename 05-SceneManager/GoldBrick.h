@@ -22,5 +22,6 @@ public:
 	int IsCollidable() { return 0; }
 	virtual void GotHit(LPCOLLISIONEVENT e) = 0;
 	bool IsBoucing() { return isBouncing; }
+	int IsBlocking() override { return 1; }
 };
 

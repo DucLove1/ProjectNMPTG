@@ -159,7 +159,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (flyingTime + 1000 < 0)
 			powerUnit = 0;
 	}
-	DebugOut(L"Power Unit : %f \n", powerUnit);
+	//DebugOut(L"Power Unit : %f \n", powerUnit);
 
 	if (flyingTime > 0)
 	{

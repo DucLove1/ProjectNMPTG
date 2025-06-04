@@ -287,14 +287,14 @@ public:
 
 	void DecreaseLevel();
 	void SetPowerUP(bool power) {
-		isPowerUp = power; anchor_start = GetTickCount64();
+		isPowerUp = power; anchor_start = GameClock::GetInstance()->GetTime();
 		GameManager::GetInstance()->SetPausedToTransform(true);
 	}
 	bool IsPowerUp() { return isPowerUp; }
 	//void SetSelfPausing(bool pause) { isSelfPausing = pause; }
 
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
-	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
+	void StartUntouchable() { untouchable = 1; untouchable_start = GameClock::GetInstance()->GetTime(); }
+	void StartRecovery() { isRecovering = 1; recovery_start = GameClock::GetInstance()->GetTime(); }
 	//for attack
 	void SetAttack(bool value);
 	bool IsAttack();
@@ -311,6 +311,7 @@ public:
 
 	void SetSmallJump();
 	bool IsSitting() { return isSitting; }
+	int GetJumpedTime() { return jumpedTime; }
 
 	void SetForEntryPipeDown();
 	void SetForEntryPipeUp();

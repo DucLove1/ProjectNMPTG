@@ -1,4 +1,4 @@
-#include "SampleKeyEventHandler.h"4
+#include "SampleKeyEventHandler.h"
 
 #include "debug.h"
 #include "Game.h"
@@ -8,6 +8,10 @@
 #include "GameManager.h"
 #include "Effect.h"
 #include "FadeTransition.h"
+
+float cdJumpByDIK_X = 0.0f;
+float cdSlowFallingByDIK_X = 0.0f;
+
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -132,6 +136,7 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 	if (game->IsKeyDown(DIK_UP))
 	{
 		mario->SetUpArrow(true);
+		mario->SetForEntryPipeUp();
 	}
 	else
 	{
@@ -179,11 +184,33 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 		}
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->IsFalling())
 		{
-			mario->SetSlowFalling(true);
+			if (cdSlowFallingByDIK_X <= 0.0f)
+			{
+				mario->SetSlowFalling(true);
+				cdSlowFallingByDIK_X = 4.0f;
+			}
+			else
+			{
+				cdSlowFallingByDIK_X -= 1.0f;
+			}
 		}
 		else if (!mario->IsSlowFalling())
 		{
-			mario->SetSmallJump();
+			/*
+			if (mario->GetState() != MARIO_STATE_JUMP
+				&& mario->GetState() != MARIO_STATE_RELEASE_JUMP
+				&& mario->GetState() != MARIO_STATE_SMALL_JUMP )
+			*/
+			if (cdJumpByDIK_X <= 0.0f)
+			{
+				mario->SetSmallJump();
+				cdJumpByDIK_X = 10.0f;
+			}
+			else
+			{
+				cdJumpByDIK_X -= 1.0f;
+			}
+			//DebugOut(L"%d \n", mario->GetJumpedTime());
 		}
 	}
 }

@@ -2,6 +2,9 @@
 
 #include "Scene.h"
 
+extern float cdJumpByDIK_X;
+extern float cdSlowFallingByDIK_X;
+
 class CSampleKeyHandler: public CSceneKeyHandler
 {
 public:

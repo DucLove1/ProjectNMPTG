@@ -1,6 +1,7 @@
 ﻿#include <algorithm>
 #include "debug.h"
 
+#include "SampleKeyEventHandler.h"
 #include "Mario.h"
 #include "MarioTail.h"
 #include "Game.h"
@@ -160,7 +161,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			powerUnit = 0;
 		}
 	}
-	/*if (GetTickCount64() % 10 % 2 == 1) 
+	/*if (GameClock::GetInstance()->GetTime() % 10 % 2 == 1)
 	{
 		DebugOut(L"%d	", IsReadyToFly());
 		DebugOut(L"Power Unit : %f \n", powerUnit);
@@ -198,27 +199,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	}
 
-	UpdateTail(dt);
-
-	if (isPickUp) {
-		PickingItem(dt);
-	}
-	else {
-		if (item != nullptr) {
-			ReleaseItem(item);
-			item = nullptr;
-		}
-	}
-
-
+	
 	// reset untouchable timer if untouchable time has passed
-	if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
+	if (GameClock::GetInstance()->GetTime() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
 		untouchable = 0;
 	}
 	// Stop recovering if time is up
-	if (GetTickCount64() - recovery_start > MARIO_RECOVERY_TIME)
+	if (GameClock::GetInstance()->GetTime() - recovery_start > MARIO_RECOVERY_TIME)
 	{
 		recovery_start = 0;
 		isRecovering = 0;
@@ -229,7 +218,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(MARIO_STATE_SIT_RELEASE); // reset state to idle
 		return;
 	}
-	else if (GetTickCount64() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR)
+	else 
+	if ((GameClock::GetInstance()->GetTime() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR && GetLevel() == MARIO_LEVEL_BIG)
+		|| (GameClock::GetInstance()->GetTime() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR_TAIL && GetLevel() == MARIO_LEVEL_TAIL))
 	{
 		vy = 0.f;
 	}
@@ -274,8 +265,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	this->fdt = (float)dt;
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	//int x = mapAniId[0][0];
-	LimitByCameraBorder();
+
+	UpdateTail(dt);
+
+	if (isPickUp) {
+		PickingItem(dt);
+	}
+	else {
+		if (item != nullptr) {
+			ReleaseItem(item);
+			item = nullptr;
+		}
+	}
+	//LimitByCameraBorder();
 
 }
 
@@ -306,7 +308,7 @@ void CMario::UpdateWhenEntryPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 	this->vy = MARIO_SPEED_ENTRY_PIPE * ny;
-	DebugOut(L"this is ny %f %f \n", ny, vy);
+	//DebugOut(L"this is ny %f %f \n", ny, vy);
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -335,13 +337,13 @@ void CMario::UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//preVx = vx;
-	DebugOut(L"Prepare Entry Pipe: %f, %f\n", this->targetPoint.first - this->x, vx);
+	//DebugOut(L"Prepare Entry Pipe: %f, %f\n", this->targetPoint.first - this->x, vx);
 
 	//if (vx * preVx <= 0.0f)
 	if (abs(this->targetPoint.first - this->x) <= 0.1)
 	{
 		SetState(MARIO_STATE_ENTRY_PIPE); // change state to entry pipe
-		DebugOut(L"Checked\n");
+		//DebugOut(L"Checked\n");
 	}
 }
 
@@ -429,13 +431,12 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 		pipe->GetPosition(targetPoint.first, targetPoint.second); // get target point of pipe
 		pipe->SetEntryPipe(true); // set pipe to entry state
 	}
-	else if (pipe != nullptr && e->ny > 0 && upArrowWasHolded)
+	else if (pipe != nullptr && e->ny > 0)// && upArrowWasHolded)
 	{
 		canEntryPipe = true;
 		pipe->GetPosition(targetPoint.first, targetPoint.second);
 		pipe->SetEntryPipe(true);
 		if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
-		this->SetForEntryPipeUp();
 	}
 	else if (dynamic_cast<RandomCard*>(e->obj))
 	{
@@ -454,6 +455,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		if (goomba->GetState() != CGoomba::DIE && goomba->GetState() != CGoomba::KNOCK_OUT)
 		{
 			goomba->KickedFromTop(this);
+			if (this->IsSlowFalling())
+			{
+				SetSlowFalling(false);
+				slowFallingTime = 0.0f;
+				cdSlowFallingByDIK_X = 4.0f;
+			}
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}
@@ -482,9 +489,15 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		if (koopa->GetState() != Koopa::KNOCK_OUT)
 		{
 			koopa->KickedFromTop(this);
+			if (this->IsSlowFalling())
+			{
+				SetSlowFalling(false);
+				slowFallingTime = 0.0f;
+				cdSlowFallingByDIK_X = 4.0f;
+			}
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
-		DebugOut(L"Koopa, Mario hit by Koopa\n");
+		//DebugOut(L"Koopa, Mario hit by Koopa\n");
 	}
 	else if (e->ny > 0) {
 
@@ -871,7 +884,7 @@ void CMario::Render()
 	//render while after got hit (I/We call it is recovery state-but not actually state bruh)
 	if (isRecovering)
 	{
-		if (((GetTickCount64() - recovery_start) % MARIO_HIDDEN_GAP_WHILE_RECOVERY) >= MARIO_HIDDEN_GAP_WHILE_RECOVERY / 2) return;
+		if (((GameClock::GetInstance()->GetTime() - recovery_start) % MARIO_HIDDEN_GAP_WHILE_RECOVERY) >= MARIO_HIDDEN_GAP_WHILE_RECOVERY / 2) return;
 	}
 	//render while isPowerUp got a new anim 
 	if (isPowerUp) {
@@ -1125,7 +1138,7 @@ void CMario::SetState(int state)
 		ax = 0;
 		ay = 0;
 
-		DebugOut(L" STATE Prepare Entry Pipe: %f, %f\n", targetPoint.first, targetPoint.second);
+		//DebugOut(L" STATE Prepare Entry Pipe: %f, %f\n", targetPoint.first, targetPoint.second);
 		break;
 
 	case MARIO_STATE_ENTRY_PIPE:
@@ -1142,7 +1155,7 @@ void CMario::SetState(int state)
 		vx = 0;
 		ax = 0;
 		ay = 0;
-		DebugOut(L"STATE Entry Pipe: %f, %f\n", targetPoint.first, this->x);
+		DebugOut(L"STATE Entry Pipe: %f, %f\n",  this->vx, this->vy);
 		break;
 
 	case MARIO_STATE_ENDGAME:
@@ -1408,7 +1421,9 @@ void CMario::SetForEntryPipeUp()
 	if (isPrepareEntry || isEntryPipe) return;
 
 	vy = -0.02f;
-	y -= 1;
+	DebugOut(L"Pre %f, %f \n", x, y);
+	y -= 5;
+	DebugOut(L"new %f, %f \n", x, y);
 	isEntryDown = false;
 
 	SetState(MARIO_STATE_ENTRY_PIPE);

@@ -2,10 +2,9 @@
 #include "GameObject.h"
 
 #define BORDER_POSITION_X 0
-//#define BORDER_POSITION_Y 232
 #define BORDER_POSITION_Y 192
-#define BORDER_WIDTH 300
-#define BORDER_HEIGHT 40
+#define BORDER_WIDTH 274
+#define BORDER_HEIGHT 38
 
 class CUserInterface :  public CGameObject
 

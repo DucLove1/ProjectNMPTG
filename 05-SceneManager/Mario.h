@@ -336,4 +336,6 @@ public:
 
 	int GetDirection() { return this->nx; }
 	void SetDirection(int direction) { this->nx = direction; }
+
+	bool IsOnDropLift() { return movingPlatform != nullptr; }
 };

@@ -151,6 +151,8 @@
     <ClCompile Include="RandomCard.cpp" />
     <ClCompile Include="RandomCardEffect.cpp" />
     <ClCompile Include="RandomCardSystem.cpp" />
+    <ClCompile Include="HUDLevel.cpp" />
+    <ClCompile Include="HUDCoin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -235,6 +237,8 @@
     <ClInclude Include="RandomCard.h" />
     <ClInclude Include="RandomCardEffect.h" />
     <ClInclude Include="RandomCardSystem.h" />
+    <ClInclude Include="HUDLevel.h" />
+    <ClInclude Include="HUDCoin.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

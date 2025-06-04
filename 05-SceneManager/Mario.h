@@ -29,9 +29,9 @@ class DropLift;
 
 #define MARIO_SPEED_ENTRY_PIPE 0.05f
 
-#define FLYING_TIME 120;
+#define FLYING_TIME 150;
 #define FLYING_SCALE -0.2f
-#define TIME_TO_CHARGE 2000.0f //~2 seconds
+#define MAX_POWER_UNIT 2000.0f
 
 #define SLOW_FALLING_TIME 150
 #define SLOW_FALLING_SCALE 0.1f
@@ -165,9 +165,8 @@ class CMario : public CGameObject
 
 	bool isFlying;
 	int flyingTime;
-	int startFlying;
+	ULONGLONG startFlying;
 	float powerUnit;
-	float maxPowerUnit;
 
 	bool upArrowWasHolded;
 	bool canEntryPipe;
@@ -206,7 +205,7 @@ class CMario : public CGameObject
 	void OnColliionWithDropLift(LPCOLLISIONEVENT e);
 
 	int ConvertAniTypeToAniId(int animation_type);
-	
+
 
 public:
 	CMario(float x, float y) : CGameObject(x, y)
@@ -233,8 +232,7 @@ public:
 		isSlowFalling = false;
 		jumpedTime = 0;
 		isFlying = false;
-		powerUnit = 0.0f; 
-		maxPowerUnit = TIME_TO_CHARGE;
+		powerUnit = 0.0f;
 		startFlying = 0;
 
 		upArrowWasHolded = false;
@@ -288,22 +286,24 @@ public:
 	int GetLevel() { return this->level; }
 
 	void DecreaseLevel();
-	void SetPowerUP(bool power) { isPowerUp = power; anchor_start = GetTickCount64(); 
-								  GameManager::GetInstance()->SetPausedToTransform(true); }
+	void SetPowerUP(bool power) {
+		isPowerUp = power; anchor_start = GameClock::GetInstance()->GetTime();
+		GameManager::GetInstance()->SetPausedToTransform(true);
+	}
 	bool IsPowerUp() { return isPowerUp; }
 	//void SetSelfPausing(bool pause) { isSelfPausing = pause; }
 
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
-	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
+	void StartUntouchable() { untouchable = 1; untouchable_start = GameClock::GetInstance()->GetTime(); }
+	void StartRecovery() { isRecovering = 1; recovery_start = GameClock::GetInstance()->GetTime(); }
 	//for attack
 	void SetAttack(bool value);
 	bool IsAttack();
 	//for flying
 	bool IsReachToExpectedSpeed();
 	bool IsReadyToFly();
-	void SetFlying(bool value) { isFlying = value; flyingTime = FLYING_TIME; }
+	void SetFlying(bool value);
 	bool canSet() { return jumpedTime >= MARIO_MAX_JUMP_TIME; }
-	
+
 	//for falling
 	bool IsFalling() { return vy > 0 && !isOnPlatform; }
 	void SetSlowFalling(bool value) { isSlowFalling = value; slowFallingTime = SLOW_FALLING_TIME; }
@@ -311,12 +311,13 @@ public:
 
 	void SetSmallJump();
 	bool IsSitting() { return isSitting; }
-	
+	int GetJumpedTime() { return jumpedTime; }
+
 	void SetForEntryPipeDown();
 	void SetForEntryPipeUp();
 	bool CanEntryPipe() { return canEntryPipe; }
 	bool IsPrepareEntry() { return isPrepareEntry; }
-	bool IsEntryPipe () { return isEntryPipe; }
+	bool IsEntryPipe() { return isEntryPipe; }
 	void SetForEndGame(bool value);
 	bool UpArrowWasHoled() { return upArrowWasHolded; }
 	void SetUpArrow(bool value) { upArrowWasHolded = value; }

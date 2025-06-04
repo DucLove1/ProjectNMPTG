@@ -18,8 +18,9 @@
 #include "TextMeshPro.h"
 #include "HUDLifeText.h"
 #include "HUDTimeText.h"
-
+#include "HUDLevel.h"
 #include "HUDScoreText.h"
+#include "HUDCoin.h"
 
 #include "GreenKoopa.h"
 
@@ -372,7 +373,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBEJECT_TYPE_HUD_LEVEL_TEXT:
 	{
 		string str = "LEVEL";
-		//	obj = new CTextMeshPro(x, y, str);
+		obj = new CHUDLevel(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_SCORE_TEXT:
@@ -390,7 +391,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_HUD_COIN:
 	{
 		string str = "COIN";
-		//	obj = new CTextMeshPro(x, y, str);
+		obj = new CHUDCoin(x, y, str);
 		break;
 	}
 

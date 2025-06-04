@@ -45,7 +45,8 @@ void DropLift::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	player->GetSpeed(m_vx, m_vy);
 
 	if (isTouched) {
-		vy = MAX_VY_FALLING;
+		//vy = MAX_VY_FALLING;
+		vy += GRAVITY;
 		if (hasPlayer)
 		{
 			player->SetIsStickToPlatform(this);  // Stick Mario to this platform

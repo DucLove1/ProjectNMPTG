@@ -15,7 +15,6 @@ class CPlayScene: public CScene
 {
 private:
 	CGameObject* curObject; // current object being edited
-
 protected: 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
@@ -34,11 +33,10 @@ protected:
 	void LoadAssets(LPCWSTR assetFile);
 	
 public: 
-	CPlayScene(int id, LPCWSTR filePath);
+	CPlayScene(int id, LPCWSTR filePath, int worldIndex);
 
 	virtual void Load();
 	virtual void Update(DWORD dt);
-	bool CheckObjectPause(CGameObject* object);
 	virtual void Render();
 	virtual void Unload();
 
@@ -52,6 +50,7 @@ public:
 	void AddObject(LPGAMEOBJECT obj);
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
 	CGameObject* GetCurObject() { return curObject; }
+	void DeleteFadeTransition();
 };
 
 typedef CPlayScene* LPPLAYSCENE;

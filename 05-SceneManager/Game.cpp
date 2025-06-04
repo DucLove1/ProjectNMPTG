@@ -456,8 +456,8 @@ void CGame::_ParseSection_SCENES(string line)
 	if (tokens.size() < 2) return;
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);   // file: ASCII format (single-byte char) => Wide Char
-
-	LPSCENE scene = new CPlayScene(id, path);
+	int worldIndex = atoi(tokens[2].c_str());
+	LPSCENE scene = new CPlayScene(id, path, worldIndex);
 	scenes[id] = scene;
 }
 
@@ -511,6 +511,20 @@ void CGame::Load(LPCWSTR gameFile)
 void CGame::SwitchScene()
 {
 	if (next_scene < 0 || next_scene == current_scene) return; 
+
+	if (scenes[current_scene]->GetWordIndex() == scenes[next_scene]->GetWordIndex())
+	{
+		CSprites::GetInstance()->Clear();
+		CAnimations::GetInstance()->Clear();
+		//TEST
+		((LPPLAYSCENE)scenes[current_scene])->DeleteFadeTransition();
+		current_scene = next_scene;
+		LPSCENE s = scenes[next_scene];
+		this->SetKeyHandler(s->GetKeyEventHandler());
+		s->Load();
+		next_scene = -1; // reset next scene
+		return;
+	}
 
 	DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
 

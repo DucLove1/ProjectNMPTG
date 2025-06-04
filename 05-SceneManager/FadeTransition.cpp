@@ -10,6 +10,7 @@ void FadeTransition::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (alpha >= 1.0f) // Finished fading in
 		{
 			alpha = 1.0f;
+			//Delete(); // Remove the transition object after fading in
 		}
 	}
 	else
@@ -18,6 +19,7 @@ void FadeTransition::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (alpha <= 0.0f) // Finished fading out
 		{
 			alpha = 0.0f;
+			Delete(); // Remove the transition object after fading out
 		}
 	}
 }

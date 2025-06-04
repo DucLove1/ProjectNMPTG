@@ -92,7 +92,6 @@ int mapAniId[][33] = {
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
 	if (isEndGame) {
 		UpdateWhenEndScene(dt, coObjects);
 		return;
@@ -160,7 +159,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (flyingTime + 1000 < 0)
 			powerUnit = 0;
 	}
-	DebugOut(L"Power Unit : %f \n", powerUnit);
+	//DebugOut(L"Power Unit : %f \n", powerUnit);
 
 	if (flyingTime > 0)
 	{
@@ -270,7 +269,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//int x = mapAniId[0][0];
-	LimitByCameraBorder();
+	//LimitByCameraBorder();
 
 }
 
@@ -409,6 +408,11 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (dynamic_cast<DropLift*>(e->obj))
 		OnColliionWithDropLift(e);
+	else if (dynamic_cast<RandomCard*>(e->obj))
+	{
+		RandomCard* randomCard = dynamic_cast<RandomCard*>(e->obj);
+		randomCard->Touched();
+	}
 	//else
 	//	SetLinked(false, false); // reset linked state
 
@@ -432,11 +436,6 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 		if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
 		this->SetForEntryPipeUp();
 	}
-	else if (dynamic_cast<RandomCard*>(e->obj))
-	{
-		RandomCard* randomCard = dynamic_cast<RandomCard*>(e->obj);
-		randomCard->Touched();
-	}
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -446,7 +445,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (goomba->GetState() != CGoomba::DIE && goomba->GetState() != CGoomba::KNOCK_OUT)
+		if (goomba->IsAlive())
 		{
 			goomba->KickedFromTop(this);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -576,7 +575,7 @@ void CMario::OnCollisionWithVenus(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
-	coin++;
+	GameManager::GetInstance()->PlusCoins(1);
 }
 
 void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
@@ -653,14 +652,15 @@ void CMario::OnCollisionWithGoldBrick(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<GoldBrickWithButton*>(e->obj))
 	{
-		if (e->nx != 0)
+		if (e->ny > 0)
 		{
 			GoldBrickWithButton* brick = dynamic_cast<GoldBrickWithButton*>(e->obj);
 			brick->GotHit(e);
 		}
+		else return;
 	}
 	GoldBrick* brick = dynamic_cast<GoldBrick*>(e->obj);
-	if (e->ny > 0) // collision with top of brick
+	if (brick) // collision with top of brick
 	{
 		brick->GotHit(e);
 	}
@@ -676,6 +676,10 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
 	//CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	// write the out pos
+	float x, y;
+	p->GetPosOut(x, y);
+	CGame::GetInstance()->GetCurrentScene()->SetPosOut(x, y);
 	p->SwitchScene();
 }
 

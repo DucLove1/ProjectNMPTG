@@ -187,9 +187,9 @@ void CGoomba::KickedFromTop(CGameObject* obj)
 	CEnemy::KickedFromTop(obj);
 }
 
-void CGoomba::KickedFromBottom(CGameObject*)
+void CGoomba::KickedFromBottom(CGameObject* obj)
 {
-	KnockedOut(this);
+	KnockedOut(obj);
 }
 
 void CGoomba::KnockedOut(CGameObject* obj)

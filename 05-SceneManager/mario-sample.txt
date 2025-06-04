@@ -1,5 +1,5 @@
 [SETTINGS]
-start	8
+start	6
 width	320
 height	240
 
@@ -23,4 +23,5 @@ height	240
 60	textures\marioWorldMap.png
 
 100	textures\hud.png
+101	textures\UIElement.png
 200	textures\fadeTransition.png

@@ -160,7 +160,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			powerUnit = 0;
 		}
 	}
-
+	GameManager::GetInstance()->SetPower(powerUnit / (MAX_POWER_UNIT / 7));
 	/*if (GameClock::GetInstance()->GetTime() % 10 % 2 == 1)
 	{
 		DebugOut(L"%d	", IsReadyToFly());

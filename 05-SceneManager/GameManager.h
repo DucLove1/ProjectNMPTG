@@ -13,7 +13,7 @@ private:
 	static GameManager* instance;
 	int curLevel;
 	int coins;
-	float speed;
+	int power;//0->7 maxpower. 0 is All off. x is x On
 	ULONGLONG remainingTime;
 	int score;
 	int lives;
@@ -26,7 +26,7 @@ private:
 	GameManager() {
 		curLevel = 1;
 		coins = 0;
-		speed = 0.0f;
+		power = 0.0f;
 		remainingTime = LIMIT_GAME_TIME; // in unit of 700ms
 		score = 0;
 		lives = 3; // default lives
@@ -48,8 +48,8 @@ public:
 	int GetCoins() { return coins; }
 	void PlusCoins(int coins) { this->coins += coins; }
 
-	void SetSpeed(float speed) { this->speed = speed; }
-	float GetSpeed() { return speed; }
+	void SetPower(float power) { this->power = power; }
+	float GetPower() { return power; }
 
 	int GetRemainingTime() { return remainingTime; }
 	void MinusRemainingTime() { this->remainingTime--; }

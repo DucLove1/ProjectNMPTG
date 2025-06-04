@@ -21,6 +21,7 @@
 #include "HUDLevel.h"
 #include "HUDScoreText.h"
 #include "HUDCoin.h"
+#include "HUDMarioPower.h"
 
 #include "GreenKoopa.h"
 
@@ -354,6 +355,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_HUD_BORDER:
 	{
 		obj = new CHUDBorder(x, y);
+		DebugOut(L"%f , %f HUDpos", x, y);
 		DebugOut(L"HUDCreated");
 		break;
 	}
@@ -394,7 +396,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CHUDCoin(x, y, str);
 		break;
 	}
-
+	case OBJECT_TYPE_HUD_POWER: //45
+	{
+		obj = new CHUDMarioPower(x, y);
+		break;
+	}
 	//end UI
 
 	case OBJECT_TYPE_BIG_TREE:

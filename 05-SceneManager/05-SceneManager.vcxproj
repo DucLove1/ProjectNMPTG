@@ -177,6 +177,7 @@
     <ClCompile Include="HUDCoin.cpp" />
     <ClCompile Include="HUDLevel.cpp" />
     <ClCompile Include="HUDLifeText.cpp" />
+    <ClCompile Include="HUDMarioPower.cpp" />
     <ClCompile Include="HUDScoreText.cpp" />
     <ClCompile Include="HUDTimeText.cpp" />
     <ClCompile Include="MarioTail.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="HUDCoin.h" />
     <ClInclude Include="HUDLevel.h" />
     <ClInclude Include="HUDLifeText.h" />
+    <ClInclude Include="HUDMarioPower.h" />
     <ClInclude Include="HUDScoreText.h" />
     <ClInclude Include="HUDTimeText.h" />
     <ClInclude Include="MarioTail.h" />

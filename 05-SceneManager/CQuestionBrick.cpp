@@ -77,6 +77,7 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 			//GameManager::GetInstance()->AddScore(1000);
 			CBouncingCoin* coin = new CBouncingCoin(x, y - 16);
 			scene->AddObject(coin);
+			GameManager::GetInstance()->PlusCoins(1);
 		}
 		else {
 			//CMushroom* mr = new CMushroom(x, y, nx);

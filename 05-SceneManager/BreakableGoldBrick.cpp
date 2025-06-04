@@ -4,6 +4,7 @@
 #include "GameClock.h"
 #include "EffectBreak.h"
 #include "Koopa.h"
+#include "MarioTail.h"
 #define ID_SPRITE_COIN 40001
 #define TIME_COIN_TO_BRICK 10000
 void BreakableGoldBrick::GoUp(DWORD dt)
@@ -35,9 +36,15 @@ void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 		// cong tien cho mario
 		// delete this;
 		if (mario != nullptr)
+		{
+			GameManager::GetInstance()->PlusCoins(1);
 			this->Delete();
+		}
 		return;
 	}
+	// neu brick dang o trang thai brick va mario khong nhay tu duoi len thi return
+	if (e->ny <= 0 && mario)
+		return;
 	// neu src_obj la mario nho thi khong bi anh huong 
 	bool isMarioSmall = (mario != NULL) ? (mario->GetLevel() == MARIO_LEVEL_SMALL) : false;
 	if (isMarioSmall)

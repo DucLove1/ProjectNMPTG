@@ -34,7 +34,13 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
-		if (mario->IsReadyToFly())
+		if(mario->IsOnDropLift())
+		{
+			float vx, vy;
+			mario->GetSpeed(vx, vy);
+			mario->SetSpeed(vx, 0);
+		}
+    if (mario->IsReadyToFly())
 		{
 			mario->SetFlying(true);
 		}

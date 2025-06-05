@@ -63,7 +63,7 @@
 
 #define WAITING_TIME_BEFORE_SCROLLING 1000 * 3
 #define VX_SCROLLING 0.035f 
-
+#define TIME_FOR_DELAY 2000
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath, int worldIndex) :
@@ -75,6 +75,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath, int worldIndex) :
 	curObject = NULL;
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
+	this->timerWhenPlayerDie = -1; // -1 means player is not dead yet
 }
 
 
@@ -834,6 +835,21 @@ void CPlayScene::Update(DWORD dt)
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 
 	PurgeDeletedObjects();
+
+	if(player->GetState() == MARIO_STATE_DIE)
+	{
+		if (this->timerWhenPlayerDie == -1) // if player is not dead yet
+		{
+			this->timerWhenPlayerDie = GetTickCount64();
+			GameManager::GetInstance()->SetPausedToTransform(true);
+		}
+		else if (GetTickCount64() - timerWhenPlayerDie >= TIME_FOR_DELAY)
+		{
+			Reload();
+			this->timerWhenPlayerDie = -1; // reset timer
+			GameManager::GetInstance()->SetPausedToTransform(false);
+		}
+	}
 }
 void CPlayScene::Render()
 {
@@ -845,7 +861,10 @@ void CPlayScene::Render()
 		objects[i]->Render();
 	}
 	//if(!GameClock::GetInstance()->IsPaused())
-	curObject = objects[0];
+	if (!this->objects.empty())
+		curObject = objects[0];
+	else
+		return;
 	if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
 		return;
 	objects[0]->Render();
@@ -886,10 +905,30 @@ bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; 
 void CPlayScene::DeleteFadeTransition()
 {
 	int sizeOfObjects = objects.size();
+	if (sizeOfObjects == 0) return; // no objects to delete
 	CGameObject* fadeTransition = nullptr;
 	fadeTransition = dynamic_cast<CGameObject*>(objects[sizeOfObjects - 1]);
 	if (fadeTransition)
 		fadeTransition->Delete();
+}
+
+void CPlayScene::Reload()
+{
+	Unload();
+	GameManager::GetInstance()->AddLives(-1); // decrease lives by 1
+	int remainLives = GameManager::GetInstance()->GetLives();
+	if (remainLives < 0)
+	{
+		// reset game
+		GameManager::GetInstance()->Reset();
+		CGame::GetInstance()->InitiateSwitchScene(6);
+	}
+	else
+	{
+		// reload current scene
+		GameManager::GetInstance()->ResetTime();
+		Load();
+	}
 }
 
 

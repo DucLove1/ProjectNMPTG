@@ -88,5 +88,7 @@ public:
 	void SetMarioDirection(int direction) { marioDirection = direction; }
 	int GetMarioDirection() { return marioDirection; }
 	int GetCurrentIndexWorld() { return currentIndexWorld; }
+	void Reset();
+	void ResetTime();
 };
 

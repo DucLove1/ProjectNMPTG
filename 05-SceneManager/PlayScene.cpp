@@ -510,11 +510,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new DropLift(x, y);
 		break;
 	}
-	case OBJECT_TYPE_BOOMERANG:
-	{
-		obj = new Boomerang(x, y);
-		break;
-	}
 	case OBJECT_TYPE_BOOMERANG_BRO:
 	{
 		obj = new BoomerangBro(x, y);
@@ -743,7 +738,7 @@ void CPlayScene::CinemachineCamera()
 
 
 	if (cx < 0) cx = 0;
-	if (cy > -17) cy = -17;
+	if (cy > -17) cy = 0;
 
 	if (!isChangeX && !isChangeY)
 	{

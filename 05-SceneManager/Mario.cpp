@@ -30,7 +30,7 @@
 #include "ComboScoreSystemMario.h"
 #include "RandomCard.h"
 #include "GameClock.h"
-
+#include "BoomerangBro.h"
 //define for Id map
 int mapAniId[][33] = {
 		{
@@ -422,6 +422,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		RandomCard* randomCard = dynamic_cast<RandomCard*>(e->obj);
 		randomCard->Touched();
 	}
+	else if (dynamic_cast<BoomerangBro*>(e->obj))
+		OnCollisionWithBoomerangBro(e);
 	//else
 	//	SetLinked(false, false); // reset linked state
 
@@ -690,6 +692,35 @@ void CMario::OnColliionWithDropLift(LPCOLLISIONEVENT e)
 {
 	DropLift* dropLift = dynamic_cast<DropLift*>(e->obj);
 	dropLift->OnCollidedWithMario(e);
+}
+
+void CMario::OnCollisionWithBoomerangBro(LPCOLLISIONEVENT e)
+{
+	BoomerangBro* boomerangBro = dynamic_cast<BoomerangBro*>(e->obj);
+	if (e->ny < 0)
+	{
+		if (boomerangBro->IsAlive())
+		{
+			boomerangBro->KickedFromTop(this);
+			if (this->IsSlowFalling())
+			{
+				SetSlowFalling(false);
+				slowFallingTime = 0.0f;
+				cdSlowFallingByDIK_X = 4.0f;
+			}
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+	}
+	else // hit by Goomba
+	{
+		if (untouchable == 0)
+		{
+			if (boomerangBro->IsAlive())
+			{
+				DecreaseLevel();
+			}
+		}
+	}
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

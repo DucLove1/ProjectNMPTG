@@ -203,6 +203,7 @@ class CMario : public CGameObject
 	void OnCollisionWithSpawnGate(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoldBrick(LPCOLLISIONEVENT e);
 	void OnColliionWithDropLift(LPCOLLISIONEVENT e);
+	void OnCollisionWithBoomerangBro(LPCOLLISIONEVENT e);
 
 	int ConvertAniTypeToAniId(int animation_type);
 

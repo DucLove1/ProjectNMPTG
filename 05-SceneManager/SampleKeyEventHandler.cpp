@@ -34,13 +34,13 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
-		if(mario->IsOnDropLift())
+		if (mario->IsOnDropLift())
 		{
 			float vx, vy;
 			mario->GetSpeed(vx, vy);
 			mario->SetSpeed(vx, 0);
 		}
-    if (mario->IsReadyToFly())
+		if (mario->IsReadyToFly() && !mario->IsOnPlatform())
 		{
 			mario->SetFlying(true);
 		}
@@ -77,6 +77,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetForEndGame(true);
 		break;
 	case DIK_A:
+		mario->SetKeyA(true);
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
 			if (!mario->IsSitting() && !mario->IsAttack())
@@ -126,9 +127,10 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_A:
 		mario->SetPickUp(false);
+		mario->SetKeyA(false);
 		//mario->SetAttack(false);
 		break;
-		//testng
+	//testng
 	case DIK_9:
 		mario->SetForEndGame(false);
 	}

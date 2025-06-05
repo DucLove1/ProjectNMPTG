@@ -250,10 +250,10 @@ void Koopa::Render()
 		lastAnimationId = aniId;
 	}
 
-	if (this->isHolded)
-	{
-		aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN;
-	}
+	//if (this->isHolded)
+	//{
+	//	aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN;
+	//}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	//RenderBoundingBox();
@@ -387,7 +387,7 @@ void Koopa::ReleaseByPlayer(CMario* player)
 	//CMario* player = dynamic_cast<CMario*>(e->obj);
 	if (player == NULL) return;
 	int nx = player->GetNx();
-	if (this->state == IN_SHELL_DOWN) {
+	if (this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) {
 		if (nx >= 0)
 			MoveInShell(1);
 		else

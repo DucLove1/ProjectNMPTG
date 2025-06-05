@@ -170,6 +170,8 @@ class CMario : public CGameObject
 	float powerUnit;
 
 	bool upArrowWasHolded;
+	bool keyAWasHoled;
+
 	bool canEntryPipe;
 	bool isEntryPipe;
 	bool isPrepareEntry;
@@ -240,6 +242,7 @@ public:
 		powerUnit = 0.0f;
 		startFlying = 0;
 
+		keyAWasHoled = false;
 		upArrowWasHolded = false;
 		isEntryPipe = false;
 		isPrepareEntry = false;
@@ -315,6 +318,7 @@ public:
 
 	//for falling
 	bool IsFalling() { return vy > 0 && !isOnPlatform; }
+	bool IsOnPlatform() { return isOnPlatform; }
 	void SetSlowFalling(bool value) { isSlowFalling = value; slowFallingTime = SLOW_FALLING_TIME; }
 	bool IsSlowFalling() { return isSlowFalling; }
 
@@ -329,6 +333,8 @@ public:
 	bool IsEntryPipe() { return isEntryPipe; }
 	bool IsExitPipe() { return isExitPipe; }
 	void SetForEndGame(bool value);
+	bool KeyAWasHoled() { return keyAWasHoled; }
+	void SetKeyA(bool value) { keyAWasHoled = value; }
 	bool UpArrowWasHoled() { return upArrowWasHolded; }
 	void SetUpArrow(bool value) { upArrowWasHolded = value; }
 

@@ -117,7 +117,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx += ax * dt;
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
-	if (abs(vy) > 0.3f) vy = 0.3f * vy / abs(vy);
+	if (GetState() == MARIO_STATE_RUNNING_LEFT
+		|| GetState() == MARIO_STATE_RUNNING_RIGHT)
+	{
+		if (abs(vy) > 0.5f)
+			vy = 0.5f * vy / abs(vy);
+	}
+	else
+	{
+		if (abs(vy) > 0.3f)
+			vy = 0.3f * vy / abs(vy);
+	}
 
 	if (state == MARIO_STATE_IDLE || state == MARIO_STATE_SIT)
 	{
@@ -555,8 +565,9 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				|| koopa->GetState() == Koopa::IN_SHELL_UP)
 			{
 				//These's make game knows M will Kick or hold
-				if (this->GetState() == MARIO_STATE_RUNNING_LEFT
-					|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+				//if (this->GetState() == MARIO_STATE_RUNNING_LEFT
+				//	|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+				if(KeyAWasHoled())
 				{
 					untouchable = 1;
 					isPickUp = true;
@@ -597,8 +608,9 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				|| koopa->GetState() == Koopa::IN_SHELL_UP)
 			{
 
-				if (this->GetState() == MARIO_STATE_RUNNING_LEFT
-					|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+				//if (this->GetState() == MARIO_STATE_RUNNING_LEFT
+				//	|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
+				if(KeyAWasHoled())
 				{
 					untouchable = 1;
 					isPickUp = true;
@@ -793,7 +805,7 @@ int CMario::GetAniId()
 		return aniId;
 	}
 
-	if (isEntryPipe)
+	if (isEntryPipe || isExitPipe)
 	{
 		aniId = ConvertAniTypeToAniId(ANI_MARIO_ENTRY_PIPE);
 		return aniId;
@@ -1340,7 +1352,7 @@ void CMario::PickingItem(DWORD dt) {
 		//DebugOut(L"SEEE temp %f", tempVy);
 		//item->SetSpeed(this->vx, tempVy);
 
-		float targetX = x + 16 * nx + (this->vx * fdt);
+		float targetX = x + 10 * nx + (this->vx * fdt);
 		float targetY = y + (this->vy * fdt);
 
 		if (this->level == MARIO_LEVEL_SMALL)
@@ -1360,6 +1372,7 @@ void CMario::PickingItem(DWORD dt) {
 		if (koopa->IsTimeOut())
 		{
 			isPickUp = false;
+			DecreaseLevel();
 		}
 	}
 

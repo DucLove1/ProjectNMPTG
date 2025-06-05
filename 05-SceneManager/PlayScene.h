@@ -20,6 +20,7 @@ protected:
 	LPGAMEOBJECT player;					
 
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> UserInterfaces;
 
 	ULONGLONG timeStart;
 	BOOLEAN isStartGame; //for scrollingCamera

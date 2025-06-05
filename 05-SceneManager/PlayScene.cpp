@@ -149,6 +149,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 */
 void CPlayScene::_ParseSection_OBJECTS(string line)
 {
+	bool isUIElement = false;
 	vector<string> tokens = split(line);
 
 	// skip invalid lines - an object set must have at least id, x, y
@@ -314,7 +315,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int sprite_middle = atoi(tokens[7].c_str());
 		int sprite_end = atoi(tokens[8].c_str());
 		int marioOut = 0;
-		if(tokens.size() > 9)
+		if (tokens.size() > 9)
 			marioOut = atoi(tokens[9].c_str());
 		obj = new CPipe(
 			x, y,
@@ -356,6 +357,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	//for UI
 	case OBJECT_TYPE_HUD_BORDER:
 	{
+		isUIElement = true;
 		obj = new CHUDBorder(x, y);
 		DebugOut(L"%f , %f HUDpos", x, y);
 		DebugOut(L"HUDCreated");
@@ -364,42 +366,49 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	// this is base class, almost is not render this class, just to Inherit
 	case OBJECT_TYPE_HUD_TEXTMESHPRO:
 	{
+		isUIElement = true;
 		string str = "";
 		obj = new CTextMeshPro(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_LIFE_TEXT:
 	{
+		isUIElement = true;
 		string str = "COUTER OF REMAINING LIVES";
 		obj = new CHUDLifeText(x, y, str);
 		break;
 	}
 	case OBEJECT_TYPE_HUD_LEVEL_TEXT:
 	{
+		isUIElement = true;
 		string str = "LEVEL";
 		obj = new CHUDLevel(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_SCORE_TEXT:
 	{
+		isUIElement = true;
 		string str = "SCORE";
 		obj = new CHUDScoreText(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_TIME_TEXT:
 	{
+		isUIElement = true;
 		string str = "TIME";
 		obj = new CHUDTimeText(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_COIN:
 	{
+		isUIElement = true;
 		string str = "COIN";
 		obj = new CHUDCoin(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_POWER: //45
 	{
+		isUIElement = true;
 		obj = new CHUDMarioPower(x, y);
 		break;
 	}
@@ -544,7 +553,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float posOutX = NON_POS, posOutY = NON_POS;
 		posOutX = (float)atof(tokens[7].c_str());
 		posOutY = (float)atof(tokens[8].c_str());
-		obj = new CPortal(x, y, r, b, isPortalIn,scene_id,posOutX,posOutY);
+		obj = new CPortal(x, y, r, b, isPortalIn, scene_id, posOutX, posOutY);
 		break;
 	}
 	case OBJECT_TYPE_RANDOM_CARD_SYSTEM:
@@ -567,8 +576,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	// General object setup
 	obj->SetPosition(x, y);
 
-
-	objects.push_back(obj);
+	if (isUIElement)
+		UserInterfaces.push_back(obj);
+	else
+		objects.push_back(obj);
 }
 
 void CPlayScene::AddObject(LPGAMEOBJECT obj) {
@@ -823,8 +834,19 @@ void CPlayScene::Update(DWORD dt)
 
 		if (GameManager::GetInstance()->IsPausedGame())
 			return;
-		if(!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
-		objects[i]->Update(dt, &coObjects);
+		if (!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
+			objects[i]->Update(dt, &coObjects);
+
+	}
+	for (size_t i = 0; i < UserInterfaces.size(); i++)
+	{
+		//if (i != 0 && GameClock::GetInstance()->IsTempPaused())
+		//	break;
+
+		if (GameManager::GetInstance()->IsPausedGame())
+			return;
+		if (!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
+			UserInterfaces[i]->Update(dt, &coObjects);
 
 	}
 
@@ -853,7 +875,7 @@ void CPlayScene::Render()
 	for (int i = 1; i < objects.size(); i++)
 	{
 		curObject = objects[i];
-		if(GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+		if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
 			continue;
 		objects[i]->Render();
 	}
@@ -862,6 +884,14 @@ void CPlayScene::Render()
 	if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
 		return;
 	objects[0]->Render();
+
+	for (int i = 0; i < UserInterfaces.size(); i++)
+	{
+		curObject = UserInterfaces[i];
+		if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+			continue;
+		UserInterfaces[i]->Render();
+	}
 }
 
 /*
@@ -875,6 +905,11 @@ void CPlayScene::Clear()
 		delete (*it);
 	}
 	objects.clear();
+	for (it = UserInterfaces.begin(); it != UserInterfaces.end(); it++)
+	{
+		delete(*it);
+	}
+	UserInterfaces.clear();
 }
 
 /*
@@ -889,6 +924,10 @@ void CPlayScene::Unload()
 		delete objects[i];
 
 	objects.clear();
+	for (int i = 0; i < UserInterfaces.size(); i++)
+		delete UserInterfaces[i];
+
+	UserInterfaces.clear();
 	player = NULL;
 
 	DebugOut(L"[INFO] Scene %d unloaded! \n", id);

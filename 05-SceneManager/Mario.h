@@ -63,6 +63,7 @@ class DropLift;
 
 #define MARIO_STATE_PREPARE_ENTRY_PIPE		1050
 #define MARIO_STATE_ENTRY_PIPE	1100
+#define MARIO_STATE_EXIT_PIPE	1150
 
 #define MARIO_MTIME_ONAIR		450
 
@@ -172,6 +173,9 @@ class CMario : public CGameObject
 	bool canEntryPipe;
 	bool isEntryPipe;
 	bool isPrepareEntry;
+	bool isExitPipe;
+	int directionToExit;
+	pair<float, float> startPoint; // it cant be changed, dont change it.
 	pair<float, float> targetPoint;
 
 	//bool isLinkedLeft; // link to platform moving left direction
@@ -188,6 +192,7 @@ class CMario : public CGameObject
 	int preNx;
 	bool isEntryDown; /// for set vy direction
 
+	void DisableAllAction();
 	void LimitByCameraBorder();
 
 	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
@@ -238,6 +243,8 @@ public:
 		upArrowWasHolded = false;
 		isEntryPipe = false;
 		isPrepareEntry = false;
+		isExitPipe = true;
+		directionToExit = -1;
 
 		isEndGame = false;
 		isOnPlatform = false;
@@ -250,6 +257,7 @@ public:
 		isLinked = false;
 
 		targetPoint = { 0,0 };
+		startPoint = { this->x, this->y };
 		this->item = nullptr;
 		this->movingPlatform = nullptr;
 		preNx = nx;
@@ -260,6 +268,7 @@ public:
 	void UpdateWhenEndScene(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void UpdateWhenEntryPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateWhenExitPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
 	void Render();
 	void SetState(int state);
@@ -318,6 +327,7 @@ public:
 	bool CanEntryPipe() { return canEntryPipe; }
 	bool IsPrepareEntry() { return isPrepareEntry; }
 	bool IsEntryPipe() { return isEntryPipe; }
+	bool IsExitPipe() { return isExitPipe; }
 	void SetForEndGame(bool value);
 	bool UpArrowWasHoled() { return upArrowWasHolded; }
 	void SetUpArrow(bool value) { upArrowWasHolded = value; }

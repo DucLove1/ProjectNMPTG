@@ -49,8 +49,8 @@ void CHUDMarioPower::SetAndCheck()
 	for (int i = 0; i < 7; i++)
 	{
 		modify = i * 9;
-		if (i == 7)
-			modify += 12;
+		if (i == 6)
+			modify += 2;
 		if (i < power)
 		{
 			elements[i]->SetCharged(true);
@@ -62,12 +62,41 @@ void CHUDMarioPower::SetAndCheck()
 		elements[i]->SetPosition(this->x + modify, this->y);
 
 	}
+	preMark = curMark;
+	curMark = elements[6]->ISCharged();
 }
 void CHUDMarioPower::Render()
 {
 	SetAndCheck();
+	AddedEffect();
 	for (auto e : elements)
 	{
 		e->Render();
 	}
+}
+
+void CHUDMarioPower::AddedEffect()
+{
+	ULONGLONG time = GameClock::GetInstance()->GetTime();
+	if (preMark == true && preMark != curMark)
+	{
+		startOff = time;
+	}
+	bool lightOn = false;
+	bool isAlert = false;
+	int GAP_TIME = 500;
+
+	if (time - startOff < ALERT_TIME)
+	{
+		GAP_TIME = 250;
+		isAlert = true;
+	}
+
+	if (((time - startOff) % GAP_TIME) >= GAP_TIME / 2)
+	{
+		if (elements[6]->ISCharged() || isAlert)
+			lightOn = true;
+	}
+
+	elements[6]->SetCharged(lightOn);
 }

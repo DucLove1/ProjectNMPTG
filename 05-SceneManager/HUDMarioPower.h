@@ -2,6 +2,7 @@
 #include "UserInterface.h"
 #include "AssetIDs.h"
 #include "GameManager.h"
+#include "GameClock.h"
 
 class CPieceOfPower :
 	public CUserInterface
@@ -45,19 +46,28 @@ public:
 	void Render() override;
 };
 
+#define ALERT_TIME 2000
 
 class CHUDMarioPower :
 	public CUserInterface
 {
 private:
+	bool preMark;
+	bool curMark;
+	ULONGLONG startOff;
+
 	vector<CPieceOfPower*> elements;
+
 	void Generate();
 public:
 	CHUDMarioPower(float x, float y) : CUserInterface(x, y)
 	{
+		curMark = false;
+		preMark = false;
 		Generate();
 	}
 	void SetAndCheck();
 	void Render() override;
+	void AddedEffect();
 };
 

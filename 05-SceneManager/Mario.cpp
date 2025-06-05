@@ -107,11 +107,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		UpdateWhenEntryPipe(dt, coObjects);
 		return;
 	}
+	if (isExitPipe)
+	{
+		UpdateWhenExitPipe(dt, coObjects);
+		return;
+	}
 
 	vy += ay * dt;
 	vx += ax * dt;
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
+	if (abs(vy) > 0.3f) vy = 0.3f * vy / abs(vy);
 
 	if (state == MARIO_STATE_IDLE || state == MARIO_STATE_SIT)
 	{
@@ -200,7 +206,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	}
 
-	
+
 	// reset untouchable timer if untouchable time has passed
 	if (GameClock::GetInstance()->GetTime() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 	{
@@ -219,12 +225,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(MARIO_STATE_SIT_RELEASE); // reset state to idle
 		return;
 	}
-	else 
-	if ((GameClock::GetInstance()->GetTime() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR && GetLevel() == MARIO_LEVEL_BIG)
-		|| (GameClock::GetInstance()->GetTime() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR_TAIL && GetLevel() == MARIO_LEVEL_TAIL))
-	{
-		vy = 0.f;
-	}
+	else
+		if ((GameClock::GetInstance()->GetTime() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR && GetLevel() == MARIO_LEVEL_BIG)
+			|| (GameClock::GetInstance()->GetTime() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR_TAIL && GetLevel() == MARIO_LEVEL_TAIL))
+		{
+			vy = 0.f;
+		}
 
 	if (GetLevel() != MARIO_LEVEL_TAIL)
 	{
@@ -347,6 +353,43 @@ void CMario::UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//DebugOut(L"Checked\n");
 	}
 }
+void CMario::UpdateWhenExitPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	float addedHeight =
+		((GetLevel() == MARIO_LEVEL_SMALL) ?
+			(MARIO_SMALL_BBOX_HEIGHT) : (MARIO_BIG_BBOX_HEIGHT)) * directionToExit - 10;
+	float YTarget = startPoint.second + addedHeight;
+
+	vy = (YTarget - this->y) / dt; //moving target point
+	vy /= 20.0f;
+	if (vy >= 0.0f)
+	{
+		SetSpeed(0.0f, max(vy, 0.01f)); // set speed to target point
+	}
+	else
+	{
+		SetSpeed(0.0f, min(vy, -0.01f));
+	}
+	CCollision::GetInstance()->Process(this, dt, coObjects);
+
+	if (directionToExit > 0.0f && this->y >= YTarget)
+	{
+		isExitPipe = false;
+		SetState(MARIO_STATE_RELEASE_JUMP);
+	}
+	else if (directionToExit < 0.0f && YTarget >= this->y)
+	{
+		isExitPipe = false;
+		SetState(MARIO_STATE_RELEASE_JUMP);
+	}
+
+	/*if (abs(YTarget - this->y) <= 0.02f)
+	{
+		isExitPipe = false;
+		SetState(MARIO_STATE_RELEASE_JUMP);
+	}*/
+	DebugOut(L"%f %f \n", YTarget, this->y);
+}
 
 void CMario::OnNoCollision(DWORD dt)
 {
@@ -385,7 +428,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
-		vx = 0;
+		if (!isFlying)
+			vx = 0;
 	}
 
 	if (dynamic_cast<CGoomba*>(e->obj))
@@ -907,7 +951,7 @@ void CMario::Render()
 		animations->Get(ID_ANI_MARIO_TAIL_ATTACK_RIGHT)->Reset();
 	}
 
-	if (isPrepareEntry || isEntryPipe)
+	if (isPrepareEntry || isEntryPipe || isExitPipe)
 	{
 		return;
 	}
@@ -1129,39 +1173,49 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_PREPARE_ENTRY_PIPE:
+		DisableAllAction();
 
 		isPrepareEntry = true;
 		y -= MARIO_SIT_HEIGHT_ADJUST;
-		isEntryPipe = false;
-		isSitting = false;
-		SetAttack(false);
-		isRecovering = false;
-		isPowerUp = false;
-		isPickUp = false;
+
+		//isEntryPipe = false;
+		//isSitting = false;
+		//SetAttack(false);
+		//isRecovering = false;
+		//isPowerUp = false;
+		//isPickUp = false;
+		// 
+		//vy = 0;
+		//ax = 0;
+		//ay = 0;
 
 		maxVx = MARIO_SPEED_ENTRY_PIPE;
-		vy = 0;
-		ax = 0;
-		ay = 0;
 
 		//DebugOut(L" STATE Prepare Entry Pipe: %f, %f\n", targetPoint.first, targetPoint.second);
 		break;
 
 	case MARIO_STATE_ENTRY_PIPE:
+		DisableAllAction();
 
 		isEntryPipe = true;
-		isPrepareEntry = false;
-		isSitting = false;
-		SetAttack(false);
-		isRecovering = false;
-		isPowerUp = false;
-		isPickUp = false;
+		//isPrepareEntry = false;
+		//isSitting = false;
+		//SetAttack(false);
+		//isRecovering = false;
+		//isPowerUp = false;
+		//isPickUp = false;
+		//
+		//maxVx = 0;
+		//vx = 0;
+		//ax = 0;
+		//ay = 0;
+		//DebugOut(L"STATE Entry Pipe: %f, %f\n",  this->vx, this->vy);
+		break;
 
-		maxVx = 0;
-		vx = 0;
-		ax = 0;
-		ay = 0;
-		DebugOut(L"STATE Entry Pipe: %f, %f\n",  this->vx, this->vy);
+	case MARIO_STATE_EXIT_PIPE:
+		DisableAllAction();
+		isExitPipe = true;
+
 		break;
 
 	case MARIO_STATE_ENDGAME:
@@ -1448,4 +1502,23 @@ void CMario::SetIsStickToPlatform(DropLift* dropLift)
 	this->movingPlatform = dropLift;
 	if (movingPlatform) isLinked = true;
 	else isLinked = false;
+}
+
+void CMario::DisableAllAction()
+{
+	isSitting = false;
+	isPowerUp = false;
+	isPickUp = false;
+	isEntryPipe = false;
+	isPrepareEntry = false;
+	isExitPipe = false;
+	SetAttack(false);
+	isRecovering = false;
+	isPowerUp = false;
+
+	maxVx = 0.0f;
+	vy = 0.0f;
+	vx = 0.0f;
+	ax = 0.0f;
+	ay = 0.0f;
 }

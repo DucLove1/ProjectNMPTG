@@ -121,8 +121,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx += ax * dt;
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
+
 	if (GetState() == MARIO_STATE_RUNNING_LEFT
-		|| GetState() == MARIO_STATE_RUNNING_RIGHT)
+		|| GetState() == MARIO_STATE_RUNNING_RIGHT
+		|| GetState() == MARIO_STATE_JUMP)
 	{
 		if (abs(vy) > 0.5f)
 			vy = 0.5f * vy / abs(vy);
@@ -240,10 +242,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	}
 	else
-		if ((GameClock::GetInstance()->GetTime() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR && GetLevel() == MARIO_LEVEL_BIG)
-			|| (GameClock::GetInstance()->GetTime() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR_TAIL && GetLevel() == MARIO_LEVEL_TAIL))
+		if ((GetTickCount64() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR && GetLevel() == MARIO_LEVEL_BIG)
+			|| (GetTickCount64() - anchor_start < MARIO_DELAY_TIME_WHILE_ANCHOR_ON_AIR_TAIL && GetLevel() == MARIO_LEVEL_TAIL))
 		{
-			vy = 0.f;
+			vy = 0.0f;
+			vx = 0.0f;
 		}
 
 	if (GetLevel() != MARIO_LEVEL_TAIL)
@@ -279,7 +282,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	//DebugOut(L"ax: %f\n", vx);
+	DebugOut(L"MAX %f %f\n", x, y);
 	//if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	preNx = nx;
@@ -299,16 +302,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	UpdateTail(dt);
 
-
-	//LimitByCameraBorder();
+	LimitByCameraBorder();
 
 }
 
 void CMario::UpdateWhenEndScene(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	SetState(MARIO_STATE_ENDGAME);
-	vx += abs(MARIO_ACCEL_WALK_X) * dt;
-	vy += MARIO_GRAVITY * dt;
+	vx += ax * dt;
+	vy += ay * dt;
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -373,7 +375,7 @@ void CMario::UpdateWhenExitPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float addedHeight =
 		((GetLevel() == MARIO_LEVEL_SMALL) ?
-			(MARIO_SMALL_BBOX_HEIGHT) : (MARIO_BIG_BBOX_HEIGHT)) * directionToExit - 10;
+			(MARIO_SMALL_BBOX_HEIGHT) : (MARIO_BIG_BBOX_HEIGHT)) * directionToExit;
 	float YTarget = startPoint.second + addedHeight;
 
 	vy = (YTarget - this->y) / dt; //moving target point
@@ -965,9 +967,9 @@ int CMario::GetAniId()
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_BRACE_RIGHT);
 			else if (ax < 0 && state == MARIO_STATE_IDLE)
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_WALKING_RIGHT);
-			else if (ax == MARIO_ACCEL_RUN_X)
+			else if (IsMAXRunning())//(ax == MARIO_ACCEL_RUN_X)
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_RUNNING_RIGHT);
-			else if (ax == MARIO_ACCEL_WALK_X)
+			else if (ax >= MARIO_ACCEL_WALK_X)
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_WALKING_RIGHT);
 		}
 		else if (vx < 0)
@@ -976,9 +978,9 @@ int CMario::GetAniId()
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_BRACE_LEFT);
 			else if (ax > 0 && state == MARIO_STATE_IDLE)
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_WALKING_LEFT);
-			else if (ax == -MARIO_ACCEL_RUN_X)
+			else if (IsMAXRunning())//(ax == -MARIO_ACCEL_RUN_X)
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_RUNNING_LEFT);
-			else if (ax == -MARIO_ACCEL_WALK_X)
+			else if (ax <= MARIO_ACCEL_WALK_X)
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_WALKING_LEFT);
 		}
 		else
@@ -1304,11 +1306,11 @@ void CMario::SetState(int state)
 		isPowerUp = false;
 		isPickUp = false;
 
-		maxVx = MARIO_WALKING_SPEED;
+		maxVx = MARIO_WALKING_SPEED / 2;
 		//vx += ax;
 		vy = 0;
-		ax = MARIO_ACCEL_WALK_X;
-		ay = MARIO_GRAVITY;
+		ax = -MARIO_ACCEL_WALK_X;
+		ay = MARIO_GRAVITY * 2;
 		break;
 	}
 
@@ -1508,6 +1510,13 @@ bool CMario::IsReadyToFly()
 	bool b2 = (powerUnit >= MAX_POWER_UNIT);
 	return b1 && b2;
 }
+bool CMario::IsMAXRunning()
+{
+	bool b1 = (vx >= MARIO_EXPECTED_SPEED) ? true : false;
+	bool b2 = (powerUnit >= MAX_POWER_UNIT);
+	return b1 && b2;
+}
+
 void CMario::SetFlying(bool value)
 {
 	isFlying = value;

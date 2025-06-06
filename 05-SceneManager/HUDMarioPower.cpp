@@ -78,7 +78,7 @@ void CHUDMarioPower::Render()
 void CHUDMarioPower::AddedEffect()
 {
 	ULONGLONG time = GameClock::GetInstance()->GetTime();
-	if (preMark == true && preMark != curMark)
+	if (preMark == false && preMark != curMark)
 	{
 		startOff = time;
 	}
@@ -86,15 +86,15 @@ void CHUDMarioPower::AddedEffect()
 	bool isAlert = false;
 	int GAP_TIME = 500;
 
-	if (time - startOff < ALERT_TIME)
+	if (time - startOff > ALERT_TIME)
 	{
 		GAP_TIME = 250;
 		isAlert = true;
 	}
 
-	if (((time - startOff) % GAP_TIME) >= GAP_TIME / 2)
+	if (((startOff - time) % GAP_TIME) >= GAP_TIME / 2)
 	{
-		if (elements[6]->ISCharged() || isAlert)
+		if (elements[6]->ISCharged())
 			lightOn = true;
 	}
 

@@ -40,7 +40,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 			mario->GetSpeed(vx, vy);
 			mario->SetSpeed(vx, 0);
 		}
-		if (mario->IsReadyToFly() && !mario->IsOnPlatform())
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL 
+			&& mario->IsReadyToFly() 
+			&& !mario->IsOnPlatform())
 		{
 			mario->SetFlying(true);
 		}
@@ -72,9 +74,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetLevel(MARIO_LEVEL_TAIL);
 		mario->SetPowerUP(true);
 		break;
-	case DIK_0:
-		mario->SetState(MARIO_STATE_DIE);
-		//mario->SetForEndGame(true);
+	case DIK_SPACE:
+		//mario->SetState(MARIO_STATE_DIE);
+		mario->SetForEndGame(true);
 		break;
 	case DIK_A:
 		mario->SetKeyA(true);

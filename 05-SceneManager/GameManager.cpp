@@ -40,7 +40,6 @@ void GameManager::Reset()
 {
 	curLevel = 1;
 	coins = 0;
-	speed = 0.0f;
 	remainingTime = LIMIT_GAME_TIME; // in unit of 700ms
 	score = 0;
 	lives = 3; // default lives

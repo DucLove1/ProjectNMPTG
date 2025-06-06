@@ -229,12 +229,22 @@ void Koopa::Render()
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_WALKING_RIGHT : ID_ANI_GREEN_KOOPA_WALKING_RIGHT;
 		break;
 	case IN_SHELL_UP:
+		if (isHolded)
+		{
+			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_UP : ID_ANI_GREEN_KOOPA_IN_SHELL_UP;
+			break;
+		}
 		if (nx == 0)
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_UP : ID_ANI_GREEN_KOOPA_IN_SHELL_UP;
 		else
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_UP_MOVE : ID_ANI_GREEN_KOOPA_IN_SHELL_UP_MOVE;
 		break;
 	case IN_SHELL_DOWN:
+		if (isHolded)
+		{
+			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN;
+			break;
+		}
 		if (vx == 0)
 			aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN;
 		else
@@ -250,10 +260,10 @@ void Koopa::Render()
 		lastAnimationId = aniId;
 	}
 
-	if (this->isHolded)
-	{
-		aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN;
-	}
+	//if (this->isHolded)
+	//{
+	//	aniId = (type == RED_KOOPA) ? ID_ANI_RED_KOOPA_IN_SHELL_DOWN : ID_ANI_GREEN_KOOPA_IN_SHELL_DOWN;
+	//}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	//RenderBoundingBox();
@@ -387,7 +397,7 @@ void Koopa::ReleaseByPlayer(CMario* player)
 	//CMario* player = dynamic_cast<CMario*>(e->obj);
 	if (player == NULL) return;
 	int nx = player->GetNx();
-	if (this->state == IN_SHELL_DOWN) {
+	if (this->state == IN_SHELL_DOWN || this->state == IN_SHELL_UP) {
 		if (nx >= 0)
 			MoveInShell(1);
 		else

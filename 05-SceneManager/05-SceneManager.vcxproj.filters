@@ -153,6 +153,7 @@
     <ClCompile Include="RandomCardSystem.cpp" />
     <ClCompile Include="HUDLevel.cpp" />
     <ClCompile Include="HUDCoin.cpp" />
+    <ClCompile Include="HUDMarioPower.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -239,6 +240,7 @@
     <ClInclude Include="RandomCardSystem.h" />
     <ClInclude Include="HUDLevel.h" />
     <ClInclude Include="HUDCoin.h" />
+    <ClInclude Include="HUDMarioPower.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -92,7 +92,8 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 				this->item2 = new CLeaf(x, y);
 				scene->AddObject(item2);
 				// xoa item1
-				this->item1->Delete();
+				if (item1)
+					this->item1->Delete();
 				this->item1 = nullptr;
 			}
 		}

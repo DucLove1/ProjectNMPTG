@@ -172,6 +172,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (powerUnit < 0.0f)
 		{
 			powerUnit = 0.0f;
+			isFlying = false;
 		}
 	}
 	if (isFlying)
@@ -282,7 +283,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	DebugOut(L"MAX %f %f\n", x, y);
+	
 	//if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	preNx = nx;
@@ -302,10 +303,22 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	UpdateTail(dt);
 
+	DelayLimit -= dt;
+	if (DelayLimit <= 0)
+		DelayLimit = 0;
 
-	LimitByCameraBorder();
+	if (DelayLimit <= 0) {
+
+		LimitByCameraBorder();
+		DebugOut(L"MAX %f %f\n", x, y);
+	}
 	//limit top map 1 
 	if (x < -350.0f) x = -350.0f;
+	if (y > 250) 
+	{
+		SetState(MARIO_STATE_DIE);
+		DelayLimit = 5000;
+	}
 }
 
 void CMario::UpdateWhenEndScene(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -502,6 +515,9 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 {
 	CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
+	if (pipe)
+		if (pipe->GetCanLetEntry() == 0)
+			///return;
 	if (pipe != nullptr && e->ny < 0 && !isPrepareEntry && !isEntryPipe)
 	{
 
@@ -1393,6 +1409,7 @@ void CMario::DecreaseLevel()
 {
 	if (level == MARIO_LEVEL_SMALL) {
 		SetState(MARIO_STATE_DIE);
+		DelayLimit = 5000;
 	}
 	else
 	{
@@ -1525,6 +1542,7 @@ bool CMario::IsMAXRunning()
 void CMario::SetFlying(bool value)
 {
 	isFlying = value;
+	if (!value) return;
 	flyingTime = FLYING_TIME;
 	if (startFlying == 0)
 		startFlying = GameClock::GetInstance()->GetTime();

@@ -159,6 +159,8 @@ class CMario : public CGameObject
 	int isRecovering;
 	ULONGLONG recovery_start;
 
+	int DelayLimit = 0;
+
 	bool isPowerUp;
 	//bool isSelfPausing;
 	ULONGLONG anchor_start; // time to anchor on air 
@@ -237,6 +239,7 @@ public:
 
 		isRecovering = 0;
 		recovery_start = -1;
+		DelayLimit = 1000;
 
 		isPowerUp = false;
 		//isSelfPausing = false;
@@ -330,7 +333,8 @@ public:
 	//for falling
 	bool IsFalling() { return vy > 0 && !isOnPlatform; }
 	bool IsOnPlatform() { return isOnPlatform; }
-	void SetSlowFalling(bool value) { isSlowFalling = value; slowFallingTime = SLOW_FALLING_TIME; }
+	void SetSlowFalling(bool value) { isSlowFalling = value; 
+						if(value) slowFallingTime = SLOW_FALLING_TIME; }
 	bool IsSlowFalling() { return isSlowFalling; }
 
 	void SetSmallJump();

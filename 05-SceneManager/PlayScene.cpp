@@ -170,7 +170,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMario(x, y);
+		if (tokens.size() >= 4)
+		{
+			int direction = atoi(tokens[3].c_str());
+
+			obj = new CMario(x, y, direction);
+
+		}
+		else
+			obj = new CMario(x, y);
 		player = (CMario*)obj;
 		//set level to mario 
 		player->SetState(GameManager::GetInstance()->GetCurLevel());
@@ -655,6 +663,9 @@ void CPlayScene::Load()
 			mario->SetLevel(GameManager::GetInstance()->GetCurLevel());
 			mario->SetPosition(this->posOutX, this->posOutY);
 			mario->SetDirection(GameManager::GetInstance()->GetMarioDirection());
+			mario->SetState(MARIO_STATE_EXIT_PIPE);
+			mario->SetDirectionToExit(-1);
+			mario->SetStartPoint(this->posOutX, this->posOutY);
 		}
 		f.close();
 		// ADD FADE TRANSITION
@@ -812,7 +823,7 @@ void CPlayScene::Update(DWORD dt)
 {
 	if (!player)
 		return;
-	if(player->GetState() == MARIO_STATE_DIE)
+	if (player->GetState() == MARIO_STATE_DIE)
 	{
 		if (this->timerWhenPlayerDie == -1) // if player is not dead yet
 		{
@@ -836,7 +847,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		GameManager::GetInstance()->PauseToTransform();
 	}
-	else if(mario && this->timerWhenPlayerDie == -1 && !mario->IsPowerUp()) // if player is dead, we don't update the scene
+	else if (mario && this->timerWhenPlayerDie == -1 && !mario->IsPowerUp()) // if player is dead, we don't update the scene
 		GameManager::GetInstance()->ResumeWhenDoneTransform();
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
@@ -877,9 +888,8 @@ void CPlayScene::Update(DWORD dt)
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
-	int currentLevel = GameManager::GetInstance()->GetCurLevel();
-	currentLevel = 1; /// set like this bcuz i don't want to change the code in GameManager, i will change it later
-	if (currentLevel != 4)
+	int currentMap = CGame::GetInstance()->GetCurrentScene()->GetID();
+	if (currentMap != 8)
 	{
 		// Update camera to follow mario
 		CinemachineCamera();
@@ -909,15 +919,12 @@ void CPlayScene::Render()
 		curObject = objects[0];
 	else
 		return;
-	if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
-		return;
-	objects[0]->Render();
+	if (!(GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused()))
+		objects[0]->Render();
 
 	for (int i = 0; i < UserInterfaces.size(); i++)
 	{
 		curObject = UserInterfaces[i];
-		if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
-			continue;
 		UserInterfaces[i]->Render();
 	}
 }

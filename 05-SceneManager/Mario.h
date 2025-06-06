@@ -220,16 +220,16 @@ class CMario : public CGameObject
 
 
 public:
-	CMario(float x, float y) : CGameObject(x, y)
+	CMario(float x, float y, float dir = 0) : CGameObject(x, y)
 	{
 		isSitting = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
-		//level = MARIO_LEVEL_SMALL;
+		level = MARIO_LEVEL_SMALL;
 		//this line is get level from GameManager because of saving level
-		level = GameManager::GetInstance()->GetCurLevel();
+		//level = GameManager::GetInstance()->GetCurLevel();
 
 		untouchable = 0;
 		untouchable_start = -1;
@@ -251,8 +251,9 @@ public:
 		upArrowWasHolded = false;
 		isEntryPipe = false;
 		isPrepareEntry = false;
-		isExitPipe = true;
-		directionToExit = -1;
+		//isExitPipe = true;
+		isExitPipe = (dir == 0) ? false : true;
+		directionToExit = dir;
 
 		isEndGame = false;
 		isOnPlatform = false;
@@ -361,4 +362,7 @@ public:
 	void SetDirection(int direction) { this->nx = direction; }
 
 	bool IsOnDropLift() { return movingPlatform != nullptr; }
+
+	void SetDirectionToExit(int direction) { this->directionToExit = direction; }
+	void SetStartPoint(float x, float y) { this->startPoint = { x,y }; }
 };

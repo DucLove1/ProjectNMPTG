@@ -36,6 +36,7 @@ public:
 		this->posOutX = x; 
 		this->posOutY = y; 
 	}
+	int GetID() { return id; }
 };
 typedef CScene * LPSCENE;
 

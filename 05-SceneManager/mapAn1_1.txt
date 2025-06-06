@@ -11,6 +11,7 @@ mushroom.txt
 bouncingCoin.txt
 tileInHiddenMap1_1.txt
 lion_brick.txt
+randomCard.txt
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: wallBuilder = 38
@@ -74,3 +75,5 @@ lion_brick.txt
 44	159	202
 #power
 45	70	202
+#random card
+74	194	205

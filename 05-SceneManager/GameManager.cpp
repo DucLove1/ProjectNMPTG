@@ -47,6 +47,10 @@ void GameManager::Reset()
 	isPausedGame = false;
 	marioDirection = 1; // default direction is right
 	isEndGame = false;
+	for(int i = 0; i < 3; i++)
+	{
+		cards[i] = -1; // reset all cards
+	}
 	GameClock::GetInstance()->Reset();
 	CGame::GetInstance()->GetCurrentScene()->GetWordIndex(); // default world index is 0
 }

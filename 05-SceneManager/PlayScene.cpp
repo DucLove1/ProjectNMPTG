@@ -59,6 +59,7 @@
 #include "BoomerangBro.h"
 #include "TeethLine.h"
 #include "RandomCardSystem.h"
+#include "HUDRandomCardSystem.h"
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
 
@@ -420,6 +421,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		isUIElement = true;
 		obj = new CHUDMarioPower(x, y);
+		break;
+	}
+	case OBJECT_TYPE_HUD_RANDOM_CARD_SYSTEM:
+	{
+		isUIElement = true;
+		obj = new HUDRandomCardSystem(x, y);
 		break;
 	}
 	//end UI
@@ -1009,7 +1016,8 @@ void CPlayScene::Reload()
 	{
 		// reload current scene
 		GameManager::GetInstance()->ResetTime();
-		Load();
+		//Load();
+		CGame::GetInstance()->InitiateSwitchScene(this->id);
 	}
 }
 

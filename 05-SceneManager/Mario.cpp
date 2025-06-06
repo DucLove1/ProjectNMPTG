@@ -303,7 +303,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	UpdateTail(dt);
 
 
-	//LimitByCameraBorder();
+	LimitByCameraBorder();
 
 }
 

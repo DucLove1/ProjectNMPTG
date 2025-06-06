@@ -1,4 +1,4 @@
-#include <fstream>
+﻿#include <fstream>
 
 #include "Game.h"
 #include "debug.h"
@@ -176,7 +176,7 @@ void CGame::Draw(float x, float y, LPTEXTURE tex, RECT* rect, float alpha, int s
 
 	D3DX10_SPRITE sprite;
 
-	// Set the sprite�s shader resource view
+	// Set the sprite’s shader resource view
 	sprite.pTexture = tex->getShaderResourceView();
 
 	if (rect == NULL)
@@ -226,7 +226,7 @@ void CGame::Draw(float x, float y, LPTEXTURE tex, RECT* rect, float alpha, int s
 	D3DXMATRIX matScaling;
 	D3DXMatrixScaling(&matScaling, (FLOAT)spriteWidth, (FLOAT)spriteHeight, 1.0f);
 
-	// Setting the sprite�s position and size
+	// Setting the sprite’s position and size
 	sprite.matWorld = (matScaling * matTranslation);
 
 	spriteObject->DrawSpritesImmediate(&sprite, 1, 0, 0);
@@ -520,13 +520,20 @@ void CGame::Load(LPCWSTR gameFile)
 void CGame::SwitchScene()
 {
 	if (next_scene < 0) return;
-	if (next_scene == current_scene)
-	{
-		// reload the current scene
+	//if (next_scene == current_scene)
+	//{
+	//	// reload the current scene
+	//	scenes[current_scene]->Unload();
+	//	CSprites::GetInstance()->Clear();
+	//	CAnimations::GetInstance()->Clear();
+	//	LPSCENE s = scenes[current_scene];
+	//	this->SetKeyHandler(s->GetKeyEventHandler());
+	//	s->Load();
+	//	next_scene = -1; // reset next scene
+	//	return;
+	//}
 
-	}
-
-	if (scenes[current_scene]->GetWordIndex() == scenes[next_scene]->GetWordIndex())
+	if (scenes[current_scene]->GetWordIndex() == scenes[next_scene]->GetWordIndex() && (next_scene != current_scene))
 	{
 		CSprites::GetInstance()->Clear();
 		CAnimations::GetInstance()->Clear();
@@ -537,21 +544,31 @@ void CGame::SwitchScene()
 		this->SetKeyHandler(s->GetKeyEventHandler());
 		s->Load();
 		next_scene = -1; // reset next scene
-		return;
 	}
+	else {
 
-	DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
+		// xoa scene cũ đi
+		for(auto& scene : scenes)
+		{
+			if(scene.second->GetWordIndex() == scenes[current_scene]->GetWordIndex())
+			{
+				scene.second->Unload();
+			}
+		}
 
-	scenes[current_scene]->Unload();
+		DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
 
-	CSprites::GetInstance()->Clear();
-	CAnimations::GetInstance()->Clear();
 
-	current_scene = next_scene;
-	LPSCENE s = scenes[next_scene];
-	this->SetKeyHandler(s->GetKeyEventHandler());
-	s->Load();
-	next_scene = -1; // reset next scene
+		CSprites::GetInstance()->Clear();
+		CAnimations::GetInstance()->Clear();
+
+		current_scene = next_scene;
+		LPSCENE s = scenes[next_scene];
+		this->SetKeyHandler(s->GetKeyEventHandler());
+		s->Load();
+		GameManager::GetInstance()->ResetTime(); // reset game manager
+		next_scene = -1; // reset next scene
+	}
 }
 
 void CGame::InitiateSwitchScene(int scene_id)

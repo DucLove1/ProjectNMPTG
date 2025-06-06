@@ -7,7 +7,10 @@ using namespace std;
 //#include "Mario.h"
 //try
 #define LIMIT_GAME_TIME 300 //300 unit in mario ~~ 150 second
-
+#define NONE -1
+#define MUSHROOM_CARD_ID 0
+#define FIRE_FLOWER_CARD_ID 1
+#define STAR_CARD_ID 2
 class GameManager
 {
 private:
@@ -22,7 +25,7 @@ private:
 	bool isPausedGame;
 	bool isEndGame;
 	int marioDirection;
-	vector<int> cards={ 0, 0, 0 }; // this game has 3 cards
+	vector<int> cards={ -1, -1, -1 }; // this game has 3 cards
 	int currentIndexWorld;
 
 	GameManager() {
@@ -90,5 +93,21 @@ public:
 	int GetCurrentIndexWorld() { return currentIndexWorld; }
 	void Reset();
 	void ResetTime();
+	void AddCard(int cardID) 
+	{ 
+		for (int i = 0; i < cards.size(); i++)
+		{
+			if (cards[i] == -1)
+			{
+				cards[i] = cardID;
+				return;
+			}
+		}
+	}
+	int GetCard(int index) 
+	{ 
+		if (index < 0 || index >= cards.size()) return NONE;
+		return cards[index]; 
+	}
 };
 

@@ -5,11 +5,13 @@
 GameManager* GameManager::instance = NULL;
 void GameManager::PauseToTransform()
 {
+	SetPausedToTransform(true);
 	GameClock::GetInstance()->TempPause();
 }
 
 void GameManager::ResumeWhenDoneTransform()
 {
+	SetPausedToTransform(false);
 	GameClock::GetInstance()->ResumeTempPause();
 }
 

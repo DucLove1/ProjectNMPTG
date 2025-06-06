@@ -38,6 +38,7 @@ void BreakableGoldBrick::GotHit(LPCOLLISIONEVENT e)
 		if (mario != nullptr)
 		{
 			GameManager::GetInstance()->PlusCoins(1);
+			GameManager::GetInstance()->AddScore(50);
 			this->Delete();
 		}
 		return;

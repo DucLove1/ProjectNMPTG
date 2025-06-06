@@ -204,6 +204,7 @@ class CMario : public CGameObject
 	void OnCollisionWithGoldBrick(LPCOLLISIONEVENT e);
 	void OnColliionWithDropLift(LPCOLLISIONEVENT e);
 	void OnCollisionWithBoomerangBro(LPCOLLISIONEVENT e);
+	void OnCollisionWithPiranhaPlant(LPCOLLISIONEVENT e);
 
 	int ConvertAniTypeToAniId(int animation_type);
 
@@ -289,7 +290,7 @@ public:
 	void DecreaseLevel();
 	void SetPowerUP(bool power) {
 		isPowerUp = power; anchor_start = GameClock::GetInstance()->GetTime();
-		GameManager::GetInstance()->SetPausedToTransform(true);
+		GameManager::GetInstance()->PauseToTransform();
 	}
 	bool IsPowerUp() { return isPowerUp; }
 	//void SetSelfPausing(bool pause) { isSelfPausing = pause; }

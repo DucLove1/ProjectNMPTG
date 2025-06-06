@@ -791,6 +791,34 @@ void CPlayScene::ScrollingCamera(DWORD dt)
 
 void CPlayScene::Update(DWORD dt)
 {
+	if (!player)
+		return;
+	if(player->GetState() == MARIO_STATE_DIE)
+	{
+		if (this->timerWhenPlayerDie == -1) // if player is not dead yet
+		{
+			this->timerWhenPlayerDie = GetTickCount64();
+			GameManager::GetInstance()->PauseToTransform();
+		}
+		else if (GetTickCount64() - timerWhenPlayerDie >= TIME_FOR_DELAY)
+		{
+			Reload();
+			this->timerWhenPlayerDie = -1; // reset timer
+			GameManager::GetInstance()->ResumeWhenDoneTransform();
+		}
+		else
+		{
+			player->Update(dt);
+			return;
+		}
+	}
+	CMario* mario = dynamic_cast<CMario*>(player);
+	if (mario && (mario->IsEntryPipe() || mario->IsPrepareEntry()))
+	{
+		GameManager::GetInstance()->PauseToTransform();
+	}
+	else if(mario && this->timerWhenPlayerDie == -1 && !mario->IsPowerUp()) // if player is dead, we don't update the scene
+		GameManager::GetInstance()->ResumeWhenDoneTransform();
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	vector<LPGAMEOBJECT> coObjects;
@@ -836,20 +864,6 @@ void CPlayScene::Update(DWORD dt)
 
 	PurgeDeletedObjects();
 
-	if(player->GetState() == MARIO_STATE_DIE)
-	{
-		if (this->timerWhenPlayerDie == -1) // if player is not dead yet
-		{
-			this->timerWhenPlayerDie = GetTickCount64();
-			GameManager::GetInstance()->SetPausedToTransform(true);
-		}
-		else if (GetTickCount64() - timerWhenPlayerDie >= TIME_FOR_DELAY)
-		{
-			Reload();
-			this->timerWhenPlayerDie = -1; // reset timer
-			GameManager::GetInstance()->SetPausedToTransform(false);
-		}
-	}
 }
 void CPlayScene::Render()
 {

@@ -31,6 +31,7 @@
 #include "RandomCard.h"
 #include "GameClock.h"
 #include "BoomerangBro.h"
+#include "PiranhaPlant.h"
 //define for Id map
 int mapAniId[][33] = {
 		{
@@ -421,9 +422,14 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		RandomCard* randomCard = dynamic_cast<RandomCard*>(e->obj);
 		randomCard->Touched();
+		this->SetForEndGame(true);
 	}
 	else if (dynamic_cast<BoomerangBro*>(e->obj))
 		OnCollisionWithBoomerangBro(e);
+	else if (dynamic_cast<PiranhaPlant*>(e->obj))
+	{
+		OnCollisionWithPiranhaPlant(e);
+	}
 	//else
 	//	SetLinked(false, false); // reset linked state
 
@@ -598,6 +604,7 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	GameManager::GetInstance()->PlusCoins(1);
+	GameManager::GetInstance()->AddScore(50);
 }
 
 void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
@@ -721,6 +728,19 @@ void CMario::OnCollisionWithBoomerangBro(LPCOLLISIONEVENT e)
 			}
 		}
 	}
+}
+
+void CMario::OnCollisionWithPiranhaPlant(LPCOLLISIONEVENT e)
+{
+	PiranhaPlant* piranhaPlant = dynamic_cast<PiranhaPlant*>(e->obj);
+	if (!piranhaPlant)
+		return;
+	if (piranhaPlant->IsAlive())
+	{
+		if (untouchable == 0)
+			DecreaseLevel();
+	}
+
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

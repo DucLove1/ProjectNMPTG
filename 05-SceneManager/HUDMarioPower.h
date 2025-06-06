@@ -46,7 +46,7 @@ public:
 	void Render() override;
 };
 
-#define ALERT_TIME 2000
+#define ALERT_TIME 3500
 
 class CHUDMarioPower :
 	public CUserInterface

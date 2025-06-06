@@ -31,7 +31,7 @@ class DropLift;
 
 #define FLYING_TIME 150;
 #define FLYING_SCALE -0.2f
-#define MAX_POWER_UNIT 2000.0f
+#define MAX_POWER_UNIT 1500.0f
 
 #define SLOW_FALLING_TIME 150
 #define SLOW_FALLING_SCALE 0.1f
@@ -178,6 +178,7 @@ class CMario : public CGameObject
 	bool canEntryPipe;
 	bool isEntryPipe;
 	bool isPrepareEntry;
+	int directionToEntry;
 	bool isExitPipe;
 	int directionToExit;
 	pair<float, float> startPoint; // it cant be changed, dont change it.
@@ -306,7 +307,9 @@ public:
 
 	void DecreaseLevel();
 	void SetPowerUP(bool power) {
-		isPowerUp = power; anchor_start = GameClock::GetInstance()->GetTime();
+		isPowerUp = power; 
+		//anchor_start = GameClock::GetInstance()->GetTime();
+		anchor_start = GetTickCount64();
 		GameManager::GetInstance()->PauseToTransform();
 	}
 	bool IsPowerUp() { return isPowerUp; }
@@ -320,6 +323,7 @@ public:
 	//for flying
 	bool IsReachToExpectedSpeed();
 	bool IsReadyToFly();
+	bool IsMAXRunning();
 	void SetFlying(bool value);
 	bool canSet() { return jumpedTime >= MARIO_MAX_JUMP_TIME; }
 
@@ -339,7 +343,9 @@ public:
 	bool IsPrepareEntry() { return isPrepareEntry; }
 	bool IsEntryPipe() { return isEntryPipe; }
 	bool IsExitPipe() { return isExitPipe; }
+
 	void SetForEndGame(bool value);
+
 	bool KeyAWasHoled() { return keyAWasHoled; }
 	void SetKeyA(bool value) { keyAWasHoled = value; }
 	bool UpArrowWasHoled() { return upArrowWasHolded; }

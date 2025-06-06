@@ -1,4 +1,4 @@
-﻿#include <algorithm>
+#include <algorithm>
 #include "debug.h"
 
 #include "SampleKeyEventHandler.h"
@@ -302,6 +302,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	UpdateTail(dt);
 
+
 	LimitByCameraBorder();
 
 }
@@ -376,6 +377,7 @@ void CMario::UpdateWhenExitPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float addedHeight =
 		((GetLevel() == MARIO_LEVEL_SMALL) ?
 			(MARIO_SMALL_BBOX_HEIGHT) : (MARIO_BIG_BBOX_HEIGHT)) * directionToExit;
+
 	float YTarget = startPoint.second + addedHeight;
 
 	vy = (YTarget - this->y) / dt; //moving target point

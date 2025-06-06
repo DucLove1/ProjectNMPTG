@@ -768,9 +768,6 @@ void CPlayScene::CinemachineCamera()
 	}
 
 
-	if (cx < 0) cx = 0;
-	if (cy > -17) cy = 0;
-
 	if (!isChangeX && !isChangeY)
 	{
 		CGame::GetInstance()->SetCamPos(preCamLeft, preCamTop);
@@ -899,12 +896,47 @@ void CPlayScene::Update(DWORD dt)
 		// Update camera to scrolling
 		ScrollingCamera(dt);
 	}
-
+	KeepCameraAlwaysRight(currentMap);
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 
 	PurgeDeletedObjects();
 
 }
+void CPlayScene::KeepCameraAlwaysRight(int curentMap)
+{
+	CGame* game = CGame::GetInstance();
+	float cx, cy;
+	game->GetCamPos(cx, cy);
+
+	switch (curentMap)
+	{
+	case 6:
+		if (cx < 0) cx = 0;
+		if (cx > 2600) cx = 2600;
+		if (cy > -17) cy = -17;
+		if (cy < -250) cy = -250;
+		break;
+	case 7:
+		if (cx < 2) cx = 2;
+		if (cx > 200) cx = 200;
+		if (cy < 0) cy = 0;
+		if (cy > 4) cy = 4;
+		break;
+	case 8:
+
+		if (cx > 1800) cx = 1800;
+		break;
+	case 9:
+		if (cx < 10) cx = 10;
+		if (cx > 230) cx = 230;
+		if (cy > 7) cy = 7;
+		if (cy < -50) cy = -50;
+		break;
+	}
+
+	game->SetCamPos(cx, cy);
+}
+
 void CPlayScene::Render()
 {
 	for (int i = 1; i < objects.size(); i++)

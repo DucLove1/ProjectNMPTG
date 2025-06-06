@@ -77,6 +77,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_SPACE:
 		//mario->SetState(MARIO_STATE_DIE);
 		mario->SetForEndGame(true);
+		//mario->SetPosition(1523.623047, -80.0);
 		break;
 	case DIK_A:
 		mario->SetKeyA(true);

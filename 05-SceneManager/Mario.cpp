@@ -304,7 +304,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 	LimitByCameraBorder();
-
+	//limit top map 1 
+	if (x < -350.0f) x = -350.0f;
 }
 
 void CMario::UpdateWhenEndScene(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -1303,16 +1304,18 @@ void CMario::SetState(int state)
 
 	case MARIO_STATE_ENDGAME:
 		isSitting = false;
+		isPowerUp = false;
+		isPickUp = false;
+		isEntryPipe = false;
+		isPrepareEntry = false;
+		isExitPipe = false;
 		SetAttack(false);
 		isRecovering = false;
 		isPowerUp = false;
-		isPickUp = false;
 
-		maxVx = MARIO_WALKING_SPEED / 2;
-		//vx += ax;
-		vy = 0;
-		ax = -MARIO_ACCEL_WALK_X;
-		ay = MARIO_GRAVITY * 2;
+		maxVx = MARIO_WALKING_SPEED;
+		ax = MARIO_ACCEL_WALK_X;
+		ay = MARIO_GRAVITY;
 		break;
 	}
 
@@ -1514,7 +1517,7 @@ bool CMario::IsReadyToFly()
 }
 bool CMario::IsMAXRunning()
 {
-	bool b1 = (vx >= MARIO_EXPECTED_SPEED) ? true : false;
+	bool b1 = (abs(vx) >= MARIO_EXPECTED_SPEED) ? true : false;
 	bool b2 = (powerUnit >= MAX_POWER_UNIT);
 	return b1 && b2;
 }

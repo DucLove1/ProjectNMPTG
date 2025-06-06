@@ -1,7 +1,7 @@
 #include "Boomerang.h"
 #include "AssetIDs.h"
 #include "Animations.h"
-
+#include "Game.h"
 #define MAX_HEIGHT 50
 #define MAX_WIDTH 100
 #define TIME_BOOMERANG_MOVE 4000
@@ -11,6 +11,7 @@
 #define PI 3.14
 #define BBOX_WIDTH 16
 #define BBOX_HEIGHT 16
+#define SCREEN_WIDTH 274
 void Boomerang::UpdateStage1(DWORD dt)
 {
 	/*float progress = (float)(GameClock::GetInstance()->GetTime() - timer) / TIME_FOR_STAGE_1;
@@ -23,12 +24,12 @@ void Boomerang::UpdateStage2(DWORD dt)
 {
 	float progress = (float)(GameClock::GetInstance()->GetTime() - timer - TIME_FOR_STAGE_1) / TIME_BOOMERANG_MOVE;
 	double angle = 2*PI * progress;
-	vx = VX * cos(angle);
+	vx = VX * cos(angle) * nx;
 	vy = VY * sin(angle);
 }
 void Boomerang::UpdateStage3(DWORD dt)
 {
-	vx = -abs(vx);
+	vx = -abs(vx) * nx;
 	vy = 0;
 }
 int Boomerang::GetStage()
@@ -48,6 +49,8 @@ int Boomerang::GetStage()
 }
 void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (!IsOnCamera())
+		this->Delete();
 	if (state == IS_HOLDED || !isActive)
 		return;
 	int stage = GetStage();
@@ -103,4 +106,17 @@ void Boomerang::Hold(float x, float y)
 	SetState(IS_HOLDED);
 	this->x = x;
 	this->y = y;
+}
+
+bool Boomerang::IsOnCamera()
+{
+	float posLeft, posRight;
+	posLeft = x - BBOX_WIDTH / 2;
+	posRight = x + BBOX_WIDTH / 2;
+	float camX, camY;
+	CGame::GetInstance()->GetCamPos(camX, camY);
+	if ((posLeft >= camX && posLeft <= camX + SCREEN_WIDTH ) || 
+		(posRight >= camX && posRight <= camX + SCREEN_WIDTH))
+		return true;
+	return false;
 }

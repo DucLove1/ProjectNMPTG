@@ -73,8 +73,8 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetPowerUP(true);
 		break;
 	case DIK_0:
-		//mario->SetState(MARIO_STATE_DIE);
-		mario->SetForEndGame(true);
+		mario->SetState(MARIO_STATE_DIE);
+		//mario->SetForEndGame(true);
 		break;
 	case DIK_A:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
@@ -102,11 +102,25 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		GameManager::GetInstance()->ResumeWhenDoneTransform();
 		break;
 	case DIK_T:
+	{
 		float x, y;
 		CGame::GetInstance()->GetCamPos(x, y);
 		FadeTransition* fade = new FadeTransition(x, y, 2000);
 		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(fade);
 		break;
+	}
+	case DIK_W:
+	{
+		if (GameManager::GetInstance()->IsPausedGame())
+		{
+			GameManager::GetInstance()->ResumeGame();
+		}
+		else
+		{
+			GameManager::GetInstance()->PauseGame();
+		}
+		break;
+	}
 	}
 }
 

@@ -38,4 +38,5 @@ public:
 	{ 
 		return posOutX != NON_POS && posOutY != NON_POS; 
 	}
+	int IsOverlappable() { return 1; }
 };

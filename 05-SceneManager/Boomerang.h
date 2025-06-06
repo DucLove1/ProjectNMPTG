@@ -21,7 +21,7 @@ public:
 		IS_HOLDED = 0,
 		IS_THROWED = 1
 	};
-	Boomerang(float x, float y)
+	Boomerang(float x, float y, int nx)
 		:CGameObject(x, y)
 	{
 		this->SetState(IS_HOLDED);
@@ -30,13 +30,15 @@ public:
 		prePosY = 0;
 		stage = 0;
 		timer = GameClock::GetInstance()->GetTime();
-		vx = VX;
+		vx = VX * nx;
 		vy = -VY;
 		isActive = true;
+		this->nx = nx;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) override;
 	void Render() override;
 	int IsCollidable() { return 0; }
+	int IsBlocking() { return 0; }
 	void OnNoCollision(DWORD dt) override
 	{
 		x += vx * dt;
@@ -46,5 +48,8 @@ public:
 	void Throw();
 	void Hold(float x, float y);
 	void InActivate() { isActive = false; };
+	bool IsRenderWhenPaused() { return false; }
+	bool IsPauseRenderWhenTransform() { return false; }
+	bool IsOnCamera();
 };
 

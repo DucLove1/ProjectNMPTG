@@ -31,7 +31,7 @@ void RedKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void RedKoopa::UpdateStateHasWing()
 {
 	vx = 0;
-	vy = MAX_VY * sin( 2 * GameClock::GetInstance()->GetTime() / 1000.0f);
+	vy = MAX_VY * sin( 2 * (GameClock::GetInstance()->GetTime() - timerWing) / 1000.0f);
 }
 
 void RedKoopa::UpdateStateHasNoWing()

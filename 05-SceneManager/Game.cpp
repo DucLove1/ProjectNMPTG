@@ -510,7 +510,12 @@ void CGame::Load(LPCWSTR gameFile)
 
 void CGame::SwitchScene()
 {
-	if (next_scene < 0 || next_scene == current_scene) return; 
+	if (next_scene < 0) return; 
+	if (next_scene == current_scene)
+	{
+		// reload the current scene
+
+	}
 
 	if (scenes[current_scene]->GetWordIndex() == scenes[next_scene]->GetWordIndex())
 	{
@@ -537,6 +542,7 @@ void CGame::SwitchScene()
 	LPSCENE s = scenes[next_scene];
 	this->SetKeyHandler(s->GetKeyEventHandler());
 	s->Load();
+	next_scene = -1; // reset next scene
 }
 
 void CGame::InitiateSwitchScene(int scene_id)
@@ -555,6 +561,18 @@ void CGame::_ParseSection_TEXTURES(string line)
 	wstring path = ToWSTR(tokens[1]);
 
 	CTextures::GetInstance()->Add(texID, path.c_str());
+}
+
+void CGame::ResetGame()
+{
+	for (int i = 0; i < scenes.size(); i++)
+	{
+		if (scenes[i] != NULL)
+		{
+			scenes[i]->Unload();
+		}
+	}
+	
 }
 
 

@@ -15,6 +15,7 @@ class CPlayScene: public CScene
 {
 private:
 	CGameObject* curObject; // current object being edited
+	ULONGLONG timerWhenPlayerDie;
 protected: 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
@@ -52,6 +53,7 @@ public:
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
 	CGameObject* GetCurObject() { return curObject; }
 	void DeleteFadeTransition();
+	void Reload();
 };
 
 typedef CPlayScene* LPPLAYSCENE;

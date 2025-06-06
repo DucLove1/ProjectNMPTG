@@ -30,7 +30,8 @@
 #include "ComboScoreSystemMario.h"
 #include "RandomCard.h"
 #include "GameClock.h"
-
+#include "BoomerangBro.h"
+#include "PiranhaPlant.h"
 //define for Id map
 int mapAniId[][35] = {
 		{
@@ -480,6 +481,13 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		RandomCard* randomCard = dynamic_cast<RandomCard*>(e->obj);
 		randomCard->Touched();
+		this->SetForEndGame(true);
+	}
+	else if (dynamic_cast<BoomerangBro*>(e->obj))
+		OnCollisionWithBoomerangBro(e);
+	else if (dynamic_cast<PiranhaPlant*>(e->obj))
+	{
+		OnCollisionWithPiranhaPlant(e);
 	}
 	//else
 	//	SetLinked(false, false); // reset linked state
@@ -659,6 +667,7 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	GameManager::GetInstance()->PlusCoins(1);
+	GameManager::GetInstance()->AddScore(50);
 }
 
 void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
@@ -753,6 +762,48 @@ void CMario::OnColliionWithDropLift(LPCOLLISIONEVENT e)
 {
 	DropLift* dropLift = dynamic_cast<DropLift*>(e->obj);
 	dropLift->OnCollidedWithMario(e);
+}
+
+void CMario::OnCollisionWithBoomerangBro(LPCOLLISIONEVENT e)
+{
+	BoomerangBro* boomerangBro = dynamic_cast<BoomerangBro*>(e->obj);
+	if (e->ny < 0)
+	{
+		if (boomerangBro->IsAlive())
+		{
+			boomerangBro->KickedFromTop(this);
+			if (this->IsSlowFalling())
+			{
+				SetSlowFalling(false);
+				slowFallingTime = 0.0f;
+				cdSlowFallingByDIK_X = 4.0f;
+			}
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+	}
+	else // hit by Goomba
+	{
+		if (untouchable == 0)
+		{
+			if (boomerangBro->IsAlive())
+			{
+				DecreaseLevel();
+			}
+		}
+	}
+}
+
+void CMario::OnCollisionWithPiranhaPlant(LPCOLLISIONEVENT e)
+{
+	PiranhaPlant* piranhaPlant = dynamic_cast<PiranhaPlant*>(e->obj);
+	if (!piranhaPlant)
+		return;
+	if (piranhaPlant->IsAlive())
+	{
+		if (untouchable == 0)
+			DecreaseLevel();
+	}
+
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

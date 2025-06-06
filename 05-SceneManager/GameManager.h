@@ -2,6 +2,7 @@
 #include <iostream>
 #include "GameClock.h"
 #include <vector>
+#include "Game.h"
 using namespace std;
 //#include "Mario.h"
 //try
@@ -22,6 +23,7 @@ private:
 	bool isEndGame;
 	int marioDirection;
 	vector<int> cards={ 0, 0, 0 }; // this game has 3 cards
+	int currentIndexWorld;
 
 	GameManager() {
 		curLevel = 1;
@@ -34,6 +36,7 @@ private:
 		isPausedGame = false;
 		marioDirection = 1; // default direction is right
 		isEndGame = false;
+		CGame::GetInstance()->GetCurrentScene()->GetWordIndex(); // default world index is 0
 	};
 public:
 	static GameManager* GetInstance()
@@ -84,5 +87,8 @@ public:
 	void SaveMarioState();
 	void SetMarioDirection(int direction) { marioDirection = direction; }
 	int GetMarioDirection() { return marioDirection; }
+	int GetCurrentIndexWorld() { return currentIndexWorld; }
+	void Reset();
+	void ResetTime();
 };
 

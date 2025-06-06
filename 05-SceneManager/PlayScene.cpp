@@ -67,7 +67,7 @@
 #define TIME_FOR_DELAY 2000
 using namespace std;
 
-CPlayScene::CPlayScene(int id, LPCWSTR filePath, int worldIndex) :
+CPlayScene::CPlayScene(int id, LPCWSTR filePath, int worldIndex, int directionWhenReenterScene) :
 	CScene(id, filePath, worldIndex)
 {
 	isStartGame = false;
@@ -77,6 +77,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath, int worldIndex) :
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
 	this->timerWhenPlayerDie = -1; // -1 means player is not dead yet
+	this->directionWhenReenterScene = directionWhenReenterScene;
 }
 
 
@@ -664,9 +665,15 @@ void CPlayScene::Load()
 			mario->SetPosition(this->posOutX, this->posOutY);
 			mario->SetDirection(GameManager::GetInstance()->GetMarioDirection());
 			mario->SetState(MARIO_STATE_EXIT_PIPE);
-			mario->SetDirectionToExit(-1);
+			mario->SetDirectionToExit(this->directionWhenReenterScene);
 			mario->SetStartPoint(this->posOutX, this->posOutY);
 		}
+		// tao mario moi
+		//CMario* mario = new CMario(this->posOutX, this->posOutY, this->directionWhenReenterScene); // create new mario object
+		//mario->SetLevel(GameManager::GetInstance()->GetCurLevel());
+		//player->Delete();
+		//player = mario; // set player to new mario object
+		//objects[0] = mario;
 		f.close();
 		// ADD FADE TRANSITION
 		this->objects.push_back(new FadeTransition(0, 0, true));
@@ -703,9 +710,14 @@ void CPlayScene::Load()
 	f.close();
 	// ADD FADE TRANSITION
 	this->objects.push_back(new FadeTransition(0, 0, true));
+	// set state mario 
+	((CMario*)player)->SetLevel(GameManager::GetInstance()->GetCurLevel());
 	// set direction for mario
 	((CMario*)player)->SetDirection(GameManager::GetInstance()->GetMarioDirection());
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
+	/*float x, y;
+	player->GetPosition(x, y);
+	CGame::GetInstance()->SetCamPos(x - CGame::GetInstance()->GetBackBufferWidth() / 2, y - CGame::GetInstance()->GetBackBufferHeight() * 3 / 5);*/
 }
 
 void CPlayScene::CinemachineCamera()
@@ -829,6 +841,8 @@ void CPlayScene::Update(DWORD dt)
 		{
 			this->timerWhenPlayerDie = GetTickCount64();
 			GameManager::GetInstance()->PauseToTransform();
+			// reset level mario to small
+			GameManager::GetInstance()->SetCurLevel(MARIO_LEVEL_SMALL);
 		}
 		else if (GetTickCount64() - timerWhenPlayerDie >= TIME_FOR_DELAY)
 		{

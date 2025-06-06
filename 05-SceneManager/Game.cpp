@@ -8,7 +8,7 @@
 #include "Animations.h"
 #include "PlayScene.h"
 
-CGame * CGame::__instance = NULL;
+CGame* CGame::__instance = NULL;
 
 /*
 	Initialize DirectX, create a Direct3D device for rendering within the window, initial Sprite library for
@@ -98,7 +98,7 @@ void CGame::Init(HWND hWnd, HINSTANCE hInstance)
 	//
 	//
 
-	D3D10_SAMPLER_DESC desc; 
+	D3D10_SAMPLER_DESC desc;
 	desc.Filter = D3D10_FILTER_MIN_MAG_POINT_MIP_LINEAR;
 	desc.AddressU = D3D10_TEXTURE_ADDRESS_CLAMP;
 	desc.AddressV = D3D10_TEXTURE_ADDRESS_CLAMP;
@@ -189,8 +189,8 @@ void CGame::Draw(float x, float y, LPTEXTURE tex, RECT* rect, float alpha, int s
 		sprite.TexSize.x = 1.0f;
 		sprite.TexSize.y = 1.0f;
 
-		if (spriteWidth==0) spriteWidth = tex->getWidth();
-		if (spriteHeight==0) spriteHeight = tex->getHeight();
+		if (spriteWidth == 0) spriteWidth = tex->getWidth();
+		if (spriteHeight == 0) spriteHeight = tex->getHeight();
 	}
 	else
 	{
@@ -249,7 +249,7 @@ LPTEXTURE CGame::LoadTexture(LPCWSTR texturePath)
 		return NULL;
 	}
 
-	D3DX10_IMAGE_LOAD_INFO info; 
+	D3DX10_IMAGE_LOAD_INFO info;
 	ZeroMemory(&info, sizeof(D3DX10_IMAGE_LOAD_INFO));
 	info.Width = imageInfo.Width;
 	info.Height = imageInfo.Height;
@@ -457,8 +457,17 @@ void CGame::_ParseSection_SCENES(string line)
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);   // file: ASCII format (single-byte char) => Wide Char
 	int worldIndex = atoi(tokens[2].c_str());
-	LPSCENE scene = new CPlayScene(id, path, worldIndex);
-	scenes[id] = scene;
+	if (tokens.size() == 4)
+	{
+		int directionWhenReenterScene = atoi(tokens[3].c_str());
+		LPSCENE scene = new CPlayScene(id, path, worldIndex, directionWhenReenterScene);
+		scenes[id] = scene;
+	}
+	else
+	{
+		LPSCENE scene = new CPlayScene(id, path, worldIndex);
+		scenes[id] = scene;
+	}
 }
 
 /*
@@ -484,11 +493,11 @@ void CGame::Load(LPCWSTR gameFile)
 		if (line == "[SETTINGS]") { section = GAME_FILE_SECTION_SETTINGS; continue; }
 		if (line == "[TEXTURES]") { section = GAME_FILE_SECTION_TEXTURES; continue; }
 		if (line == "[SCENES]") { section = GAME_FILE_SECTION_SCENES; continue; }
-		if (line[0] == '[') 
-		{ 
-			section = GAME_FILE_SECTION_UNKNOWN; 
+		if (line[0] == '[')
+		{
+			section = GAME_FILE_SECTION_UNKNOWN;
 			DebugOut(L"[ERROR] Unknown section: %s\n", ToLPCWSTR(line));
-			continue; 
+			continue;
 		}
 
 		//
@@ -510,7 +519,7 @@ void CGame::Load(LPCWSTR gameFile)
 
 void CGame::SwitchScene()
 {
-	if (next_scene < 0) return; 
+	if (next_scene < 0) return;
 	if (next_scene == current_scene)
 	{
 		// reload the current scene
@@ -572,7 +581,7 @@ void CGame::ResetGame()
 			scenes[i]->Unload();
 		}
 	}
-	
+
 }
 
 

@@ -12,17 +12,20 @@ icons.txt
 boomerang.txt
 boomerangBro.txt
 effect.txt
+randomCard.txt
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17, big_tree = 18, bushes = 19, cloud = 30, lion_brick = 31, green venus = 32, piranha =33, gold_brick = 34, bulder gold brick = 36, pipe = 9, hud = 25, wall = 37, bCoin = 23, cross platform = 51, icon = 52, woodenBlock = 53, dropLift = 56
 
 # See OBJECT_TYPE constants in AssetIDs.h
 #mario
-0	50	100
+0	137	155	-1
 #ground
 15	0	183	42	1
 #black background
 39	193	-41	20	14	390001	390000	390000
+#random card system
+73	380	85
 #icon big tree
 52	290	127	520002
 52	450	151	520003
@@ -38,7 +41,7 @@ effect.txt
 #cloud
 30	55	67	1
 #pipe
-9	137	151	32	16	2	81000	82000	82000
+9	137	151	32	16	2	81000	82000	82000	1
 #boomerang bro
 58	10	155
 

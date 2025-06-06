@@ -10,6 +10,7 @@ leaf.txt
 mushroom.txt
 bouncingCoin.txt
 tileInHiddenMap1_1.txt
+lion_brick.txt
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: wallBuilder = 38
@@ -41,6 +42,10 @@ tileInHiddenMap1_1.txt
 #pipe
 9	128	8	32	16	2	84000	85000	85000	1
 9	352	8	32	16	2	84000	85000	85000
+# lion brick
+31	352	-8	1	1
+#test portal
+50	350	0	360	10	0	6	120	0
 #coin
 4	216	40
 4	232	40

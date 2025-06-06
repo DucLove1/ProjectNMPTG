@@ -36,7 +36,7 @@ private:
 		isPausedGame = false;
 		marioDirection = 1; // default direction is right
 		isEndGame = false;
-		CGame::GetInstance()->GetCurrentScene()->GetWordIndex(); // default world index is 0
+		currentIndexWorld = CGame::GetInstance()->GetCurrentScene()->GetWordIndex(); // default world index is 0
 	};
 public:
 	static GameManager* GetInstance()

@@ -132,7 +132,9 @@ class DropLift;
 #define  ANI_MARIO_ATTACK_LEFT 29
 #define  ANI_MARIO_FLYING_RIGHT 30
 #define  ANI_MARIO_FLYING_LEFT 31
-#define  ANI_MARIO_ENTRY_PIPE 32
+#define	 ANI_MARIO_KICK_RIGHT	32
+#define  ANI_MARIO_KICK_LEFT	33
+#define  ANI_MARIO_ENTRY_PIPE 34
 #pragma endregion
 
 class CMario : public CGameObject
@@ -152,6 +154,7 @@ class CMario : public CGameObject
 	//ULONGLONG jump_start;
 
 	BOOLEAN isPickUp;
+	ULONGLONG startReleaseItem;
 
 	int isRecovering;
 	ULONGLONG recovery_start;
@@ -253,6 +256,7 @@ public:
 		isOnPlatform = false;
 		//jump_start = -1;
 		isPickUp = false;
+		startReleaseItem = 0;
 		coin = 0;
 
 		//isLinkedLeft = false;

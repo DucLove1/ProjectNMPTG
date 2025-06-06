@@ -32,7 +32,7 @@
 #include "GameClock.h"
 
 //define for Id map
-int mapAniId[][33] = {
+int mapAniId[][35] = {
 		{
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT,
 			ID_ANI_MARIO_SMALL_WALKING_RIGHT, ID_ANI_MARIO_SMALL_WALKING_LEFT,
@@ -50,6 +50,7 @@ int mapAniId[][33] = {
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is slowfalling)
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT, // fill array with idle (this is attacking)
 			ID_ANI_MARIO_SMALL_IDLE_RIGHT, ID_ANI_MARIO_SMALL_IDLE_LEFT,  // fill array with idle (this is flying)
+			ID_ANI_MARIO_SMALL_KICKING_RIGHT, ID_ANI_MARIO_SMALL_KICKING_LEFT,
 			ID_ANI_MARIO_SMALL_ENTRY_PIPE
 		},
 		{
@@ -70,6 +71,7 @@ int mapAniId[][33] = {
 			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,// fill array with idle (this is slowfalling)
 			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,// fill array with idle (this is attacking)
 			ID_ANI_MARIO_IDLE_RIGHT, ID_ANI_MARIO_IDLE_LEFT,// fill array with idle (this is flying)
+			ID_ANI_MARIO_KICKING_RIGHT, ID_ANI_MARIO_KICKING_LEFT,
 			ID_ANI_MARIO_BIG_ENTRY_PIPE
 		},
 		{
@@ -89,6 +91,7 @@ int mapAniId[][33] = {
 			ID_ANI_MARIO_TAIL_SLOWFALLING_RIGHT, ID_ANI_MARIO_TAIL_SLOWFALLING_LEFT,
 			ID_ANI_MARIO_TAIL_ATTACK_RIGHT, ID_ANI_MARIO_TAIL_ATTACK_LEFT,
 			ID_ANI_MARIO_FLY_RIGHT, ID_ANI_MARIO_FLY_LEFT,
+			ID_ANI_MARIO_TAIL_KICK_RIGHT, ID_ANI_MARIO_TAIL_KICK_LEFT,
 			ID_ANI_MARIO_TAIL_ENTRY_PIPE,
 		}
 };
@@ -283,8 +286,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 
-	UpdateTail(dt);
-
 	if (isPickUp) {
 		PickingItem(dt);
 	}
@@ -294,6 +295,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			item = nullptr;
 		}
 	}
+
+	UpdateTail(dt);
+
+
 	//LimitByCameraBorder();
 
 }
@@ -567,16 +572,17 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				//These's make game knows M will Kick or hold
 				//if (this->GetState() == MARIO_STATE_RUNNING_LEFT
 				//	|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
-				if(KeyAWasHoled())
+				if (KeyAWasHoled())
 				{
 					untouchable = 1;
 					isPickUp = true;
 					this->item = koopa;
 					//koopa->WasPickedUp(this);
 				}
-				// Koopa git kicked by Mario
+				// Koopa got kicked by Mario
 				else
 				{
+					startReleaseItem = GameClock::GetInstance()->GetTime();
 					float Mx, My, Kx, Ky;
 					this->GetPosition(Mx, My);
 					koopa->GetPosition(Kx, Ky);
@@ -610,7 +616,7 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 
 				//if (this->GetState() == MARIO_STATE_RUNNING_LEFT
 				//	|| this->GetState() == MARIO_STATE_RUNNING_RIGHT)
-				if(KeyAWasHoled())
+				if (KeyAWasHoled())
 				{
 					untouchable = 1;
 					isPickUp = true;
@@ -619,6 +625,7 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				}
 
 				else {
+					startReleaseItem = GameClock::GetInstance()->GetTime();
 					if (nx >= 0)
 						koopa->MoveInShell(1);
 					else
@@ -777,6 +784,7 @@ int CMario::GetAniId()
 			aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_RIGHT);
 		else
 			aniId = ConvertAniTypeToAniId(ANI_MARIO_POWER_UP_LEFT);
+
 		return aniId;
 	}//early return at here to focus on animation
 	if (isSitting) // this case is sitting
@@ -889,6 +897,14 @@ int CMario::GetAniId()
 			else
 				aniId = ConvertAniTypeToAniId(ANI_MARIO_PICKING_IDLE_LEFT);
 		}
+	}
+	else if (GameClock::GetInstance()->GetTime() - startReleaseItem < 150)
+	{
+		if (preNx != nx) startReleaseItem = 0;
+		if (nx >= 0)
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_KICK_RIGHT);
+		else
+			aniId = ConvertAniTypeToAniId(ANI_MARIO_KICK_LEFT);
 	}
 	else //  another movement
 	{
@@ -1352,8 +1368,8 @@ void CMario::PickingItem(DWORD dt) {
 		//DebugOut(L"SEEE temp %f", tempVy);
 		//item->SetSpeed(this->vx, tempVy);
 
-		float targetX = x + 10 * nx + (this->vx * fdt);
-		float targetY = y + (this->vy * fdt);
+		float targetX = x + 10 * nx; // +(this->vx * fdt);
+		float targetY = y; //+ (this->vy * fdt);
 
 		if (this->level == MARIO_LEVEL_SMALL)
 		{
@@ -1384,6 +1400,7 @@ void CMario::ReleaseItem(CGameObject* item) {
 	Koopa* koopa = dynamic_cast<Koopa*> (item);
 	if (koopa == nullptr) return;
 
+	startReleaseItem = GameClock::GetInstance()->GetTime();
 	koopa->SetHolded(false);
 	koopa->SetAccelation(0.f, KOOPA_GRAVITY);
 	koopa->ReleaseByPlayer(this);

@@ -38,9 +38,7 @@ randomCard.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 #mario
-0	20	50
-#test portal
-50	50	100	60	110	0	7	2000	50
+0	2317	-170
 #wall
 37	0	40
 #black background
@@ -61,10 +59,13 @@ randomCard.txt
 9	2317	125	32	16	2	82000	82000	82000
 31	2309	109	2	1
 
+31	2317	-105	1	1
 9	2317	-147	32	16	12	81000	82000	82000
 31	2309	45	2	1
 #pipe
 9	2382	125	32	16	2	81000	82000	82000
+#portal
+50	2317	-80	2333	0	0	7	2382	50
 #big tree
 18	91	93	4	1
 18	75	109	3	0

@@ -102,11 +102,25 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		GameManager::GetInstance()->ResumeWhenDoneTransform();
 		break;
 	case DIK_T:
+	{
 		float x, y;
 		CGame::GetInstance()->GetCamPos(x, y);
 		FadeTransition* fade = new FadeTransition(x, y, 2000);
 		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(fade);
 		break;
+	}
+	case DIK_W:
+	{
+		if (GameManager::GetInstance()->IsPausedGame())
+		{
+			GameManager::GetInstance()->ResumeGame();
+		}
+		else
+		{
+			GameManager::GetInstance()->PauseGame();
+		}
+		break;
+	}
 	}
 }
 

@@ -170,8 +170,6 @@ void Koopa::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
 			GameManager::GetInstance()->AddScore(score);
 			if (isHolded) 
 			{
-				CMario* player = dynamic_cast<CMario*>((dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene()))->GetPlayer());
-				player->SetNullItem();
 				//isHolded = false;
 				//this->KnockedOut(this);
 				this->Delete();
@@ -208,11 +206,11 @@ void Koopa::UpdateStateKnockOut(DWORD dt)
 		ax = 0;
 		return;
 	}
-	//if (IsHolded())
-	//{
-	//	x += vx * dt;
-	//	y += vy * dt;
-	//}
+	if (IsHolded())
+	{
+		x += vx * dt;
+		y += vy * dt;
+	}
 }
 void Koopa::Render()
 {

@@ -298,7 +298,6 @@ public:
 	void PickingItem(DWORD dt);
 	void ReleaseItem(CGameObject* item);
 	void UpdateTail(DWORD dt);
-	void SetNullItem() { item = nullptr; }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);

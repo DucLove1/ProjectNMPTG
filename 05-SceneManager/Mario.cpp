@@ -1400,12 +1400,8 @@ void CMario::DecreaseLevel()
 }
 
 void CMario::PickingItem(DWORD dt) {
-	if (!this->isPickUp)
+	if (this->item == nullptr || this->item->IsDeleted())
 		return;
-	if (this->item == nullptr || this->item->IsDeleted()) {
-		ReleaseItem(item);
-		return;
-	}
 	if (!dynamic_cast<Koopa*>(this->item)->IsAlive())
 	{
 		ReleaseItem(this->item);
@@ -1465,8 +1461,7 @@ void CMario::ReleaseItem(CGameObject* item) {
 	isPickUp = false;
 	startReleaseItem = GameClock::GetInstance()->GetTime();
 	koopa->SetHolded(false);
-	/*koopa->SetSpeed(0.f, 0.f);
-	koopa->SetAccelation(0.f, KOOPA_GRAVITY);*/
+	koopa->SetAccelation(0.f, KOOPA_GRAVITY);
 	koopa->ReleaseByPlayer(this);
 }
 

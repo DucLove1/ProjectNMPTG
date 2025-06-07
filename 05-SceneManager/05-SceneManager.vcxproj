@@ -184,6 +184,7 @@
     <ClCompile Include="GreenMushroom.cpp" />
     <ClCompile Include="Icon.cpp" />
     <ClCompile Include="ParticalBreak.cpp" />
+    <ClCompile Include="PausePanel.cpp" />
     <ClCompile Include="RandomCard.cpp" />
     <ClCompile Include="RandomCardEffect.cpp" />
     <ClCompile Include="RandomCardSystem.cpp" />
@@ -269,6 +270,7 @@
     <ClInclude Include="GreenMushroom.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="ParticalBreak.h" />
+    <ClInclude Include="PausePanel.h" />
     <ClInclude Include="RandomCard.h" />
     <ClInclude Include="RandomCardEffect.h" />
     <ClInclude Include="RandomCardSystem.h" />

@@ -56,3 +56,5 @@ effect.txt
 44	159	202
 #power
 45	70	202
+#pause
+48	136	211

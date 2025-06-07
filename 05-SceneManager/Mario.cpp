@@ -285,6 +285,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	if (GameClock::GetInstance()->GetTime() - pauseToDecrease > 1000)
+	{
+		GameManager::GetInstance()->ResumeWhenDoneTransform();
+	}
 
 	//if (abs(vx) > abs(maxVx)) vx = maxVx;
 
@@ -312,7 +316,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (DelayLimit <= 0) {
 
 		LimitByCameraBorder();
-		DebugOut(L"MAX %f %f\n", x, y);
+		//DebugOut(L"MAX %f %f\n", x, y);
 	}
 	//limit top map 1 
 	if (x < -350.0f) x = -350.0f;
@@ -485,6 +489,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithFireBall(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
+	else if (dynamic_cast<Boomerang*>(e->obj))
+		OnCollisionWithBoomerang(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CQuestionBrick*>(e->obj))
@@ -521,13 +527,22 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 
 }
 
+void CMario::OnCollisionWithBoomerang(LPCOLLISIONEVENT e)
+{
+	Boomerang* bmr = dynamic_cast<Boomerang*> (e->obj);
+	if (bmr)
+	{
+		DecreaseLevel();
+	}
+}
+
 void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 {
 	CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
-	canEntryPipe = true;
 	if (pipe)
 		if (pipe->GetCanLetEntry() == 0)
 			return;
+	canEntryPipe = true;
 	if (pipe != nullptr && e->ny < 0 && !isPrepareEntry && !isEntryPipe && pipe->GetCanLetEntry() == 1 && DownArrowWasHolded())
 	{
 
@@ -542,7 +557,7 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 		canEntryPipe = true;
 		pipe->GetPosition(targetPoint.first, targetPoint.second);
 		pipe->SetEntryPipe(true);
-		//if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
+		if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
 		this->SetForEntryPipeUp();
 	}
 }
@@ -1430,6 +1445,10 @@ void CMario::DecreaseLevel()
 		StartUntouchable();
 		StartRecovery();
 	}
+	if (pauseToDecrease == 0)
+		pauseToDecrease = GameClock::GetInstance()->GetTime();
+
+	GameManager::GetInstance()->PauseToTransform();
 }
 
 void CMario::PickingItem(DWORD dt) {

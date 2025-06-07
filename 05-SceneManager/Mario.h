@@ -164,6 +164,7 @@ class CMario : public CGameObject
 	bool isPowerUp;
 	//bool isSelfPausing;
 	ULONGLONG anchor_start; // time to anchor on air 
+	ULONGLONG pauseToDecrease  = 0;
 
 	int jumpedTime;
 	bool isSlowFalling;
@@ -208,6 +209,7 @@ class CMario : public CGameObject
 	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
+	void OnCollisionWithBoomerang(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);

@@ -55,7 +55,7 @@ void CMarioTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CMarioTail::Render()
 {
 	if (!isActive) return;
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 void CMarioTail::OnNoCollision(DWORD dt)
 {

@@ -81,7 +81,7 @@ void CPortal::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CPortal::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CPortal::GetBoundingBox(float &l, float &t, float &r, float &b)

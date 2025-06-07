@@ -954,7 +954,7 @@ void CPlayScene::KeepCameraAlwaysRight(int curentMap)
 	{
 	case 6:
 		if (cx < 0) cx = 0;
-		if (cx > 2600) cx = 2600;
+		if (cx > 2600) cx = 2580;
 		if (cy > -17) cy = -17;
 		if (cy < -250) cy = -250;
 		break;

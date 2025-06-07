@@ -7,10 +7,10 @@ height	240
 # type: 0: intro, 1: play scene 
 [SCENES]
 0	intro.txt	0
-6	map1.txt	1
-7	mapAn1_1.txt	1
-8	map4.txt	4
-9	mapAn1_4.txt	4
+6	map1.txt	1	-1
+7	mapAn1_1.txt	1	1
+8	map4.txt	4	0
+9	mapAn1_4.txt	4	-1
 # id	file 
 [TEXTURES]
 -100	textures\bbox.png

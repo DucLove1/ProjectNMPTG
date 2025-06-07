@@ -36,7 +36,7 @@ BoomerangBro::BoomerangBro(float x, float y)
 	indexCurPhase = 0;
 	canThrow = false;
 	gen = mt19937(rd()); // Initialize random number generator
-	dis = uniform_int_distribution<int>(0, 2); // Random number from 0 to 2
+	dis = uniform_int_distribution<int>(1, 2); // Random number from 1 to 2
 }
 void BoomerangBro::GetBoundingBox(float& l, float& t, float& r, float& b)
 {

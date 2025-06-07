@@ -59,7 +59,11 @@
 #include "BoomerangBro.h"
 #include "TeethLine.h"
 #include "RandomCardSystem.h"
+<<<<<<< HEAD
+#include "PausePanel.h"
+=======
 #include "HUDRandomCardSystem.h"
+>>>>>>> beaeb9665e47d5c752eda4848df222aa86a39234
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
 
@@ -427,6 +431,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CHUDMarioPower(x, y);
 		break;
 	}
+
+	case OBJECT_TYPE_HUD_PAUSE_PANEL:
+	{
+		isUIElement = true;
+		obj = new CPausePanel(x, y);
+
 	case OBJECT_TYPE_HUD_RANDOM_CARD_SYSTEM:
 	{
 		isUIElement = true;

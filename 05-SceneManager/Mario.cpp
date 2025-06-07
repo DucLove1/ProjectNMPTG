@@ -306,6 +306,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			item = nullptr;
 		}
 	}
+	DebugOut(L"%f, %f \n", x, y);
 
 	UpdateTail(dt);
 
@@ -401,10 +402,11 @@ void CMario::UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void CMario::UpdateWhenExitPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	float addedHeight =
-		((GetLevel() == MARIO_LEVEL_SMALL) ?
-			(MARIO_SMALL_BBOX_HEIGHT) : (MARIO_BIG_BBOX_HEIGHT)) * directionToExit;
-
+	float addedHeight = 0;
+	if ((GetLevel() == MARIO_LEVEL_SMALL))
+		addedHeight += directionToExit * (MARIO_SMALL_BBOX_HEIGHT * 1.5);
+	else
+		addedHeight += directionToExit * MARIO_BIG_BBOX_HEIGHT;
 	float YTarget = startPoint.second + addedHeight;
 
 	vy = (YTarget - this->y) / dt; //moving target point

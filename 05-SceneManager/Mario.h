@@ -265,6 +265,7 @@ public:
 		directionToExit = dir;
 
 		isEndGame = false;
+		GameManager::GetInstance()->SetEndGame(isEndGame);
 		isOnPlatform = false;
 		//jump_start = -1;
 		isPickUp = false;

@@ -568,6 +568,8 @@ void CGame::SwitchScene()
 		s->Load();
 		GameManager::GetInstance()->ResetTime(); // reset game manager
 		next_scene = -1; // reset next scene
+		// set lai camera
+		SetCamPos(0, 0);
 	}
 }
 

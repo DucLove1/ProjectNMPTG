@@ -920,7 +920,9 @@ void CPlayScene::Update(DWORD dt)
 		// Update camera to scrolling
 		ScrollingCamera(dt);
 	}
-
+	float camX, camY;
+	CGame::GetInstance()->GetCamPos(camX, camY);
+	DebugOut(L"cam pos x = %f, y =%f\n", camX, camY);
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 
 	PurgeDeletedObjects();

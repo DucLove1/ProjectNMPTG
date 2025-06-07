@@ -43,7 +43,7 @@ randomCard.txt
 #pipe
 9	137	151	32	16	2	81000	82000	82000	1
 #boomerang bro
-58	10	155
+58	300	155
 
 # hud
 25	136	211

@@ -89,29 +89,29 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		//case DIK_8: //was test
 		//	mario->SetPickUp(true);
 		//	break;
-	case DIK_R: // reset
-		//Reload();
-		break;
-	case DIK_D:
-		GameManager::GetInstance()->PauseGame();
-		break;
-	case DIK_C:
-		GameManager::GetInstance()->ResumeGame();
-		break;
-	case DIK_Q:
-		GameManager::GetInstance()->PauseToTransform();
-		break;
-	case DIK_E:
-		GameManager::GetInstance()->ResumeWhenDoneTransform();
-		break;
-	case DIK_T:
-	{
-		float x, y;
-		CGame::GetInstance()->GetCamPos(x, y);
-		FadeTransition* fade = new FadeTransition(x, y, 2000);
-		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(fade);
-		break;
-	}
+	//case DIK_R: // reset
+	//	//Reload();
+	//	break;
+	//case DIK_D:
+	//	GameManager::GetInstance()->PauseGame();
+	//	break;
+	//case DIK_C:
+	//	GameManager::GetInstance()->ResumeGame();
+	//	break;
+	//case DIK_Q:
+	//	GameManager::GetInstance()->PauseToTransform();
+	//	break;
+	//case DIK_E:
+	//	GameManager::GetInstance()->ResumeWhenDoneTransform();
+	//	break;
+	//case DIK_T:
+	//{
+	//	float x, y;
+	//	CGame::GetInstance()->GetCamPos(x, y);
+	//	FadeTransition* fade = new FadeTransition(x, y, 2000);
+	//	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(fade);
+	//	break;
+	//}
 	case DIK_W:
 	{
 		if (GameManager::GetInstance()->IsPausedGame())

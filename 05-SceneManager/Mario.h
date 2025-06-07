@@ -175,7 +175,9 @@ class CMario : public CGameObject
 	float powerUnit;
 
 	bool upArrowWasHolded;
+	bool downArrowWasHoled;
 	bool keyAWasHoled;
+	bool addedFlag =false;
 
 	bool canEntryPipe;
 	bool isEntryPipe;
@@ -253,6 +255,7 @@ public:
 
 		keyAWasHoled = false;
 		upArrowWasHolded = false;
+		downArrowWasHoled = false;
 		isEntryPipe = false;
 		isPrepareEntry = false;
 		//isExitPipe = true;
@@ -310,7 +313,7 @@ public:
 
 	void DecreaseLevel();
 	void SetPowerUP(bool power) {
-		isPowerUp = power; 
+		isPowerUp = power;
 		//anchor_start = GameClock::GetInstance()->GetTime();
 		anchor_start = GetTickCount64();
 		GameManager::GetInstance()->PauseToTransform();
@@ -333,8 +336,10 @@ public:
 	//for falling
 	bool IsFalling() { return vy > 0 && !isOnPlatform; }
 	bool IsOnPlatform() { return isOnPlatform; }
-	void SetSlowFalling(bool value) { isSlowFalling = value; 
-						if(value) slowFallingTime = SLOW_FALLING_TIME; }
+	void SetSlowFalling(bool value) {
+		isSlowFalling = value;
+		if (value) slowFallingTime = SLOW_FALLING_TIME;
+	}
 	bool IsSlowFalling() { return isSlowFalling; }
 
 	void SetSmallJump();
@@ -354,6 +359,8 @@ public:
 	void SetKeyA(bool value) { keyAWasHoled = value; }
 	bool UpArrowWasHoled() { return upArrowWasHolded; }
 	void SetUpArrow(bool value) { upArrowWasHolded = value; }
+	bool DownArrowWasHolded() { return downArrowWasHoled; }
+	void SetDownArrow(bool value) { downArrowWasHoled = value; }
 
 	void SetLinked(bool value1, bool value2, DropLift* dropLift);
 	//bool IsLinkedLeft() { return isLinkedLeft; }

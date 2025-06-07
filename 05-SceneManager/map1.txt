@@ -38,8 +38,8 @@ randomCard.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 #mario
-0	20	100
-
+#0	20	100
+0	2317	-150
 
 #wall
 #37	0	40

@@ -324,12 +324,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int sprite_middle = atoi(tokens[7].c_str());
 		int sprite_end = atoi(tokens[8].c_str());
 		int marioOut = 0;
+		int canEntry = 0;
 		if (tokens.size() > 9)
 			marioOut = atoi(tokens[9].c_str());
+		if (tokens.size() > 10)
+			canEntry = atoi(tokens[10].c_str());
+
 		obj = new CPipe(
 			x, y,
 			cell_width, cell_height, length,
-			sprite_begin, sprite_middle, sprite_end, marioOut);
+			sprite_begin, sprite_middle, sprite_end, marioOut, canEntry);
 		break;
 
 	}

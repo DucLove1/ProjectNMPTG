@@ -169,6 +169,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else if (!(state == MARIO_STATE_RELEASE_JUMP) && !isFlying)
 	{
 		powerUnit -= dt * 10.0f;
+		startFlying = 0.0f;
 		if (powerUnit < 0.0f)
 		{
 			powerUnit = 0.0f;
@@ -181,6 +182,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			startFlying = 0;
 			powerUnit = 0;
+			isFlying = false;
 		}
 	}
 	GameManager::GetInstance()->SetPower(powerUnit / (MAX_POWER_UNIT / 7));
@@ -283,7 +285,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	
+
 	//if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	preNx = nx;
@@ -314,7 +316,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	//limit top map 1 
 	if (x < -350.0f) x = -350.0f;
-	if (y > 250) 
+	if (y > 250)
 	{
 		SetState(MARIO_STATE_DIE);
 		DelayLimit = 5000;
@@ -345,7 +347,14 @@ void CMario::UpdateWhenEntryPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		ny = -1.0f;
 	}
-
+	if (addedFlag == false)
+	{
+		if (isEntryDown)
+			y += 1;
+		else
+			y -= 4;
+		addedFlag = true;
+	}
 
 	this->vy = MARIO_SPEED_ENTRY_PIPE * ny;
 	//DebugOut(L"this is ny %f %f \n", ny, vy);
@@ -515,22 +524,26 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 {
 	CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
+	canEntryPipe = true;
 	if (pipe)
 		if (pipe->GetCanLetEntry() == 0)
-			///return;
-	if (pipe != nullptr && e->ny < 0 && !isPrepareEntry && !isEntryPipe)
+			return;
+	if (pipe != nullptr && e->ny < 0 && !isPrepareEntry && !isEntryPipe && pipe->GetCanLetEntry() == 1 && DownArrowWasHolded())
 	{
 
 		canEntryPipe = true;
 		pipe->GetPosition(targetPoint.first, targetPoint.second); // get target point of pipe
 		pipe->SetEntryPipe(true); // set pipe to entry state
+
+		this->SetForEntryPipeDown();
 	}
-	else if (pipe != nullptr && e->ny > 0)// && upArrowWasHolded)
+	else if (pipe != nullptr && e->ny > 0 && pipe->GetCanLetEntry() == -1 && UpArrowWasHoled())// && upArrowWasHolded)
 	{
 		canEntryPipe = true;
 		pipe->GetPosition(targetPoint.first, targetPoint.second);
 		pipe->SetEntryPipe(true);
-		if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
+		//if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
+		this->SetForEntryPipeUp();
 	}
 }
 

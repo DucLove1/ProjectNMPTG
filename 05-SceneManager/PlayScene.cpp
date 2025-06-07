@@ -59,11 +59,9 @@
 #include "BoomerangBro.h"
 #include "TeethLine.h"
 #include "RandomCardSystem.h"
-<<<<<<< HEAD
 #include "PausePanel.h"
-=======
 #include "HUDRandomCardSystem.h"
->>>>>>> beaeb9665e47d5c752eda4848df222aa86a39234
+#include "Mario.h"
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
 
@@ -171,6 +169,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
+	{
 		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
@@ -190,6 +189,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		player->SetState(GameManager::GetInstance()->GetCurLevel());
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
+	}
 	case OBJECT_TYPE_BROWN_GOOMBA:
 	{
 		int state = atoi(tokens[3].c_str());
@@ -436,6 +436,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		isUIElement = true;
 		obj = new CPausePanel(x, y);
+		break;
+	}
 
 	case OBJECT_TYPE_HUD_RANDOM_CARD_SYSTEM:
 	{
@@ -595,10 +597,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	default:
+	{
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
 		return;
 	}
-
+	}
 	// General object setup
 	obj->SetPosition(x, y);
 
@@ -931,7 +934,7 @@ void CPlayScene::Update(DWORD dt)
 		// Update camera to scrolling
 		ScrollingCamera(dt);
 	}
-  
+
 	KeepCameraAlwaysRight(currentMap);
 	float camX, camY;
 	CGame::GetInstance()->GetCamPos(camX, camY);

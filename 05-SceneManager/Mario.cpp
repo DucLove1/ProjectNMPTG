@@ -169,9 +169,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else if (!(state == MARIO_STATE_RELEASE_JUMP) && !isFlying)
 	{
 		powerUnit -= dt * 10.0f;
+		startFlying = 0.0f;
 		if (powerUnit < 0.0f)
 		{
 			powerUnit = 0.0f;
+			isFlying = false;
 		}
 	}
 	if (isFlying)
@@ -180,6 +182,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			startFlying = 0;
 			powerUnit = 0;
+			isFlying = false;
 		}
 	}
 	GameManager::GetInstance()->SetPower(powerUnit / (MAX_POWER_UNIT / 7));
@@ -282,7 +285,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	DebugOut(L"MAX %f %f\n", x, y);
+	if (GameClock::GetInstance()->GetTime() - pauseToDecrease > 1000)
+	{
+		GameManager::GetInstance()->ResumeWhenDoneTransform();
+	}
+
 	//if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	preNx = nx;
@@ -302,9 +309,22 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	UpdateTail(dt);
 
+	DelayLimit -= dt;
+	if (DelayLimit <= 0)
+		DelayLimit = 0;
 
-	LimitByCameraBorder();
+	if (DelayLimit <= 0) {
 
+		LimitByCameraBorder();
+		//DebugOut(L"MAX %f %f\n", x, y);
+	}
+	//limit top map 1 
+	if (x < -350.0f) x = -350.0f;
+	if (y > 250)
+	{
+		SetState(MARIO_STATE_DIE);
+		DelayLimit = 5000;
+	}
 }
 
 void CMario::UpdateWhenEndScene(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -331,7 +351,14 @@ void CMario::UpdateWhenEntryPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		ny = -1.0f;
 	}
-
+	if (addedFlag == false)
+	{
+		if (isEntryDown)
+			y += 1;
+		else
+			y -= 4;
+		addedFlag = true;
+	}
 
 	this->vy = MARIO_SPEED_ENTRY_PIPE * ny;
 	//DebugOut(L"this is ny %f %f \n", ny, vy);
@@ -462,6 +489,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithFireBall(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
+	else if (dynamic_cast<Boomerang*>(e->obj))
+		OnCollisionWithBoomerang(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CQuestionBrick*>(e->obj))
@@ -498,22 +527,38 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 
 }
 
+void CMario::OnCollisionWithBoomerang(LPCOLLISIONEVENT e)
+{
+	Boomerang* bmr = dynamic_cast<Boomerang*> (e->obj);
+	if (bmr)
+	{
+		DecreaseLevel();
+	}
+}
+
 void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 {
 	CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
-	if (pipe != nullptr && e->ny < 0 && !isPrepareEntry && !isEntryPipe)
+	if (pipe)
+		if (pipe->GetCanLetEntry() == 0)
+			return;
+	canEntryPipe = true;
+	if (pipe != nullptr && e->ny < 0 && !isPrepareEntry && !isEntryPipe && pipe->GetCanLetEntry() == 1 && DownArrowWasHolded())
 	{
 
 		canEntryPipe = true;
 		pipe->GetPosition(targetPoint.first, targetPoint.second); // get target point of pipe
 		pipe->SetEntryPipe(true); // set pipe to entry state
+
+		this->SetForEntryPipeDown();
 	}
-	else if (pipe != nullptr && e->ny > 0)// && upArrowWasHolded)
+	else if (pipe != nullptr && e->ny > 0 && pipe->GetCanLetEntry() == -1 && UpArrowWasHoled())// && upArrowWasHolded)
 	{
 		canEntryPipe = true;
 		pipe->GetPosition(targetPoint.first, targetPoint.second);
 		pipe->SetEntryPipe(true);
 		if (abs(targetPoint.first - this->x) >= MARIO_BIG_BBOX_WIDTH / 3) return;
+		this->SetForEntryPipeUp();
 	}
 }
 
@@ -1303,16 +1348,18 @@ void CMario::SetState(int state)
 
 	case MARIO_STATE_ENDGAME:
 		isSitting = false;
+		isPowerUp = false;
+		isPickUp = false;
+		isEntryPipe = false;
+		isPrepareEntry = false;
+		isExitPipe = false;
 		SetAttack(false);
 		isRecovering = false;
 		isPowerUp = false;
-		isPickUp = false;
 
-		maxVx = MARIO_WALKING_SPEED / 2;
-		//vx += ax;
-		vy = 0;
-		ax = -MARIO_ACCEL_WALK_X;
-		ay = MARIO_GRAVITY * 2;
+		maxVx = MARIO_WALKING_SPEED;
+		ax = MARIO_ACCEL_WALK_X;
+		ay = MARIO_GRAVITY;
 		break;
 	}
 
@@ -1390,6 +1437,7 @@ void CMario::DecreaseLevel()
 {
 	if (level == MARIO_LEVEL_SMALL) {
 		SetState(MARIO_STATE_DIE);
+		DelayLimit = 5000;
 	}
 	else
 	{
@@ -1397,6 +1445,10 @@ void CMario::DecreaseLevel()
 		StartUntouchable();
 		StartRecovery();
 	}
+	if (pauseToDecrease == 0)
+		pauseToDecrease = GameClock::GetInstance()->GetTime();
+
+	GameManager::GetInstance()->PauseToTransform();
 }
 
 void CMario::PickingItem(DWORD dt) {
@@ -1517,7 +1569,7 @@ bool CMario::IsReadyToFly()
 }
 bool CMario::IsMAXRunning()
 {
-	bool b1 = (vx >= MARIO_EXPECTED_SPEED) ? true : false;
+	bool b1 = (abs(vx) >= MARIO_EXPECTED_SPEED) ? true : false;
 	bool b2 = (powerUnit >= MAX_POWER_UNIT);
 	return b1 && b2;
 }
@@ -1525,6 +1577,7 @@ bool CMario::IsMAXRunning()
 void CMario::SetFlying(bool value)
 {
 	isFlying = value;
+	if (!value) return;
 	flyingTime = FLYING_TIME;
 	if (startFlying == 0)
 		startFlying = GameClock::GetInstance()->GetTime();

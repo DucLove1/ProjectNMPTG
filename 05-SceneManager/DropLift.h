@@ -5,7 +5,7 @@ class CMario;
 #include "Game.h"
 #include "PlayScene.h"
 
-#define GRAVITY 0.0002f
+#define GRAVITY 0.00025f
 class DropLift : public CGameObject
 {
 private:

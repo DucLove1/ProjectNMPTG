@@ -23,14 +23,8 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
-		if (mario->CanEntryPipe())
-		{
-			mario->SetForEntryPipeDown();
-		}
-		else
-		{
+		if (!mario->CanEntryPipe())
 			mario->SetState(MARIO_STATE_SIT);
-		}
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
@@ -40,8 +34,8 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 			mario->GetSpeed(vx, vy);
 			mario->SetSpeed(vx, 0);
 		}
-		if (mario->GetLevel() == MARIO_LEVEL_TAIL 
-			&& mario->IsReadyToFly() 
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL
+			&& mario->IsReadyToFly()
 			&& !mario->IsOnPlatform())
 		{
 			mario->SetFlying(true);
@@ -76,7 +70,8 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_SPACE:
 		//mario->SetState(MARIO_STATE_DIE);
-		mario->SetForEndGame(true);
+		//mario->SetForEndGame(true);
+		mario->SetPosition(1523.623047, -110.0);
 		break;
 	case DIK_A:
 		mario->SetKeyA(true);
@@ -146,7 +141,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetKeyA(false);
 		//mario->SetAttack(false);
 		break;
-	//testng
+		//testng
 	case DIK_9:
 		mario->SetForEndGame(false);
 	}
@@ -160,12 +155,21 @@ void CSampleKeyHandler::KeyState(BYTE* states)
 	if (game->IsKeyDown(DIK_UP))
 	{
 		mario->SetUpArrow(true);
-		mario->SetForEntryPipeUp();
 	}
 	else
 	{
 		mario->SetUpArrow(false);
 	}
+
+	if (game->IsKeyDown(DIK_DOWN))
+	{
+		mario->SetDownArrow(true);
+	}
+	else
+	{
+		mario->SetDownArrow(false);
+	}
+
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
 

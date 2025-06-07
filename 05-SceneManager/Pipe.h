@@ -14,13 +14,16 @@ protected:
 	int spriteIdBegin, spriteIdMiddle, spriteIdEnd;
 	//int spriteIdTop;
 	bool isEntryPipe; // true if player is in entry pipe
+
+	int canLetEntry;
 	CMario* player; // for entry pipe
 	bool MarioOut;
+
 
 public:
 	CPipe(float x, float y,
 		float cell_width, float cell_height, int length,
-		int sprite_id_begin, int sprite_id_middle, int sprite_id_end, int MarioOut = 0) :CGameObject(x, y)
+		int sprite_id_begin, int sprite_id_middle, int sprite_id_end, int MarioOut = 0, int canEntry = 0) :CGameObject(x, y)
 	{
 		this->length = length;
 		this->cellWidth = cell_width;
@@ -29,6 +32,7 @@ public:
 		this->spriteIdMiddle = sprite_id_middle;
 		this->spriteIdEnd = sprite_id_end;
 
+		this->canLetEntry = canEntry;
 		isEntryPipe = false;
 		if (MarioOut)
 		{
@@ -50,6 +54,8 @@ public:
 	int IsDirectionColliable(float nx, float ny);
 
 	void SetEntryPipe(bool value);
+
+	int GetCanLetEntry() { return canLetEntry; }
 
 	void SetPlayer();
 };

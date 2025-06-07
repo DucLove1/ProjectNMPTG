@@ -159,9 +159,12 @@ class CMario : public CGameObject
 	int isRecovering;
 	ULONGLONG recovery_start;
 
+	int DelayLimit = 0;
+
 	bool isPowerUp;
 	//bool isSelfPausing;
 	ULONGLONG anchor_start; // time to anchor on air 
+	ULONGLONG pauseToDecrease  = 0;
 
 	int jumpedTime;
 	bool isSlowFalling;
@@ -173,7 +176,9 @@ class CMario : public CGameObject
 	float powerUnit;
 
 	bool upArrowWasHolded;
+	bool downArrowWasHoled;
 	bool keyAWasHoled;
+	bool addedFlag =false;
 
 	bool canEntryPipe;
 	bool isEntryPipe;
@@ -204,6 +209,7 @@ class CMario : public CGameObject
 	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
+	void OnCollisionWithBoomerang(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
@@ -237,6 +243,7 @@ public:
 
 		isRecovering = 0;
 		recovery_start = -1;
+		DelayLimit = 1000;
 
 		isPowerUp = false;
 		//isSelfPausing = false;
@@ -250,6 +257,7 @@ public:
 
 		keyAWasHoled = false;
 		upArrowWasHolded = false;
+		downArrowWasHoled = false;
 		isEntryPipe = false;
 		isPrepareEntry = false;
 		//isExitPipe = true;
@@ -307,7 +315,7 @@ public:
 
 	void DecreaseLevel();
 	void SetPowerUP(bool power) {
-		isPowerUp = power; 
+		isPowerUp = power;
 		//anchor_start = GameClock::GetInstance()->GetTime();
 		anchor_start = GetTickCount64();
 		GameManager::GetInstance()->PauseToTransform();
@@ -330,7 +338,10 @@ public:
 	//for falling
 	bool IsFalling() { return vy > 0 && !isOnPlatform; }
 	bool IsOnPlatform() { return isOnPlatform; }
-	void SetSlowFalling(bool value) { isSlowFalling = value; slowFallingTime = SLOW_FALLING_TIME; }
+	void SetSlowFalling(bool value) {
+		isSlowFalling = value;
+		if (value) slowFallingTime = SLOW_FALLING_TIME;
+	}
 	bool IsSlowFalling() { return isSlowFalling; }
 
 	void SetSmallJump();
@@ -350,6 +361,8 @@ public:
 	void SetKeyA(bool value) { keyAWasHoled = value; }
 	bool UpArrowWasHoled() { return upArrowWasHolded; }
 	void SetUpArrow(bool value) { upArrowWasHolded = value; }
+	bool DownArrowWasHolded() { return downArrowWasHoled; }
+	void SetDownArrow(bool value) { downArrowWasHoled = value; }
 
 	void SetLinked(bool value1, bool value2, DropLift* dropLift);
 	//bool IsLinkedLeft() { return isLinkedLeft; }

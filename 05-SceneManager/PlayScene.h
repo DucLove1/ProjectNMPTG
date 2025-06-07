@@ -47,6 +47,7 @@ public:
 
 	void CinemachineCamera();
 	void ScrollingCamera(DWORD dt);
+	void KeepCameraAlwaysRight(int curentMap);
 
 	void Clear();
 	void PurgeDeletedObjects();

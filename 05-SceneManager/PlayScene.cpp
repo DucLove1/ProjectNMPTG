@@ -326,12 +326,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int sprite_middle = atoi(tokens[7].c_str());
 		int sprite_end = atoi(tokens[8].c_str());
 		int marioOut = 0;
+		int canEntry = 0;
 		if (tokens.size() > 9)
 			marioOut = atoi(tokens[9].c_str());
+		if (tokens.size() > 10)
+			canEntry = atoi(tokens[10].c_str());
+
 		obj = new CPipe(
 			x, y,
 			cell_width, cell_height, length,
-			sprite_begin, sprite_middle, sprite_end, marioOut);
+			sprite_begin, sprite_middle, sprite_end, marioOut, canEntry);
 		break;
 
 	}
@@ -787,9 +791,6 @@ void CPlayScene::CinemachineCamera()
 	}
 
 
-	if (cx < 0) cx = 0;
-	if (cy > -17) cy = 0;
-
 	if (!isChangeX && !isChangeY)
 	{
 		CGame::GetInstance()->SetCamPos(preCamLeft, preCamTop);
@@ -920,14 +921,51 @@ void CPlayScene::Update(DWORD dt)
 		// Update camera to scrolling
 		ScrollingCamera(dt);
 	}
+  
+	KeepCameraAlwaysRight(currentMap);
 	float camX, camY;
 	CGame::GetInstance()->GetCamPos(camX, camY);
-	DebugOut(L"cam pos x = %f, y =%f\n", camX, camY);
+	//DebugOut(L"cam pos x = %f, y =%f\n", camX, camY);
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 
 	PurgeDeletedObjects();
 
 }
+void CPlayScene::KeepCameraAlwaysRight(int curentMap)
+{
+	CGame* game = CGame::GetInstance();
+	float cx, cy;
+	game->GetCamPos(cx, cy);
+
+	switch (curentMap)
+	{
+	case 6:
+		if (cx < 0) cx = 0;
+		if (cx > 2600) cx = 2600;
+		if (cy > -17) cy = -17;
+		if (cy < -250) cy = -250;
+		break;
+	case 7:
+		if (cx < 2) cx = 2;
+		if (cx > 200) cx = 200;
+		if (cy < 0) cy = 0;
+		if (cy > 4) cy = 4;
+		break;
+	case 8:
+
+		if (cx > 1800) cx = 1800;
+		break;
+	case 9:
+		if (cx < 10) cx = 10;
+		if (cx > 230) cx = 230;
+		if (cy > 7) cy = 7;
+		if (cy < -50) cy = -50;
+		break;
+	}
+
+	game->SetCamPos(cx, cy);
+}
+
 void CPlayScene::Render()
 {
 	for (int i = 1; i < objects.size(); i++)

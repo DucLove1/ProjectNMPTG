@@ -1,20 +1,16 @@
 [SETTINGS]
-start	6
+start	9	
 width	320
 height	240
 
 #id	type	file
 # type: 0: intro, 1: play scene 
 [SCENES]
-0	intro.txt
-1	scene01.txt
-2	scene02.txt
-3	scene03.txt
-5	scene0005.txt
-6	map1.txt
-7	mapAn1_1.txt
-8	map4.txt
-9	mapAn1_4.txt
+0	intro.txt	0
+6	map1.txt	1	-1
+7	mapAn1_1.txt	1	1
+8	map4.txt	4	0
+9	mapAn1_4.txt	4	-1
 # id	file 
 [TEXTURES]
 -100	textures\bbox.png
@@ -27,4 +23,5 @@ height	240
 60	textures\marioWorldMap.png
 
 100	textures\hud.png
+101	textures\UIElement.png
 200	textures\fadeTransition.png

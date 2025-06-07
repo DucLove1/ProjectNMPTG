@@ -71,6 +71,8 @@ void ItemGoldBrick::InitializeLeaf(LPCOLLISIONEVENT e)
 }
 void ItemGoldBrick::GotHit(LPCOLLISIONEVENT e)
 {
+	if (e->ny <= 0 && dynamic_cast<CMario*>(e->src_obj))
+		return;
 	// chon item
 	int itemId = ChooseItem();
 	// tao vat pham

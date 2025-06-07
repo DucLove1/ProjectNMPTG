@@ -15,12 +15,14 @@ class CPlayScene: public CScene
 {
 private:
 	CGameObject* curObject; // current object being edited
-
+	ULONGLONG timerWhenPlayerDie;
+	int directionWhenReenterScene; // 1: right, -1: left, 0: no direction
 protected: 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
 
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> UserInterfaces;
 
 	ULONGLONG timeStart;
 	BOOLEAN isStartGame; //for scrollingCamera
@@ -34,11 +36,10 @@ protected:
 	void LoadAssets(LPCWSTR assetFile);
 	
 public: 
-	CPlayScene(int id, LPCWSTR filePath);
+	CPlayScene(int id, LPCWSTR filePath, int worldIndex, int directionWhenReenterScene = 0);
 
 	virtual void Load();
 	virtual void Update(DWORD dt);
-	bool CheckObjectPause(CGameObject* object);
 	virtual void Render();
 	virtual void Unload();
 
@@ -46,12 +47,15 @@ public:
 
 	void CinemachineCamera();
 	void ScrollingCamera(DWORD dt);
+	void KeepCameraAlwaysRight(int curentMap);
 
 	void Clear();
 	void PurgeDeletedObjects();
 	void AddObject(LPGAMEOBJECT obj);
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
 	CGameObject* GetCurObject() { return curObject; }
+	void DeleteFadeTransition();
+	void Reload();
 };
 
 typedef CPlayScene* LPPLAYSCENE;

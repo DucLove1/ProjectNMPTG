@@ -18,8 +18,10 @@
 #include "TextMeshPro.h"
 #include "HUDLifeText.h"
 #include "HUDTimeText.h"
-
+#include "HUDLevel.h"
 #include "HUDScoreText.h"
+#include "HUDCoin.h"
+#include "HUDMarioPower.h"
 
 #include "GreenKoopa.h"
 
@@ -57,16 +59,19 @@
 #include "BoomerangBro.h"
 #include "TeethLine.h"
 #include "RandomCardSystem.h"
+#include "PausePanel.h"
+#include "HUDRandomCardSystem.h"
+#include "Mario.h"
 #define TIMES_TO_DEVIDE_WIDTH 10
 #define TIMES_TO_DEVIDE_HEIGHT 5
 
 #define WAITING_TIME_BEFORE_SCROLLING 1000 * 3
 #define VX_SCROLLING 0.035f 
-
+#define TIME_FOR_DELAY 2000
 using namespace std;
 
-CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
-	CScene(id, filePath)
+CPlayScene::CPlayScene(int id, LPCWSTR filePath, int worldIndex, int directionWhenReenterScene) :
+	CScene(id, filePath, worldIndex)
 {
 	isStartGame = false;
 	timeStart = GameClock::GetInstance()->GetTime();
@@ -74,6 +79,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	curObject = NULL;
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
+	this->timerWhenPlayerDie = -1; // -1 means player is not dead yet
+	this->directionWhenReenterScene = directionWhenReenterScene;
 }
 
 
@@ -147,6 +154,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 */
 void CPlayScene::_ParseSection_OBJECTS(string line)
 {
+	bool isUIElement = false;
 	vector<string> tokens = split(line);
 
 	// skip invalid lines - an object set must have at least id, x, y
@@ -161,17 +169,27 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
+	{
 		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMario(x, y);
+		if (tokens.size() >= 4)
+		{
+			int direction = atoi(tokens[3].c_str());
+
+			obj = new CMario(x, y, direction);
+
+		}
+		else
+			obj = new CMario(x, y);
 		player = (CMario*)obj;
 		//set level to mario 
 		player->SetState(GameManager::GetInstance()->GetCurLevel());
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
+	}
 	case OBJECT_TYPE_BROWN_GOOMBA:
 	{
 		int state = atoi(tokens[3].c_str());
@@ -311,11 +329,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int sprite_begin = atoi(tokens[6].c_str());
 		int sprite_middle = atoi(tokens[7].c_str());
 		int sprite_end = atoi(tokens[8].c_str());
+		int marioOut = 0;
+		int canEntry = 0;
+		if (tokens.size() > 9)
+			marioOut = atoi(tokens[9].c_str());
+		if (tokens.size() > 10)
+			canEntry = atoi(tokens[10].c_str());
 
 		obj = new CPipe(
 			x, y,
 			cell_width, cell_height, length,
-			sprite_begin, sprite_middle, sprite_end);
+			sprite_begin, sprite_middle, sprite_end, marioOut, canEntry);
 		break;
 
 	}
@@ -352,48 +376,75 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	//for UI
 	case OBJECT_TYPE_HUD_BORDER:
 	{
+		isUIElement = true;
 		obj = new CHUDBorder(x, y);
+		DebugOut(L"%f , %f HUDpos", x, y);
 		DebugOut(L"HUDCreated");
 		break;
 	}
 	// this is base class, almost is not render this class, just to Inherit
 	case OBJECT_TYPE_HUD_TEXTMESHPRO:
 	{
+		isUIElement = true;
 		string str = "";
 		obj = new CTextMeshPro(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_LIFE_TEXT:
 	{
+		isUIElement = true;
 		string str = "COUTER OF REMAINING LIVES";
 		obj = new CHUDLifeText(x, y, str);
 		break;
 	}
 	case OBEJECT_TYPE_HUD_LEVEL_TEXT:
 	{
+		isUIElement = true;
 		string str = "LEVEL";
-		//	obj = new CTextMeshPro(x, y, str);
+		obj = new CHUDLevel(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_SCORE_TEXT:
 	{
+		isUIElement = true;
 		string str = "SCORE";
 		obj = new CHUDScoreText(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_TIME_TEXT:
 	{
+		isUIElement = true;
 		string str = "TIME";
 		obj = new CHUDTimeText(x, y, str);
 		break;
 	}
 	case OBJECT_TYPE_HUD_COIN:
 	{
+		isUIElement = true;
 		string str = "COIN";
-		//	obj = new CTextMeshPro(x, y, str);
+		obj = new CHUDCoin(x, y, str);
+		break;
+	}
+	case OBJECT_TYPE_HUD_POWER: //45
+	{
+		isUIElement = true;
+		obj = new CHUDMarioPower(x, y);
 		break;
 	}
 
+	case OBJECT_TYPE_HUD_PAUSE_PANEL:
+	{
+		isUIElement = true;
+		obj = new CPausePanel(x, y);
+		break;
+	}
+
+	case OBJECT_TYPE_HUD_RANDOM_CARD_SYSTEM:
+	{
+		isUIElement = true;
+		obj = new HUDRandomCardSystem(x, y);
+		break;
+	}
 	//end UI
 
 	case OBJECT_TYPE_BIG_TREE:
@@ -509,11 +560,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new DropLift(x, y);
 		break;
 	}
-	case OBJECT_TYPE_BOOMERANG:
-	{
-		obj = new Boomerang(x, y);
-		break;
-	}
 	case OBJECT_TYPE_BOOMERANG_BRO:
 	{
 		obj = new BoomerangBro(x, y);
@@ -532,7 +578,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float b = (float)atof(tokens[4].c_str());
 		bool isPortalIn = atoi(tokens[5].c_str()) == 1 ? true : false; // 1 for in, 0 for out
 		int scene_id = atoi(tokens[6].c_str());
-		obj = new CPortal(x, y, r, b, isPortalIn,scene_id);
+		float posOutX = NON_POS, posOutY = NON_POS;
+		posOutX = (float)atof(tokens[7].c_str());
+		posOutY = (float)atof(tokens[8].c_str());
+		obj = new CPortal(x, y, r, b, isPortalIn, scene_id, posOutX, posOutY);
 		break;
 	}
 	case OBJECT_TYPE_RANDOM_CARD_SYSTEM:
@@ -540,18 +589,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new RandomCardSystem(x, y);
 		break;
 	}
-
+	case OBJECT_TYPE_FADE_TRANSITION:
+	{
+		bool isFadeIn = atoi(tokens[3].c_str()) == 1 ? true : false; // 1 for fade in, 0 for fade out
+		obj = new FadeTransition(x, y, isFadeIn);
+		break;
+	}
 
 	default:
+	{
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
 		return;
 	}
-
+	}
 	// General object setup
 	obj->SetPosition(x, y);
 
-
-	objects.push_back(obj);
+	if (isUIElement)
+		UserInterfaces.push_back(obj);
+	else
+		objects.push_back(obj);
 }
 
 void CPlayScene::AddObject(LPGAMEOBJECT obj) {
@@ -595,6 +652,57 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 
 void CPlayScene::Load()
 {
+	// scene da duoc load roi
+	if (!this->objects.empty())
+	{
+		// vi da xoa asset khi chuyen scene nen phai add vao lai
+		// khong can them object vi da co san object
+		ifstream f;
+		f.open(sceneFilePath);
+
+		// current resource section flag
+		int section = SCENE_SECTION_UNKNOWN;
+
+		char str[MAX_SCENE_LINE];
+		while (f.getline(str, MAX_SCENE_LINE))
+		{
+			string line(str);
+
+			if (line[0] == '#') continue;	// skip comment lines	
+			if (line == "[ASSETS]") { section = SCENE_SECTION_ASSETS; continue; };
+			if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
+
+			//
+			// data section
+			//
+			switch (section)
+			{
+			case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
+			}
+		}
+
+		// neu quay lai map da duoc load thi gan lai trang thai cua mario
+		if (player != NULL)
+		{
+			CMario* mario = dynamic_cast<CMario*>(player);
+			mario->SetLevel(GameManager::GetInstance()->GetCurLevel());
+			mario->SetPosition(this->posOutX, this->posOutY);
+			mario->SetDirection(GameManager::GetInstance()->GetMarioDirection());
+			mario->SetState(MARIO_STATE_EXIT_PIPE);
+			mario->SetDirectionToExit(this->directionWhenReenterScene);
+			mario->SetStartPoint(this->posOutX, this->posOutY);
+		}
+		// tao mario moi
+		//CMario* mario = new CMario(this->posOutX, this->posOutY, this->directionWhenReenterScene); // create new mario object
+		//mario->SetLevel(GameManager::GetInstance()->GetCurLevel());
+		//player->Delete();
+		//player = mario; // set player to new mario object
+		//objects[0] = mario;
+		f.close();
+		// ADD FADE TRANSITION
+		this->objects.push_back(new FadeTransition(0, 0, true));
+		return;
+	}
 	DebugOut(L"[INFO] Start loading scene from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -624,8 +732,16 @@ void CPlayScene::Load()
 	}
 
 	f.close();
-
+	// ADD FADE TRANSITION
+	this->objects.push_back(new FadeTransition(0, 0, true));
+	// set state mario 
+	((CMario*)player)->SetLevel(GameManager::GetInstance()->GetCurLevel());
+	// set direction for mario
+	((CMario*)player)->SetDirection(GameManager::GetInstance()->GetMarioDirection());
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
+	/*float x, y;
+	player->GetPosition(x, y);
+	CGame::GetInstance()->SetCamPos(x - CGame::GetInstance()->GetBackBufferWidth() / 2, y - CGame::GetInstance()->GetBackBufferHeight() * 3 / 5);*/
 }
 
 void CPlayScene::CinemachineCamera()
@@ -688,9 +804,6 @@ void CPlayScene::CinemachineCamera()
 	}
 
 
-	if (cx < 0) cx = 0;
-	if (cy > -17) cy = -17;
-
 	if (!isChangeX && !isChangeY)
 	{
 		CGame::GetInstance()->SetCamPos(preCamLeft, preCamTop);
@@ -741,6 +854,36 @@ void CPlayScene::ScrollingCamera(DWORD dt)
 
 void CPlayScene::Update(DWORD dt)
 {
+	if (!player)
+		return;
+	if (player->GetState() == MARIO_STATE_DIE)
+	{
+		if (this->timerWhenPlayerDie == -1) // if player is not dead yet
+		{
+			this->timerWhenPlayerDie = GetTickCount64();
+			GameManager::GetInstance()->PauseToTransform();
+			// reset level mario to small
+			GameManager::GetInstance()->SetCurLevel(MARIO_LEVEL_SMALL);
+		}
+		else if (GetTickCount64() - timerWhenPlayerDie >= TIME_FOR_DELAY)
+		{
+			Reload();
+			this->timerWhenPlayerDie = -1; // reset timer
+			GameManager::GetInstance()->ResumeWhenDoneTransform();
+		}
+		else
+		{
+			player->Update(dt);
+			return;
+		}
+	}
+	CMario* mario = dynamic_cast<CMario*>(player);
+	if (mario && (mario->IsEntryPipe() || mario->IsPrepareEntry()))
+	{
+		GameManager::GetInstance()->PauseToTransform();
+	}
+	else if (mario && this->timerWhenPlayerDie == -1 && !mario->IsPowerUp()) // if player is dead, we don't update the scene
+		GameManager::GetInstance()->ResumeWhenDoneTransform();
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	vector<LPGAMEOBJECT> coObjects;
@@ -761,17 +904,27 @@ void CPlayScene::Update(DWORD dt)
 
 		if (GameManager::GetInstance()->IsPausedGame())
 			return;
-		if(!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
-		objects[i]->Update(dt, &coObjects);
+		if (!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
+			objects[i]->Update(dt, &coObjects);
+
+	}
+	for (size_t i = 0; i < UserInterfaces.size(); i++)
+	{
+		//if (i != 0 && GameClock::GetInstance()->IsTempPaused())
+		//	break;
+
+		if (GameManager::GetInstance()->IsPausedGame())
+			return;
+		if (!GameManager::GetInstance()->IsPausedToTransform() || objects[i]->IsUpdateWhenMarioTransform())
+			UserInterfaces[i]->Update(dt, &coObjects);
 
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
-	int currentLevel = GameManager::GetInstance()->GetCurLevel();
-	currentLevel = 1; /// set like this bcuz i don't want to change the code in GameManager, i will change it later
-	if (currentLevel != 4)
+	int currentMap = CGame::GetInstance()->GetCurrentScene()->GetID();
+	if (currentMap != 8)
 	{
 		// Update camera to follow mario
 		CinemachineCamera();
@@ -782,33 +935,72 @@ void CPlayScene::Update(DWORD dt)
 		ScrollingCamera(dt);
 	}
 
+	KeepCameraAlwaysRight(currentMap);
+	float camX, camY;
+	CGame::GetInstance()->GetCamPos(camX, camY);
+	//DebugOut(L"cam pos x = %f, y =%f\n", camX, camY);
 	//CGame::GetInstance()->SetCamPos(cx, cy);
 
 	PurgeDeletedObjects();
+
 }
-bool CPlayScene::CheckObjectPause(CGameObject* object)
+void CPlayScene::KeepCameraAlwaysRight(int curentMap)
 {
-	if (dynamic_cast<CEnemy*>(object) || dynamic_cast<VenusBullet*>(object)
-		|| dynamic_cast<CLeaf*>(object) || dynamic_cast<CMushroom*>(object))
+	CGame* game = CGame::GetInstance();
+	float cx, cy;
+	game->GetCamPos(cx, cy);
+
+	switch (curentMap)
 	{
-		return true;
+	case 6:
+		if (cx < 0) cx = 0;
+		if (cx > 2600) cx = 2600;
+		if (cy > -17) cy = -17;
+		if (cy < -250) cy = -250;
+		break;
+	case 7:
+		if (cx < 2) cx = 2;
+		if (cx > 200) cx = 200;
+		if (cy < 0) cy = 0;
+		if (cy > 4) cy = 4;
+		break;
+	case 8:
+
+		if (cx > 1800) cx = 1800;
+		break;
+	case 9:
+		if (cx < 10) cx = 10;
+		if (cx > 230) cx = 230;
+		if (cy > 7) cy = 7;
+		if (cy < -50) cy = -50;
+		break;
 	}
-	return false;
+
+	game->SetCamPos(cx, cy);
 }
+
 void CPlayScene::Render()
 {
 	for (int i = 1; i < objects.size(); i++)
 	{
 		curObject = objects[i];
-		if(GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+		if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
 			continue;
 		objects[i]->Render();
 	}
 	//if(!GameClock::GetInstance()->IsPaused())
-	curObject = objects[0];
-	if (GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused())
+	if (!this->objects.empty())
+		curObject = objects[0];
+	else
 		return;
-	objects[0]->Render();
+	if (!(GameManager::GetInstance()->IsPausedGame() && !curObject->IsRenderWhenPaused()))
+		objects[0]->Render();
+
+	for (int i = 0; i < UserInterfaces.size(); i++)
+	{
+		curObject = UserInterfaces[i];
+		UserInterfaces[i]->Render();
+	}
 }
 
 /*
@@ -822,6 +1014,11 @@ void CPlayScene::Clear()
 		delete (*it);
 	}
 	objects.clear();
+	for (it = UserInterfaces.begin(); it != UserInterfaces.end(); it++)
+	{
+		delete(*it);
+	}
+	UserInterfaces.clear();
 }
 
 /*
@@ -836,12 +1033,47 @@ void CPlayScene::Unload()
 		delete objects[i];
 
 	objects.clear();
+	for (int i = 0; i < UserInterfaces.size(); i++)
+		delete UserInterfaces[i];
+
+	UserInterfaces.clear();
 	player = NULL;
 
 	DebugOut(L"[INFO] Scene %d unloaded! \n", id);
 }
 
 bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; }
+
+void CPlayScene::DeleteFadeTransition()
+{
+	int sizeOfObjects = objects.size();
+	if (sizeOfObjects == 0) return; // no objects to delete
+	CGameObject* fadeTransition = nullptr;
+	fadeTransition = dynamic_cast<CGameObject*>(objects[sizeOfObjects - 1]);
+	if (fadeTransition)
+		fadeTransition->Delete();
+}
+
+void CPlayScene::Reload()
+{
+	Unload();
+	GameManager::GetInstance()->AddLives(-1); // decrease lives by 1
+	int remainLives = GameManager::GetInstance()->GetLives();
+	if (remainLives < 0)
+	{
+		// reset game
+		GameManager::GetInstance()->Reset();
+		CGame::GetInstance()->InitiateSwitchScene(6);
+	}
+	else
+	{
+		// reload current scene
+		GameManager::GetInstance()->ResetTime();
+		//Load();
+		CGame::GetInstance()->InitiateSwitchScene(this->id);
+	}
+}
+
 
 void CPlayScene::PurgeDeletedObjects()
 {

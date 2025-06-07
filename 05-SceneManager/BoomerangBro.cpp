@@ -4,6 +4,7 @@
 #include "Animations.h"
 #include "Boomerang.h"
 #include "GameClock.h"
+#include "Effect.h"
 #define BOOMERANG_BRO_WIDTH 16
 #define BOOMERANG_BRO_HEIGHT 22
 #define VX 0.05f
@@ -29,12 +30,13 @@ BoomerangBro::BoomerangBro(float x, float y)
 	mario = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	nx = 1;
 	SetSpeed(VX, VY);
-	timesDoneAnimWalk = 0;
 	numberBoomerang = 2;
 	timer = GameClock::GetInstance()->GetTime();
 	SetState(STEP_FRONT);
 	indexCurPhase = 0;
 	canThrow = false;
+	gen = mt19937(rd()); // Initialize random number generator
+	dis = uniform_int_distribution<int>(1, 2); // Random number from 1 to 2
 }
 void BoomerangBro::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
@@ -46,15 +48,32 @@ void BoomerangBro::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void BoomerangBro::Render()
 {
+	if (state == DIE_BOTTOM)
+	{
+		DebugOut(L"chay vao day");
+	}
 	int ani = GetAnimationId();
 	CAnimations::GetInstance()->Get(ani)->Render(x, y);
-	if (CAnimations::GetInstance()->Get(ani)->Done())
-		timesDoneAnimWalk++;
 }
 void BoomerangBro::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
-	vy += 0.01 * dt;
-	SetStateBoomerangBro();
+	if (GameManager::GetInstance()->IsEndGame() && IsAlive())
+	{
+		this->KickedFromTop(this);
+		return;
+	}
+	if (mario)
+	{
+		float mX, mY;
+		mario->GetPosition(mX, mY);
+		if (mX < x)
+			nx = -1;
+		else
+			nx = 1;
+	}
+	vy += 0.001 * dt;
+	if(IsAlive())
+		SetStateBoomerangBro();
 	switch (state)
 	{
 	case STEP_FRONT:
@@ -67,7 +86,7 @@ void BoomerangBro::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (canThrow)
 		{
-			Boomerang* boomerang = new Boomerang(x-5, y-5);
+			Boomerang* boomerang = new Boomerang(x-5, y-5, this->nx);
 			dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene())->AddObject(boomerang);
 			boomerang->Throw();
 			canThrow = false;
@@ -83,7 +102,6 @@ void BoomerangBro::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 		break;
 	}
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	DebugOut(L"vx = %f", vx);
 }
 void BoomerangBro::OnNoCollision(DWORD dt)
 {
@@ -110,6 +128,31 @@ void BoomerangBro::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (e->nx != 0)
 	{
 		vx = -vx;
+	}
+}
+void BoomerangBro::KickedFromTop(CGameObject*)
+{
+	SetState(DIE_TOP);
+	int score = 1000;
+	GameManager::GetInstance()->AddScore(score);
+	// add effect
+	Effect* effect = new Effect(this->x, this->y - 16, score);
+	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(effect);
+
+}
+void BoomerangBro::KickedFromBottom(CGameObject* obj)
+{
+	SetState(DIE_BOTTOM);
+	if (obj)
+	{
+		float mX, mY;
+		mario->GetPosition(mX, mY);
+		if (mX < x)
+			nx = 1;
+		else
+			nx = -1;
+		vy = -0.25f; // Jump up
+		vx = 0.05f * nx; // Move to the left or right
 	}
 }
 int BoomerangBro::GetAnimationId()
@@ -139,6 +182,8 @@ int BoomerangBro::GetAnimationId()
 
 void BoomerangBro::SetStateBoomerangBro()
 {
+	if(!IsAlive())
+		return;
 	ULONGLONG cur = GameClock::GetInstance()->GetTime();
 	ULONGLONG time = cur - timer;
 	if (indexCurPhase == phases.size() - 1)
@@ -146,6 +191,10 @@ void BoomerangBro::SetStateBoomerangBro()
 		indexCurPhase = 0;
 		timer = cur;
 		SetState(phases[indexCurPhase].second);
+		int numberRandom = dis(gen);
+		bool isJump = (numberRandom == 2);
+		if(isJump)
+			vy = -0.25f; // Jump up
 		return;
 	}
 	if (time >= phases[indexCurPhase + 1].first)

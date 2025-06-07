@@ -1,4 +1,4 @@
-#include <fstream>
+﻿#include <fstream>
 
 #include "Game.h"
 #include "debug.h"
@@ -8,7 +8,7 @@
 #include "Animations.h"
 #include "PlayScene.h"
 
-CGame * CGame::__instance = NULL;
+CGame* CGame::__instance = NULL;
 
 /*
 	Initialize DirectX, create a Direct3D device for rendering within the window, initial Sprite library for
@@ -98,7 +98,7 @@ void CGame::Init(HWND hWnd, HINSTANCE hInstance)
 	//
 	//
 
-	D3D10_SAMPLER_DESC desc; 
+	D3D10_SAMPLER_DESC desc;
 	desc.Filter = D3D10_FILTER_MIN_MAG_POINT_MIP_LINEAR;
 	desc.AddressU = D3D10_TEXTURE_ADDRESS_CLAMP;
 	desc.AddressV = D3D10_TEXTURE_ADDRESS_CLAMP;
@@ -176,7 +176,7 @@ void CGame::Draw(float x, float y, LPTEXTURE tex, RECT* rect, float alpha, int s
 
 	D3DX10_SPRITE sprite;
 
-	// Set the sprite�s shader resource view
+	// Set the sprite’s shader resource view
 	sprite.pTexture = tex->getShaderResourceView();
 
 	if (rect == NULL)
@@ -189,8 +189,8 @@ void CGame::Draw(float x, float y, LPTEXTURE tex, RECT* rect, float alpha, int s
 		sprite.TexSize.x = 1.0f;
 		sprite.TexSize.y = 1.0f;
 
-		if (spriteWidth==0) spriteWidth = tex->getWidth();
-		if (spriteHeight==0) spriteHeight = tex->getHeight();
+		if (spriteWidth == 0) spriteWidth = tex->getWidth();
+		if (spriteHeight == 0) spriteHeight = tex->getHeight();
 	}
 	else
 	{
@@ -226,7 +226,7 @@ void CGame::Draw(float x, float y, LPTEXTURE tex, RECT* rect, float alpha, int s
 	D3DXMATRIX matScaling;
 	D3DXMatrixScaling(&matScaling, (FLOAT)spriteWidth, (FLOAT)spriteHeight, 1.0f);
 
-	// Setting the sprite�s position and size
+	// Setting the sprite’s position and size
 	sprite.matWorld = (matScaling * matTranslation);
 
 	spriteObject->DrawSpritesImmediate(&sprite, 1, 0, 0);
@@ -249,7 +249,7 @@ LPTEXTURE CGame::LoadTexture(LPCWSTR texturePath)
 		return NULL;
 	}
 
-	D3DX10_IMAGE_LOAD_INFO info; 
+	D3DX10_IMAGE_LOAD_INFO info;
 	ZeroMemory(&info, sizeof(D3DX10_IMAGE_LOAD_INFO));
 	info.Width = imageInfo.Width;
 	info.Height = imageInfo.Height;
@@ -456,9 +456,18 @@ void CGame::_ParseSection_SCENES(string line)
 	if (tokens.size() < 2) return;
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);   // file: ASCII format (single-byte char) => Wide Char
-
-	LPSCENE scene = new CPlayScene(id, path);
-	scenes[id] = scene;
+	int worldIndex = atoi(tokens[2].c_str());
+	if (tokens.size() == 4)
+	{
+		int directionWhenReenterScene = atoi(tokens[3].c_str());
+		LPSCENE scene = new CPlayScene(id, path, worldIndex, directionWhenReenterScene);
+		scenes[id] = scene;
+	}
+	else
+	{
+		LPSCENE scene = new CPlayScene(id, path, worldIndex);
+		scenes[id] = scene;
+	}
 }
 
 /*
@@ -484,11 +493,11 @@ void CGame::Load(LPCWSTR gameFile)
 		if (line == "[SETTINGS]") { section = GAME_FILE_SECTION_SETTINGS; continue; }
 		if (line == "[TEXTURES]") { section = GAME_FILE_SECTION_TEXTURES; continue; }
 		if (line == "[SCENES]") { section = GAME_FILE_SECTION_SCENES; continue; }
-		if (line[0] == '[') 
-		{ 
-			section = GAME_FILE_SECTION_UNKNOWN; 
+		if (line[0] == '[')
+		{
+			section = GAME_FILE_SECTION_UNKNOWN;
 			DebugOut(L"[ERROR] Unknown section: %s\n", ToLPCWSTR(line));
-			continue; 
+			continue;
 		}
 
 		//
@@ -510,19 +519,58 @@ void CGame::Load(LPCWSTR gameFile)
 
 void CGame::SwitchScene()
 {
-	if (next_scene < 0 || next_scene == current_scene) return; 
+	if (next_scene < 0) return;
+	//if (next_scene == current_scene)
+	//{
+	//	// reload the current scene
+	//	scenes[current_scene]->Unload();
+	//	CSprites::GetInstance()->Clear();
+	//	CAnimations::GetInstance()->Clear();
+	//	LPSCENE s = scenes[current_scene];
+	//	this->SetKeyHandler(s->GetKeyEventHandler());
+	//	s->Load();
+	//	next_scene = -1; // reset next scene
+	//	return;
+	//}
 
-	DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
+	if (scenes[current_scene]->GetWordIndex() == scenes[next_scene]->GetWordIndex() && (next_scene != current_scene))
+	{
+		CSprites::GetInstance()->Clear();
+		CAnimations::GetInstance()->Clear();
+		//TEST
+		((LPPLAYSCENE)scenes[current_scene])->DeleteFadeTransition();
+		current_scene = next_scene;
+		LPSCENE s = scenes[next_scene];
+		this->SetKeyHandler(s->GetKeyEventHandler());
+		s->Load();
+		next_scene = -1; // reset next scene
+	}
+	else {
 
-	scenes[current_scene]->Unload();
+		// xoa scene cũ đi
+		for(auto& scene : scenes)
+		{
+			if(scene.second->GetWordIndex() == scenes[current_scene]->GetWordIndex())
+			{
+				scene.second->Unload();
+			}
+		}
 
-	CSprites::GetInstance()->Clear();
-	CAnimations::GetInstance()->Clear();
+		DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
 
-	current_scene = next_scene;
-	LPSCENE s = scenes[next_scene];
-	this->SetKeyHandler(s->GetKeyEventHandler());
-	s->Load();
+
+		CSprites::GetInstance()->Clear();
+		CAnimations::GetInstance()->Clear();
+
+		current_scene = next_scene;
+		LPSCENE s = scenes[next_scene];
+		this->SetKeyHandler(s->GetKeyEventHandler());
+		s->Load();
+		GameManager::GetInstance()->ResetTime(); // reset game manager
+		next_scene = -1; // reset next scene
+		// set lai camera
+		SetCamPos(0, 0);
+	}
 }
 
 void CGame::InitiateSwitchScene(int scene_id)
@@ -541,6 +589,18 @@ void CGame::_ParseSection_TEXTURES(string line)
 	wstring path = ToWSTR(tokens[1]);
 
 	CTextures::GetInstance()->Add(texID, path.c_str());
+}
+
+void CGame::ResetGame()
+{
+	for (int i = 0; i < scenes.size(); i++)
+	{
+		if (scenes[i] != NULL)
+		{
+			scenes[i]->Unload();
+		}
+	}
+
 }
 
 

@@ -66,5 +66,13 @@ public:
             tempPaused = false;
         }
     }
+
+    void Reset() {
+		startTime = GetTickCount64();
+		pauseTime = 0;
+		accumulatedPause = 0;
+		isPaused = false;
+		tempPaused = false;
+	}
 };
 

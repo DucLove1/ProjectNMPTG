@@ -29,9 +29,9 @@ class DropLift;
 
 #define MARIO_SPEED_ENTRY_PIPE 0.05f
 
-#define FLYING_TIME 120;
+#define FLYING_TIME 150;
 #define FLYING_SCALE -0.2f
-#define TIME_TO_CHARGE 2000.0f //~2 seconds
+#define MAX_POWER_UNIT 1500.0f
 
 #define SLOW_FALLING_TIME 150
 #define SLOW_FALLING_SCALE 0.1f
@@ -63,6 +63,7 @@ class DropLift;
 
 #define MARIO_STATE_PREPARE_ENTRY_PIPE		1050
 #define MARIO_STATE_ENTRY_PIPE	1100
+#define MARIO_STATE_EXIT_PIPE	1150
 
 #define MARIO_MTIME_ONAIR		450
 
@@ -131,7 +132,9 @@ class DropLift;
 #define  ANI_MARIO_ATTACK_LEFT 29
 #define  ANI_MARIO_FLYING_RIGHT 30
 #define  ANI_MARIO_FLYING_LEFT 31
-#define  ANI_MARIO_ENTRY_PIPE 32
+#define	 ANI_MARIO_KICK_RIGHT	32
+#define  ANI_MARIO_KICK_LEFT	33
+#define  ANI_MARIO_ENTRY_PIPE 34
 #pragma endregion
 
 class CMario : public CGameObject
@@ -151,13 +154,17 @@ class CMario : public CGameObject
 	//ULONGLONG jump_start;
 
 	BOOLEAN isPickUp;
+	ULONGLONG startReleaseItem;
 
 	int isRecovering;
 	ULONGLONG recovery_start;
 
+	int DelayLimit = 0;
+
 	bool isPowerUp;
 	//bool isSelfPausing;
 	ULONGLONG anchor_start; // time to anchor on air 
+	ULONGLONG pauseToDecrease  = 0;
 
 	int jumpedTime;
 	bool isSlowFalling;
@@ -165,14 +172,21 @@ class CMario : public CGameObject
 
 	bool isFlying;
 	int flyingTime;
-	int startFlying;
+	ULONGLONG startFlying;
 	float powerUnit;
-	float maxPowerUnit;
 
 	bool upArrowWasHolded;
+	bool downArrowWasHoled;
+	bool keyAWasHoled;
+	bool addedFlag =false;
+
 	bool canEntryPipe;
 	bool isEntryPipe;
 	bool isPrepareEntry;
+	int directionToEntry;
+	bool isExitPipe;
+	int directionToExit;
+	pair<float, float> startPoint; // it cant be changed, dont change it.
 	pair<float, float> targetPoint;
 
 	//bool isLinkedLeft; // link to platform moving left direction
@@ -189,11 +203,13 @@ class CMario : public CGameObject
 	int preNx;
 	bool isEntryDown; /// for set vy direction
 
+	void DisableAllAction();
 	void LimitByCameraBorder();
 
 	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
+	void OnCollisionWithBoomerang(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
@@ -204,27 +220,30 @@ class CMario : public CGameObject
 	void OnCollisionWithSpawnGate(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoldBrick(LPCOLLISIONEVENT e);
 	void OnColliionWithDropLift(LPCOLLISIONEVENT e);
+	void OnCollisionWithBoomerangBro(LPCOLLISIONEVENT e);
+	void OnCollisionWithPiranhaPlant(LPCOLLISIONEVENT e);
 
 	int ConvertAniTypeToAniId(int animation_type);
-	
+
 
 public:
-	CMario(float x, float y) : CGameObject(x, y)
+	CMario(float x, float y, float dir = 0) : CGameObject(x, y)
 	{
 		isSitting = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
-		//level = MARIO_LEVEL_SMALL;
+		level = MARIO_LEVEL_SMALL;
 		//this line is get level from GameManager because of saving level
-		level = GameManager::GetInstance()->GetCurLevel();
+		//level = GameManager::GetInstance()->GetCurLevel();
 
 		untouchable = 0;
 		untouchable_start = -1;
 
 		isRecovering = 0;
 		recovery_start = -1;
+		DelayLimit = 1000;
 
 		isPowerUp = false;
 		//isSelfPausing = false;
@@ -233,18 +252,24 @@ public:
 		isSlowFalling = false;
 		jumpedTime = 0;
 		isFlying = false;
-		powerUnit = 0.0f; 
-		maxPowerUnit = TIME_TO_CHARGE;
+		powerUnit = 0.0f;
 		startFlying = 0;
 
+		keyAWasHoled = false;
 		upArrowWasHolded = false;
+		downArrowWasHoled = false;
 		isEntryPipe = false;
 		isPrepareEntry = false;
+		//isExitPipe = true;
+		isExitPipe = (dir == 0) ? false : true;
+		directionToExit = dir;
 
 		isEndGame = false;
+		GameManager::GetInstance()->SetEndGame(isEndGame);
 		isOnPlatform = false;
 		//jump_start = -1;
 		isPickUp = false;
+		startReleaseItem = 0;
 		coin = 0;
 
 		//isLinkedLeft = false;
@@ -252,6 +277,7 @@ public:
 		isLinked = false;
 
 		targetPoint = { 0,0 };
+		startPoint = { this->x, this->y };
 		this->item = nullptr;
 		this->movingPlatform = nullptr;
 		preNx = nx;
@@ -262,6 +288,7 @@ public:
 	void UpdateWhenEndScene(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void UpdateWhenEntryPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void UpdateWhenPrepareEntry(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateWhenExitPipe(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
 	void Render();
 	void SetState(int state);
@@ -288,38 +315,55 @@ public:
 	int GetLevel() { return this->level; }
 
 	void DecreaseLevel();
-	void SetPowerUP(bool power) { isPowerUp = power; anchor_start = GetTickCount64(); 
-								  GameManager::GetInstance()->SetPausedToTransform(true); }
+	void SetPowerUP(bool power) {
+		isPowerUp = power;
+		//anchor_start = GameClock::GetInstance()->GetTime();
+		anchor_start = GetTickCount64();
+		GameManager::GetInstance()->PauseToTransform();
+	}
 	bool IsPowerUp() { return isPowerUp; }
 	//void SetSelfPausing(bool pause) { isSelfPausing = pause; }
 
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
-	void StartRecovery() { isRecovering = 1; recovery_start = GetTickCount64(); }
+	void StartUntouchable() { untouchable = 1; untouchable_start = GameClock::GetInstance()->GetTime(); }
+	void StartRecovery() { isRecovering = 1; recovery_start = GameClock::GetInstance()->GetTime(); }
 	//for attack
 	void SetAttack(bool value);
 	bool IsAttack();
 	//for flying
 	bool IsReachToExpectedSpeed();
 	bool IsReadyToFly();
-	void SetFlying(bool value) { isFlying = value; flyingTime = FLYING_TIME; }
+	bool IsMAXRunning();
+	void SetFlying(bool value);
 	bool canSet() { return jumpedTime >= MARIO_MAX_JUMP_TIME; }
-	
+
 	//for falling
 	bool IsFalling() { return vy > 0 && !isOnPlatform; }
-	void SetSlowFalling(bool value) { isSlowFalling = value; slowFallingTime = SLOW_FALLING_TIME; }
+	bool IsOnPlatform() { return isOnPlatform; }
+	void SetSlowFalling(bool value) {
+		isSlowFalling = value;
+		if (value) slowFallingTime = SLOW_FALLING_TIME;
+	}
 	bool IsSlowFalling() { return isSlowFalling; }
 
 	void SetSmallJump();
 	bool IsSitting() { return isSitting; }
-	
+	int GetJumpedTime() { return jumpedTime; }
+
 	void SetForEntryPipeDown();
 	void SetForEntryPipeUp();
 	bool CanEntryPipe() { return canEntryPipe; }
 	bool IsPrepareEntry() { return isPrepareEntry; }
-	bool IsEntryPipe () { return isEntryPipe; }
+	bool IsEntryPipe() { return isEntryPipe; }
+	bool IsExitPipe() { return isExitPipe; }
+
 	void SetForEndGame(bool value);
+
+	bool KeyAWasHoled() { return keyAWasHoled; }
+	void SetKeyA(bool value) { keyAWasHoled = value; }
 	bool UpArrowWasHoled() { return upArrowWasHolded; }
 	void SetUpArrow(bool value) { upArrowWasHolded = value; }
+	bool DownArrowWasHolded() { return downArrowWasHoled; }
+	void SetDownArrow(bool value) { downArrowWasHoled = value; }
 
 	void SetLinked(bool value1, bool value2, DropLift* dropLift);
 	//bool IsLinkedLeft() { return isLinkedLeft; }
@@ -333,4 +377,12 @@ public:
 	bool IsUpdateWhenMarioTransform() { return true; }
 
 	bool IsRenderWhenPaused() { return false; }
+
+	int GetDirection() { return this->nx; }
+	void SetDirection(int direction) { this->nx = direction; }
+
+	bool IsOnDropLift() { return movingPlatform != nullptr; }
+
+	void SetDirectionToExit(int direction) { this->directionToExit = direction; }
+	void SetStartPoint(float x, float y) { this->startPoint = { x,y }; }
 };

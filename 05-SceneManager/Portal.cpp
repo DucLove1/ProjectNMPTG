@@ -3,7 +3,7 @@
 #include "Textures.h"
 #include "PlayScene.h"
 #define TIME_TRANSITION 1000 //ms
-CPortal::CPortal(float l, float t, float r, float b, bool isPortalIn, int scene_id )
+CPortal::CPortal(float l, float t, float r, float b, bool isPortalIn, int scene_id, float posOutX, float posOutY )
 {
 	this->scene_id = scene_id;
 	x = l; 
@@ -14,6 +14,9 @@ CPortal::CPortal(float l, float t, float r, float b, bool isPortalIn, int scene_
 	fade_transition = nullptr;
 	this->isPortalIn = isPortalIn; // true if this portal is for entering the scene, false if it's for exiting
 	isTransited = false; // true if the scene start to transition, false otherwise
+	// example to make portal 
+	this->posOutX = posOutX; // position mario go out in this scene which is also in the same world
+	this->posOutY = posOutY; // position mario go out in this scene which is also in the same world
 }
 
 void CPortal::RenderBoundingBox()
@@ -56,11 +59,17 @@ void CPortal::SwitchScene()
 			CMario* player = dynamic_cast<CMario*>(((CPlayScene*)(CGame::GetInstance()->GetCurrentScene()))->GetPlayer());
 			int curLevel = player->GetLevel();
 			GameManager::GetInstance()->SetCurLevel(curLevel);
+			// save direction of mario to gameManager
+			int direction = player->GetDirection();
+			GameManager::GetInstance()->SetMarioDirection(direction);
 		}
 	}
 	if(GetTickCount64() - this->time_start < TIME_TRANSITION)
 		return;
 	CGame::GetInstance()->InitiateSwitchScene(this->scene_id);
+	this->time_start = -1;
+	//fade_transition->Delete();
+	this->isTransited = false;
 }
 
 void CPortal::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

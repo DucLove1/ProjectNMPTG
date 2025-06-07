@@ -45,7 +45,9 @@ void DropLift::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	player->GetSpeed(m_vx, m_vy);
 
 	if (isTouched) {
-		vy = MAX_VY_FALLING;
+		vy = MAX_VY_FALLING * 2;
+		//vy += GRAVITY * dt;
+		DebugOut(L"V nef %f \n", vy);
 		if (hasPlayer)
 		{
 			player->SetIsStickToPlatform(this);  // Stick Mario to this platform
@@ -134,12 +136,25 @@ void DropLift::OnCollidedWithMario(LPCOLLISIONEVENT e) {
 
 bool DropLift::IsOnCamera()
 {
+	float posLeft;
+	float posRight;
+	float posTop;
+	float posBottom;
+	posLeft = x - DROP_LIFT_BBOX_WIDTH / 2;
+	posRight = x + DROP_LIFT_BBOX_WIDTH /2;
+	posTop = y - DROP_LIFT_BBOX_HEIGHT / 2;
+	posBottom = y + DROP_LIFT_BBOX_HEIGHT / 2;
 	float camX, camY;
 	CGame::GetInstance()->GetCamPos(camX, camY);
-	if (this->x - DROP_LIFT_BBOX_WIDTH <= camX + SCREEN_WIDTH && this->x >= camX
-		&& this->y <= camY + SCREEN_HEIGHT && this->y >= camY)
+	if ((posLeft >= camX && posLeft <= camX + SCREEN_WIDTH) ||
+		(posRight >= camX && posRight <= camX + SCREEN_WIDTH))
 		return true;
+
 	return false;
+	//if (this->x - DROP_LIFT_BBOX_WIDTH <= camX + SCREEN_WIDTH && this->x >= camX
+	//	&& this->y <= camY + SCREEN_HEIGHT && this->y >= camY)
+	//	return true;
+	//return false;
 }
 
 void DropLift::GotLinked()

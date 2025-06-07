@@ -19,7 +19,7 @@ public:
 	}
 
 	void Render() override;
-	void FillWithZeroes(string& time);
+	void FillWithZeroes(string& coin);
 };
 
 

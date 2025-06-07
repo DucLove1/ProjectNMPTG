@@ -77,6 +77,7 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 			//GameManager::GetInstance()->AddScore(1000);
 			CBouncingCoin* coin = new CBouncingCoin(x, y - 16);
 			scene->AddObject(coin);
+			GameManager::GetInstance()->PlusCoins(1);
 		}
 		else {
 			//CMushroom* mr = new CMushroom(x, y, nx);
@@ -91,7 +92,8 @@ void CQuestionBrick::GotHit(LPCOLLISIONEVENT e)
 				this->item2 = new CLeaf(x, y);
 				scene->AddObject(item2);
 				// xoa item1
-				this->item1->Delete();
+				if (this->item1 != nullptr)
+					this->item1->Delete();
 				this->item1 = nullptr;
 			}
 		}

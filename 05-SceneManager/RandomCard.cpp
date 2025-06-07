@@ -34,5 +34,7 @@ void RandomCard::Touched()
 	// make animation item here
 	RandomCardEffect* effect = new RandomCardEffect(x, y, curItem);
 	((LPPLAYSCENE)(CGame::GetInstance()->GetCurrentScene()))->AddObject(effect);
+	// add vao game manager
+	GameManager::GetInstance()->AddCard(curItem);
 }
 

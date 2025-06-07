@@ -10,7 +10,7 @@ void CHUDTimeText::Render()
 	//	->GetRemainingTime());
 	ULONGLONG time =
 		GameManager::GetInstance()->CalculateRemainingTime();
-	if (time >= 300)
+	if (time > 301)
 	{
 		time = 0;
 	}

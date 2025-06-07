@@ -17,6 +17,7 @@ partical_break.txt
 dropLift.txt
 effect.txt
 bouncingCoin.txt
+randomCard.txt
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 15 = ground, block = 7, question brick = 20, red venus = 13, goomba = 2, red_koopa = 12, spawner = 17, big_tree = 18, bushes = 19, cloud = 30, lion_brick = 31, green venus = 32, piranha =33, gold_brick = 34, bulder gold brick = 36, pipe = 9, hud = 25, wall = 37, bCoin = 23, cross platform = 51, icon = 52, woodenBlock = 53, dropLift = 56
@@ -129,8 +130,12 @@ bouncingCoin.txt
 12	1872	70	0
 #wooden block
 53	1920	167	8	2	530001	530002	530003	530004	530005	530006
+
 #pipe
 9	1944	103	32	16	4	81000	82000	82000	1	1	
+#portal
+50	1945	150	1970	160	0	9	2382	125
+
 #lion brick
 31	2032	8	1	10
 
@@ -148,3 +153,5 @@ bouncingCoin.txt
 44	159	202
 #power
 45	70	202
+#random card
+74	194	205

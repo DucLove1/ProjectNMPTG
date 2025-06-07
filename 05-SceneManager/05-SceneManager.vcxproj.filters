@@ -154,6 +154,8 @@
     <ClCompile Include="HUDLevel.cpp" />
     <ClCompile Include="HUDCoin.cpp" />
     <ClCompile Include="HUDMarioPower.cpp" />
+    <ClCompile Include="HUDRandomCard.cpp" />
+    <ClCompile Include="HUDRandomCardSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -241,6 +243,8 @@
     <ClInclude Include="HUDLevel.h" />
     <ClInclude Include="HUDCoin.h" />
     <ClInclude Include="HUDMarioPower.h" />
+    <ClInclude Include="HUDRandomCard.h" />
+    <ClInclude Include="HUDRandomCardSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

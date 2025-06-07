@@ -57,6 +57,11 @@ void BoomerangBro::Render()
 }
 void BoomerangBro::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
+	if (GameManager::GetInstance()->IsEndGame() && IsAlive())
+	{
+		this->KickedFromTop(this);
+		return;
+	}
 	if (mario)
 	{
 		float mX, mY;

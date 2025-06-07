@@ -30,7 +30,9 @@ void CPipe::RenderBoundingBox() {
 }
 void CPipe::Render() {
 	if (this->length <= 0) return;
-
+	// nay tinh khi load scene se thay player moi nen phai lay player moi frame
+	//if (this->MarioOut)
+	//	SetPlayer();
 	//for entry pipe
 	if ((isEntryPipe && (player->IsEntryPipe() || player->IsPrepareEntry()))
 		|| (player != nullptr && player->IsExitPipe()))

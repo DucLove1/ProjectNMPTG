@@ -168,9 +168,10 @@ void Koopa::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
 			Effect* scoreEffect = new Effect(x, y, score);
 			(dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene()))->AddObject(scoreEffect);
 			GameManager::GetInstance()->AddScore(score);
-			if (isHolded) {
-				/*isHolded = false;
-				this->KnockedOut(this);*/
+			if (isHolded) 
+			{
+				//isHolded = false;
+				//this->KnockedOut(this);
 				this->Delete();
 			}
 		}

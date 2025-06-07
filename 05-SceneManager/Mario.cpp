@@ -1452,8 +1452,11 @@ void CMario::DecreaseLevel()
 }
 
 void CMario::PickingItem(DWORD dt) {
-	if (this->item == nullptr || this->item->IsDeleted()) {
-		//ReleaseItem(item);
+	if (this->item == nullptr || this->item->IsDeleted())
+		return;
+	if (!dynamic_cast<Koopa*>(this->item)->IsAlive())
+	{
+		ReleaseItem(this->item);
 		return;
 	}
 	float fdt = (float)dt;
@@ -1507,11 +1510,11 @@ void CMario::ReleaseItem(CGameObject* item) {
 	Koopa* koopa = dynamic_cast<Koopa*> (item);
 	if (koopa == nullptr) return;
 
+	isPickUp = false;
 	startReleaseItem = GameClock::GetInstance()->GetTime();
 	koopa->SetHolded(false);
 	koopa->SetAccelation(0.f, KOOPA_GRAVITY);
 	koopa->ReleaseByPlayer(this);
-	//this->item = nullptr;
 }
 
 void CMario::UpdateTail(DWORD dt)

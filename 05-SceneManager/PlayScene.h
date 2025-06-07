@@ -16,6 +16,7 @@ class CPlayScene: public CScene
 private:
 	CGameObject* curObject; // current object being edited
 	ULONGLONG timerWhenPlayerDie;
+	int directionWhenReenterScene; // 1: right, -1: left, 0: no direction
 protected: 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
@@ -35,7 +36,7 @@ protected:
 	void LoadAssets(LPCWSTR assetFile);
 	
 public: 
-	CPlayScene(int id, LPCWSTR filePath, int worldIndex);
+	CPlayScene(int id, LPCWSTR filePath, int worldIndex, int directionWhenReenterScene = 0);
 
 	virtual void Load();
 	virtual void Update(DWORD dt);

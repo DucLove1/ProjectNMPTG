@@ -14,8 +14,11 @@ protected:
 	int spriteIdBegin, spriteIdMiddle, spriteIdEnd;
 	//int spriteIdTop;
 	bool isEntryPipe; // true if player is in entry pipe
+
 	int canLetEntry;
-	CMario* player; 
+	CMario* player; // for entry pipe
+	bool MarioOut;
+
 
 public:
 	CPipe(float x, float y,
@@ -33,10 +36,14 @@ public:
 		isEntryPipe = false;
 		if (MarioOut)
 		{
+			this->MarioOut = true;
 			SetPlayer();
 		}
 		else
+		{
+			this->MarioOut = false;
 			this->player == nullptr;
+		}
 	}
 
 	void Render();
